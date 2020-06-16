@@ -2,7 +2,7 @@
 
 Regression applied to law texts from JEC / UFSC to predict the compensation for moral damage related to failures in air transport services.
 
-# Scope
+## Scope
 
 We aim to check many techniques related to text representation, regression and final evaluation.
 
