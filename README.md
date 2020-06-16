@@ -1,6 +1,6 @@
 # Text Regression in Law Judgements
 
-Regression applied to law texts from JEC / UFSC to predict the compensation for moral damage related to failures in air transport services.
+Regression applied to judgement texts from JEC / UFSC to predict the compensation for moral damage related to failures in air transport services.
 
 ## Scope
 
@@ -10,7 +10,7 @@ In terms of text representation, we apply the following:
 
 - Bag of Words with TF values
 - Bag of Words with TF-IDF values
-- Word embeddings trained from large legal corpora (TODO: Cite out paper)  
+- Word embeddings trained from large legal corpora (TODO: Cite our paper)  
 - Bag of Words with Word embeddings values
 - Word Embeddings with Dimensionality Reduction
 
