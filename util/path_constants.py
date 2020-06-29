@@ -31,3 +31,5 @@ DAMAGE_VALUES_DATASET_PATH = "data/regression_attributes_classes.csv"
 # Merge Dataset
 #
 MERGE_DATASET = "data/merge_dataset.csv"
+
+PROCESSED_DATASET = "data/processed_dataset.csv"
