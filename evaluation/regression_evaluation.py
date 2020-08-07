@@ -3,14 +3,13 @@
 @author
 """
 import datetime
-import time
 
 import numpy as np
-from sklearn import metrics
 import pandas as pd
+from sklearn import metrics
 
 
-def batch_evaluation(data, independent_vars=1):
+def batch_evaluation(data, independent_vars=1, description=""):
     print()
     metrics_data = list()
     len_data = len(data)
@@ -27,5 +26,5 @@ def batch_evaluation(data, independent_vars=1):
         metrics_data.append([key, np.round(mse, 2), np.round(rmse, 2), np.round(r2_score, 4), np.round(adjusted_r2_score, 4), np.round(mae, 2)])
 
     df = pd.DataFrame(columns=["algorithm", "mse", "rmse", "r2", "adj_r2", "mae"], data=metrics_data)
-    filename = "data/regression_metrics_" + str(datetime.datetime.today()).replace(":", "-").replace(".", "-") + ".csv"
+    filename = "data/regression_metrics_" + str(datetime.datetime.today()).replace(":", "-").replace(".", "-") + "_" + description + ".csv"
     df.to_csv(filename.replace(" ", "_"))

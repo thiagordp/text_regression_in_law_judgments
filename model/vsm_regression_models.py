@@ -25,9 +25,16 @@ REGRESSION_MODELS = {
     "random_forest_50": RandomForestRegressor(n_estimators=50),
     "random_forest_100": RandomForestRegressor(n_estimators=100),
     "random_forest_1000": RandomForestRegressor(n_estimators=1000),
+    "random_forest_2000": RandomForestRegressor(n_estimators=2000),
+    "random_forest_4000": RandomForestRegressor(n_estimators=4000),
+    "random_forest_5000": RandomForestRegressor(n_estimators=5000),
     "mlp_100": MLPRegressor(hidden_layer_sizes=(100,), max_iter=1000),
-    "mlp_100_50": MLPRegressor(hidden_layer_sizes=(100, 50,), max_iter=1000),
-    "mlp_100_100_50": MLPRegressor(hidden_layer_sizes=(100, 100, 50,), max_iter=1000),
+    "mlp_200": MLPRegressor(hidden_layer_sizes=(200,), max_iter=1000),
+    "mlp_1000": MLPRegressor(hidden_layer_sizes=(1000,), max_iter=1000),
+    "mlp_200_50": MLPRegressor(hidden_layer_sizes=(200, 50,), max_iter=1000),
+    "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 100,), max_iter=1000),
+    "mlp_1000_100": MLPRegressor(hidden_layer_sizes=(1000, 100,), max_iter=1000),
+    "mlp_1000_100_50": MLPRegressor(hidden_layer_sizes=(1000, 100, 50,), max_iter=1000),
     "decision_tree": DecisionTreeRegressor(),
     "adaboost": AdaBoostRegressor(),
     "bagging": BaggingRegressor(),
@@ -44,7 +51,7 @@ def full_models_regression(x_train, y_train, x_test, y_test):
     for key in REGRESSION_MODELS.keys():
         print("Training", key)
         time.sleep(1)
-        for i in tqdm.tqdm(range(50)):
+        for i in tqdm.tqdm(range(20)):
             model = REGRESSION_MODELS[key]
             model.fit(x_train, y_train)
             y_pred = model.predict(x_test)

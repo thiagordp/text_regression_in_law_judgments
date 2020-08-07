@@ -9,7 +9,7 @@ from pre_processing.text_pre_processing import process_text
 
 
 def document_vector(corpus, dim=0, remove_stopwords=True, stemming=False):
-    print("TF BOW Document Vector")
+    print("TF-IDF BOW Document Vector")
     time.sleep(0.2)
     processed_corpus = list()
     for doc in tqdm.tqdm(corpus):
