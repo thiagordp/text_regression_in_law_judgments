@@ -14,7 +14,8 @@ from sklearn.model_selection import train_test_split
 from evaluation import regression_evaluation
 from model import vsm_regression_models, embeddings_regression_models
 from representation import bow_tf, bow_tf_idf, word_embeddings
-from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_PATH
+from util.aux_function import print_time
+from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_PATH, INCLUDE_ZERO_VALUES
 
 
 def test_bow_tf():
@@ -23,6 +24,12 @@ def test_bow_tf():
         print("Train / Test ", tests)
         raw_data_df = pd.read_csv(MERGE_DATASET, index_col=0)
         raw_data_df.dropna(inplace=True)
+
+        if not INCLUDE_ZERO_VALUES:
+            raw_data_df = raw_data_df.loc[raw_data_df["indenizacao_total"] > 1.0]
+
+        print(raw_data_df["indenizacao_total"].unique())
+
         # Representation
         x = [row for row in raw_data_df["sentenca"].values]
         y = raw_data_df["indenizacao_total"].values
@@ -33,6 +40,7 @@ def test_bow_tf():
             row = x[i]
             label = y[i]
             data.append([label, row])
+
         time.sleep(0.1)
         bow = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
 
@@ -53,9 +61,16 @@ def test_bow_tf():
 def test_bow_tf_idf():
     for tests in range(10):
         print("===============================================================================")
+        print_time()
         print("Train / Test ", tests)
         raw_data_df = pd.read_csv(MERGE_DATASET, index_col=0)
         raw_data_df.dropna(inplace=True)
+
+        if not INCLUDE_ZERO_VALUES:
+            raw_data_df = raw_data_df.loc[raw_data_df["indenizacao_total"] > 1.0]
+
+        print(raw_data_df["indenizacao_total"].unique())
+
         # Representation
         x = [row for row in raw_data_df["sentenca"].values]
         y = raw_data_df["indenizacao_total"].values
@@ -83,8 +98,14 @@ def test_embeddings_cnn():
 
         for tests in range(10):
             print("Train / Test ", tests)
+            print_time()
             raw_data_df = pd.read_csv(MERGE_DATASET, index_col=0)
             raw_data_df.dropna(inplace=True)
+
+            if not INCLUDE_ZERO_VALUES:
+                raw_data_df = raw_data_df.loc[raw_data_df["indenizacao_total"] > 1.0]
+
+            print(raw_data_df["indenizacao_total"].unique())
 
             # Representation
             x = [row for row in raw_data_df["sentenca"].values]
@@ -104,6 +125,3 @@ def test_embeddings_cnn():
             models_predictions = embeddings_regression_models.simple_cnn_model(x_train, y_train, x_test, y_test, x_val, y_val, vocabulary_size, emb_len, embeddings_matrix,
                                                                                emb_path)
             regression_evaluation.batch_evaluation(models_predictions, independent_vars=100, description="cnn")
-
-
-

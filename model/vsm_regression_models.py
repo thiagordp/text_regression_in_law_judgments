@@ -10,6 +10,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.tree import export_graphviz
+
+from util.aux_function import print_time
 
 REGRESSION_MODELS = {
     "linear_regression": LinearRegression(),
@@ -50,6 +53,7 @@ def full_models_regression(x_train, y_train, x_test, y_test):
 
     for key in REGRESSION_MODELS.keys():
         print("Training", key)
+        print_time()
         time.sleep(1)
         for i in tqdm.tqdm(range(20)):
             model = REGRESSION_MODELS[key]

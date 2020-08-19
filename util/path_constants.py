@@ -20,10 +20,13 @@ JEC_CLASS_PATHS = [
     EXTINCAO
 ]
 
+
+
 #
 # Moral Damage Values Dataset
 #
 DAMAGE_VALUES_DATASET_PATH = "data/regression_attributes_classes.csv"
+INCLUDE_ZERO_VALUES = False
 
 #
 # Merge Dataset
