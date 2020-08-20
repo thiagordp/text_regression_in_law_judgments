@@ -3,6 +3,8 @@ File Path Constants
 @author Thiago Raulino Dal Pont
 """
 
+PROJECT_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Projects/text_regression_in_law_judgments/"
+
 #
 # Original Judgements
 #

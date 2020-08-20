@@ -42,11 +42,11 @@ def test_bow_tf():
             data.append([label, row])
 
         time.sleep(0.1)
-        bow = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
+        bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
 
         x_train, x_test, y_train, y_test = train_test_split(bow, y, test_size=0.3, shuffle=True, random_state=int((random.random() * random.random() * time.time())) % 2 ** 32)
 
-        models_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test)
+        models_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test,feature_names)
         regression_evaluation.batch_evaluation(models_predictions, independent_vars=len(x_train[0]), description="tf")
 
     # print("Evaluating")
@@ -77,12 +77,13 @@ def test_bow_tf_idf():
         # y = y.reshape(-1, 1)
 
         # bow = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
-        bow = bow_tf_idf.document_vector(x, remove_stopwords=True, stemming=False)
+        bow, feature_names = bow_tf_idf.document_vector(x, remove_stopwords=True, stemming=False)
 
         x_train, x_test, y_train, y_test = train_test_split(bow, y, test_size=0.3, shuffle=True, random_state=int((random.random() * random.random() * time.time())) % 2 ** 32)
 
-        models_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test)
+        models_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test, feature_names)
         regression_evaluation.batch_evaluation(models_predictions, independent_vars=len(x_train[0]), description="tf_idf")
+
 
 
 def test_embeddings_cnn():

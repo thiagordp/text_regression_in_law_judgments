@@ -2,19 +2,23 @@
 
 @author Thiago Raulino Dal Pont
 """
+import random
 import time
 
+import numpy as np
+import pandas as pd
 import tqdm
 from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, BaggingRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.tree import export_graphviz
 
 from util.aux_function import print_time
+from visualization.vsm_models_visualization import visualize_decision_tree
 
 REGRESSION_MODELS = {
+    "decision_tree": DecisionTreeRegressor(),
     "linear_regression": LinearRegression(),
     "svr_linear": SVR(C=1.0, epsilon=0.2, kernel="linear"),
     "svr_poly_2": SVR(C=1.0, epsilon=0.2, kernel="poly", degree=2),
@@ -38,7 +42,6 @@ REGRESSION_MODELS = {
     "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 100,), max_iter=1000),
     "mlp_1000_100": MLPRegressor(hidden_layer_sizes=(1000, 100,), max_iter=1000),
     "mlp_1000_100_50": MLPRegressor(hidden_layer_sizes=(1000, 100, 50,), max_iter=1000),
-    "decision_tree": DecisionTreeRegressor(),
     "adaboost": AdaBoostRegressor(),
     "bagging": BaggingRegressor(),
     "extra_trees": ExtraTreesRegressor(),
@@ -46,20 +49,38 @@ REGRESSION_MODELS = {
 }
 
 
-def full_models_regression(x_train, y_train, x_test, y_test):
+def full_models_regression(x_train, y_train, x_test, y_test, feature_names):
     results = list()
     print("Training Regressors")
-    time.sleep(1)
+    time.sleep(0.5)
 
+    get_tree = False
     for key in REGRESSION_MODELS.keys():
         print("Training", key)
         print_time()
         time.sleep(1)
         for i in tqdm.tqdm(range(20)):
             model = REGRESSION_MODELS[key]
+            model.random_state = random.randint(1, 2 ** 32 - 1)
             model.fit(x_train, y_train)
             y_pred = model.predict(x_test)
             results.append([key, y_test, y_pred])
+
+            if key.find("decision_tree") != -1 and not get_tree:
+                get_tree = True
+                visualize_decision_tree(model, feature_names)
+
+                importances = model.feature_importances_
+                print(len(importances), len(feature_names))
+                indices = np.argsort(importances)[::-1]
+
+                columns = ["feature_name", "importance"]
+                list_importances = list()
+                for i in range(len(feature_names)):
+                    list_importances.append([feature_names[indices[i]], importances[indices[i]]])
+
+                df = pd.DataFrame(data=list_importances, columns=columns)
+                df.to_csv("data/features/decision_tree.csv")
 
     return results
 

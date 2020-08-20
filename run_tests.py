@@ -11,8 +11,8 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 def test_representation():
-    # test_representations.test_bow_tf()
-    test_representations.test_bow_tf_idf()
+    test_representations.test_bow_tf()
+    # test_representations.test_bow_tf_idf()
     # test_representations.test_embeddings_cnn()
 
 
@@ -34,8 +34,8 @@ def test_log():
 
 def main():
     # test_pre_processings()
-    # test_representation()
-    test_log()
+    test_representation()
+    # test_log()
 
 
 if __name__ == "__main__":

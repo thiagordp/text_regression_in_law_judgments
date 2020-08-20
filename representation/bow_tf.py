@@ -24,6 +24,7 @@ def document_vector(corpus, dim=0, remove_stopwords=True, stemming=False):
 
     vectorizer = CountVectorizer()
     x = vectorizer.fit_transform(processed_corpus).toarray()
+    feature_names = vectorizer.get_feature_names()
 
     if dim > 0:
         print("Applying PCA to reduce to", dim, "dimensions")
@@ -31,4 +32,4 @@ def document_vector(corpus, dim=0, remove_stopwords=True, stemming=False):
         x = pca.fit_transform(x)
         print("Variance:", np.sum(pca.explained_variance_ratio_))
 
-    return x
+    return x, feature_names
