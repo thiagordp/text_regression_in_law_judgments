@@ -6,18 +6,17 @@ import random
 import time
 
 import tqdm
-from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, BaggingRegressor, ExtraTreesRegressor, GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, BaggingRegressor, GradientBoostingRegressor, ExtraTreesRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 
 from util.aux_function import print_time
-from visualization import vsm_models_visualization
 
 REGRESSION_MODELS = {
-    "random_forest_5": RandomForestRegressor(n_estimators=5, n_jobs=8),
-    "decision_tree": DecisionTreeRegressor(),
+    # "random_forest_5": RandomForestRegressor(n_estimators=5, n_jobs=8),
+    # "decision_tree": DecisionTreeRegressor(),
     # "linear_regression": LinearRegression(),
     # "svr_linear": SVR(C=1.0, epsilon=0.2, kernel="linear"),
     # "svr_poly_2": SVR(C=1.0, epsilon=0.2, kernel="poly", degree=2),
@@ -33,23 +32,24 @@ REGRESSION_MODELS = {
     # "random_forest_1000": RandomForestRegressor(n_estimators=1000, n_jobs=8),
     # "random_forest_2000": RandomForestRegressor(n_estimators=2000, n_jobs=8),
     # "random_forest_4000": RandomForestRegressor(n_estimators=4000, n_jobs=8),
-    # "random_forest_5000": RandomForestRegressor(n_estimators=5000, n_jobs=8),
+    "random_forest_5000": RandomForestRegressor(n_estimators=5000, n_jobs=8),
     # "mlp_100": MLPRegressor(hidden_layer_sizes=(100,), max_iter=1000),
     # "mlp_200": MLPRegressor(hidden_layer_sizes=(200,), max_iter=1000),
     # "mlp_1000": MLPRegressor(hidden_layer_sizes=(1000,), max_iter=1000),
     # "mlp_200_50": MLPRegressor(hidden_layer_sizes=(200, 50,), max_iter=1000),
-    # "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 100,), max_iter=1000),
+    "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 100,), max_iter=1000),
     # "mlp_1000_100": MLPRegressor(hidden_layer_sizes=(1000, 100,), max_iter=1000),
-    # "mlp_1000_100_50": MLPRegressor(hidden_layer_sizes=(1000, 100, 50,), max_iter=1000),
-    # "adaboost": AdaBoostRegressor(),
-    # "bagging": BaggingRegressor(),
-    # "extra_trees": ExtraTreesRegressor(),
-    # "gradient_boosting": GradientBoostingRegressor()
+    "mlp_1000_100_50": MLPRegressor(hidden_layer_sizes=(1000, 100, 50,), max_iter=1000),
+    "adaboost": AdaBoostRegressor(),
+    "bagging": BaggingRegressor(),
+    "extra_trees": ExtraTreesRegressor(),
+    "gradient_boosting": GradientBoostingRegressor()
 }
 
 
 def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech_representation):
-    results = list()
+    results_test = list()
+    results_train = list()
     print("Training Regressors")
     time.sleep(0.5)
 
@@ -58,17 +58,22 @@ def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech
         print_time()
         time.sleep(1)
 
-        for i in tqdm.tqdm(range(20)):
+        for i in tqdm.tqdm(range(1)):
             model = REGRESSION_MODELS[key]
+
             model.random_state = random.randint(1, 2 ** 32 - 1)
             model.fit(x_train, y_train)
+
             y_pred = model.predict(x_test)
-            results.append([key, y_test, y_pred])
+            results_test.append([key, y_test, y_pred])
 
-            if i == 0:
-                vsm_models_visualization.setup_visualization(key, model, feature_names, tech_representation)
+            y_pred = model.predict(x_train)
+            results_train.append([key, y_train, y_pred])
 
-    return results
+            # if i == 0:
+            #     vsm_models_visualization.setup_visualization(key, model, feature_names, tech_representation)
+
+    return results_train, results_test
 
 
 def linear_regression(x_train, y_train, x_test, y_test):

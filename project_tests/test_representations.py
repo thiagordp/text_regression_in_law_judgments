@@ -19,7 +19,7 @@ from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_
 
 
 def test_bow_tf():
-    for tests in range(10):
+    for tests in range(1):
         print("===============================================================================")
         print("Train / Test ", tests)
         raw_data_df = pd.read_csv(MERGE_DATASET, index_col=0)
@@ -32,8 +32,8 @@ def test_bow_tf():
 
         # Representation
         x = [row for row in raw_data_df["sentenca"].values]
+        sentenca_num = [str(row) for row in raw_data_df["judgement"].values]
         y = raw_data_df["indenizacao_total"].values
-        # y = y.reshape(-1, 1)
 
         data = list()
         for i in tqdm.tqdm(range(len(x))):
@@ -43,11 +43,25 @@ def test_bow_tf():
 
         time.sleep(0.1)
         bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
+        arr = list()
+        bow = list(bow)
 
-        x_train, x_test, y_train, y_test = train_test_split(bow, y, test_size=0.3, shuffle=True, random_state=int((random.random() * random.random() * time.time())) % 2 ** 32)
+        for i in range(len(sentenca_num)):
+            bow_i = list(bow[i])
+            s_i = sentenca_num[i]
+            arr.append([s_i, bow_i])
 
-        models_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test, feature_names, "tf")
-        regression_evaluation.batch_evaluation(models_predictions, independent_vars=len(x_train[0]), description="tf")
+        x_train, x_test, y_train, y_test = train_test_split(arr, y, test_size=0.3, shuffle=True, random_state=int((random.random() * random.random() * time.time())) % 2 ** 32)
+
+        sentence_train = [row[0] for row in x_train]
+        x_train = [row[1] for row in x_train]
+
+        sentence_test = [row[0] for row in x_test]
+        x_test = [row[1] for row in x_test]
+
+        train_predictions, test_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test, feature_names, "tf")
+        regression_evaluation.batch_evaluation(train_predictions, test_predictions, sentence_train, sentence_test, description="tf")
+
 
     # print("Evaluating")
     # rmse = np.sqrt(metrics.mean_squared_error(y_test, y_poly_pred))
@@ -59,7 +73,7 @@ def test_bow_tf():
 
 
 def test_bow_tf_idf():
-    for tests in range(10):
+    for tests in range(1):
         print("===============================================================================")
         print_time()
         print("Train / Test ", tests)

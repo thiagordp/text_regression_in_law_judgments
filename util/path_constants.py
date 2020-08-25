@@ -28,7 +28,7 @@ JEC_CLASS_PATHS = [
 # Moral Damage Values Dataset
 #
 DAMAGE_VALUES_DATASET_PATH = "data/regression_attributes_classes.csv"
-INCLUDE_ZERO_VALUES = False
+INCLUDE_ZERO_VALUES = True
 
 #
 # Merge Dataset
