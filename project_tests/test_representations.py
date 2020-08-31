@@ -62,7 +62,6 @@ def test_bow_tf():
         train_predictions, test_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test, feature_names, "tf")
         regression_evaluation.batch_evaluation(train_predictions, test_predictions, sentence_train, sentence_test, description="tf")
 
-
     # print("Evaluating")
     # rmse = np.sqrt(metrics.mean_squared_error(y_test, y_poly_pred))
     # r2 = metrics.r2_score(y_test, y_poly_pred)
