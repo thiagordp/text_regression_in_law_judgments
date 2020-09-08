@@ -3,12 +3,13 @@
 @author Thiago Raulion Dal Pont
 """
 
-from googleapiclient.discovery import build
-import pandas as pd
-import pickle
 import os.path
-from google_auth_oauthlib.flow import InstalledAppFlow
+import pickle
+
+import pandas as pd
 from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
@@ -30,8 +31,7 @@ def gsheet_api_check(SCOPES):
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'sheets_credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file('util/sheets_credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
@@ -58,7 +58,6 @@ def pull_sheet_data(SCOPES, SPREADSHEET_ID, RANGE_NAME):
 
 
 def export_data_to_sheets(df, scopes, spreadsheet_id, range_name):
-
     creds = gsheet_api_check(scopes)
     service = build('sheets', 'v4', credentials=creds)
 

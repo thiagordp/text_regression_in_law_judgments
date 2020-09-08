@@ -9,6 +9,7 @@ import tqdm
 from gensim.models import KeyedVectors
 from gensim.scripts.glove2word2vec import glove2word2vec
 from gensim.test.utils import get_tmpfile, datapath
+from sklearn.feature_selection import VarianceThreshold
 from sklearn.model_selection import train_test_split
 
 from evaluation import regression_evaluation
@@ -16,6 +17,7 @@ from model import vsm_regression_models, embeddings_regression_models
 from representation import bow_tf, bow_tf_idf, word_embeddings
 from util.aux_function import print_time
 from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_PATH, INCLUDE_ZERO_VALUES
+from sklearn.model_selection import KFold
 
 
 def test_bow_tf():
@@ -26,14 +28,14 @@ def test_bow_tf():
         raw_data_df.dropna(inplace=True)
 
         if not INCLUDE_ZERO_VALUES:
-            raw_data_df = raw_data_df.loc[raw_data_df["indenizacao_total"] > 1.0]
-
-        print(raw_data_df["indenizacao_total"].unique())
+            raw_data_df = raw_data_df.loc[raw_data_df["indenizacao"] > 1.0]
 
         # Representation
         x = [row for row in raw_data_df["sentenca"].values]
         sentenca_num = [str(row) for row in raw_data_df["judgement"].values]
-        y = raw_data_df["indenizacao_total"].values
+
+        print(raw_data_df["indenizacao"].unique())
+        y = raw_data_df["indenizacao"].values
 
         data = list()
         for i in tqdm.tqdm(range(len(x))):
@@ -43,6 +45,9 @@ def test_bow_tf():
 
         time.sleep(0.1)
         bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
+        #variance_sel = VarianceThreshold(threshold=(.5 * (1 - .5)))
+        #bow = variance_sel.fit_transform(bow)
+
         arr = list()
         bow = list(bow)
 
@@ -50,6 +55,10 @@ def test_bow_tf():
             bow_i = list(bow[i])
             s_i = sentenca_num[i]
             arr.append([s_i, bow_i])
+
+        kfold = KFold(n_splits=10,
+                      shuffle=True,
+                      random_state=int((random.random() * random.random() * time.time())) % 2 ** 32)
 
         x_train, x_test, y_train, y_test = train_test_split(arr, y, test_size=0.3, shuffle=True, random_state=int((random.random() * random.random() * time.time())) % 2 ** 32)
 
@@ -80,13 +89,13 @@ def test_bow_tf_idf():
         raw_data_df.dropna(inplace=True)
 
         if not INCLUDE_ZERO_VALUES:
-            raw_data_df = raw_data_df.loc[raw_data_df["indenizacao_total"] > 1.0]
+            raw_data_df = raw_data_df.loc[raw_data_df["indenizacao"] > 1.0]
 
-        print(raw_data_df["indenizacao_total"].unique())
+        print(raw_data_df["indenizacao"].unique())
 
         # Representation
         x = [row for row in raw_data_df["sentenca"].values]
-        y = raw_data_df["indenizacao_total"].values
+        y = raw_data_df["indenizacao"].values
         # y = y.reshape(-1, 1)
 
         # bow = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
@@ -116,13 +125,13 @@ def test_embeddings_cnn():
             raw_data_df.dropna(inplace=True)
 
             if not INCLUDE_ZERO_VALUES:
-                raw_data_df = raw_data_df.loc[raw_data_df["indenizacao_total"] > 1.0]
+                raw_data_df = raw_data_df.loc[raw_data_df["indenizacao"] > 1.0]
 
-            print(raw_data_df["indenizacao_total"].unique())
+            print(raw_data_df["indenizacao"].unique())
 
             # Representation
             x = [row for row in raw_data_df["sentenca"].values]
-            y = raw_data_df["indenizacao_total"].astype('float64').values
+            y = raw_data_df["indenizacao"].astype('float64').values
 
             word_vectors = KeyedVectors.load_word2vec_format(emb, binary=False)
 

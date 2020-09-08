@@ -31,7 +31,7 @@ def create_processed_base():
     # Representation
     x = [row for row in raw_data_df["sentenca"].values]
 
-    y = raw_data_df["indenizacao_total"].values
+    y = raw_data_df["indenizacao"].values
 
     print("Processing texts")
     data = list()

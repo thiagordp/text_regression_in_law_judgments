@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn import metrics
 
-from util.sheets_api import pull_sheet_data, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME, export_data_to_sheets
+from util.sheets_api import pull_sheet_data, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME
 
 
 def process_row_metric(row):
@@ -22,17 +22,48 @@ def process_row_metric(row):
     return [key, np.round(mse, 2), np.round(rmse, 2), np.round(r2_score, 4), np.round(mae, 2)]
 
 
+def percentage_error(y_pred, y_test):
+    if abs(y_pred) < 0.1 and y_test == 0:
+        return 0
+
+    if y_test == 0:
+        y_test = 0.1
+
+    return (y_pred - y_test) / y_test
+
+
+def compare_results(metrics_train, metrics_test):
+    techs = list(metrics_train["algorithm"].unique())
+    techs.extend(list(metrics_test["algorithm"]))
+
+    techs = set(techs)
+
+    for tech in techs:
+        m_train = metrics_train[metrics_train["algorithm"] == tech]
+        m_test = metrics_test[metrics_test["algorithm"] == tech]
+        rmse_train = float(np.mean(m_train["rmse"]))
+        rmse_test = float(np.mean(m_test["rmse"]))
+
+        print(tech, "\t", round(rmse_test, 2), round(rmse_train, 2), round((rmse_test / rmse_train) - 1, 5))
+
+
 def batch_evaluation(results_train, results_test, sentence_train, sentences_test, description=""):
     metrics_test = list()
     metrics_train = list()
 
     for row in results_test:
         metrics_test.append(process_row_metric(row))
-
+    for row in results_train:
+        metrics_train.append(process_row_metric(row))
     columns = ["algorithm", "mse", "rmse", "r2", "mae"]
-    df = pd.DataFrame(columns=columns, data=metrics_test)
+
+    df_test = pd.DataFrame(columns=columns, data=metrics_test)
+    df_train = pd.DataFrame(columns=columns, data=metrics_train)
+
+    compare_results(df_train, df_test)
+
     filename = "data/regression_metrics_test_" + str(datetime.datetime.today()).replace(":", "-").replace(".", "-") + "_" + description + ".csv"
-    df.to_csv(filename.replace(" ", "_"))
+    df_test.to_csv(filename.replace(" ", "_"))
 
     list_predictions = dict()
 
@@ -55,7 +86,7 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
             actual = actual_values[j_tr]
             sent_train = sentence_train[j_tr]
 
-            predictions_dict[int(sent_train)] = [sent_train, tech_train, "train", round(pred, 2), round((pred - actual), 2), round(actual, 2)]
+            predictions_dict[int(sent_train)] = [sent_train, tech_train, "train", round(pred, 2), round(percentage_error(pred, actual), 4), round(actual, 2)]
 
         actual_values = row_test[1]
         pred_values = row_test[2]
@@ -65,7 +96,7 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
             actual = actual_values[k_tes]
             sent_test = sentences_test[k_tes]
 
-            predictions_dict[int(sent_test)] = [int(sent_test), tech_train, "test", round(pred, 2), round((pred - actual), 2), round(actual, 2)]
+            predictions_dict[int(sent_test)] = [int(sent_test), tech_train, "test", round(pred, 2), round(percentage_error(pred, actual), 4), round(actual, 2)]
 
         list_predictions[tech_train] = predictions_dict
 
@@ -112,13 +143,12 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
         data_tech = formatted_predictions[tech]
         columns_tech = [tech, tech + " Error"]
         data_tech = np.array(data_tech)
-        df = pd.DataFrame(data_tech.T, columns_tech).T
+        df_test = pd.DataFrame(data_tech.T, columns_tech).T
 
         list_columns.extend(columns_tech)
-        list_dfs.append(df)
+        list_dfs.append(df_test)
 
     result = pd.concat(list_dfs, axis=1)
     result.to_excel("results.xlsx", index=False)
 
-    export_data_to_sheets(result, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME)
-
+    # export_data_to_sheets(result, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME)

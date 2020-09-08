@@ -6,7 +6,7 @@ import random
 import time
 
 import tqdm
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor, BaggingRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
@@ -47,10 +47,14 @@ from util.aux_function import print_time
 # }
 
 REGRESSION_MODELS = {
-    # "random_forest_5000": RandomForestRegressor(n_estimators=5000, n_jobs=8),
-    # "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 100,), max_iter=1000),
-    # "adaboost": AdaBoostRegressor(),
-    # "bagging": BaggingRegressor(),
+    "random_forest_5000": RandomForestRegressor(n_estimators=5000, n_jobs=8, max_depth=3, max_leaf_nodes=10),
+    "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 50,),
+                                max_iter=200,
+                                validation_fraction=0.2,
+                                early_stopping=True,
+                                activation="relu"),
+    "adaboost": AdaBoostRegressor(),
+    "bagging": BaggingRegressor(),
     "gradient_boosting": GradientBoostingRegressor()
 }
 
