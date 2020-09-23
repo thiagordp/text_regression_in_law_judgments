@@ -6,6 +6,7 @@ import glob
 import pandas as pd
 import tqdm
 
+from pre_processing.text_pre_processing import process_text
 from util.path_constants import *
 from util.value_contants import CLASSE_DICT, GET_INDIVIDUAL_VALUES
 
@@ -46,7 +47,8 @@ def merge_databases():
 
     last_class = ""
     last_num = "0"
-    for index, row in attributes_df.iterrows():
+
+    for index, row in tqdm.tqdm(attributes_df.iterrows()):
         num_judgement = row["Sentença"]
         jec_class = row["Julgamento"]
 
@@ -63,12 +65,13 @@ def merge_databases():
             if int(jec_judge[0]) == int(num_judgement) and \
                     jec_judge[1] == jec_class and \
                     (int(last_num) != int(num_judgement) or last_class != jec_class):
-                final_data.append([int(num_judgement), jec_class, indenizacao, jec_judge[2]])
+                processed_text = process_text(jec_judge[2], remove_stopwords=True, stemming=False)
+                final_data.append([int(num_judgement), jec_class, indenizacao, processed_text])
 
                 break
         last_class = jec_class
         last_num = num_judgement
 
     final_df = pd.DataFrame(data=final_data, columns=["judgement", "jec_class", "indenizacao", "sentenca"])
-    final_df.to_csv(MERGE_DATASET)
+    final_df.to_csv(PROCESSED_DATASET_W_SW)
     # print(num_judgement, jec_class, indenizacao)

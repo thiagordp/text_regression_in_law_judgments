@@ -1,22 +1,23 @@
+"""
+@description
+    Binary BOW
+@author Thiago Raulino Dal Pont
+"""
+
 import time
-
 import numpy as np
-import tqdm
-from sklearn.decomposition import PCA
-from sklearn.feature_extraction.text import TfidfVectorizer
 
-from pre_processing.text_pre_processing import process_text
+from sklearn.decomposition import PCA
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 def document_vector(corpus, dim=0, remove_stopwords=True, stemming=False):
-    print("TF-IDF BOW Document Vector")
+    print("Binary BOW Document Vector")
+
     time.sleep(0.2)
     processed_corpus = list(corpus)
-    # for doc in tqdm.tqdm(corpus):
-    #     proc = process_text(doc, remove_stopwords=remove_stopwords, stemming=stemming)
-    #     processed_corpus.append(proc)
 
-    vectorizer = TfidfVectorizer(ngram_range=(1, 4))
+    vectorizer = CountVectorizer(binary=True, ngram_range=(1, 4))
     x = vectorizer.fit_transform(processed_corpus).toarray()
     feature_names = vectorizer.get_feature_names()
 

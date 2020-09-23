@@ -11,7 +11,9 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 def test_representation():
-    test_representations.test_bow_tf()
+    test_representations.test_tf_feature_selection()
+    test_representations.test_tf_predictions()
+    # test_representations.test_bow_tf()
     # test_representations.test_bow_tf_idf()
     # test_representations.test_embeddings_cnn()
 

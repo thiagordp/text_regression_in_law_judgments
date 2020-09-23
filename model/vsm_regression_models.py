@@ -5,14 +5,14 @@
 import random
 import time
 
-import tqdm
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor, BaggingRegressor
-from sklearn.linear_model import LinearRegression
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.linear_model import LinearRegression, ElasticNet, SGDRegressor, Ridge
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.utils._testing import ignore_warnings
 
-from util.aux_function import print_time
 
 # REGRESSION_MODELS = {
 # "random_forest_5": RandomForestRegressor(n_estimators=5, n_jobs=8),
@@ -47,30 +47,65 @@ from util.aux_function import print_time
 # }
 
 REGRESSION_MODELS = {
-    "random_forest_5000": RandomForestRegressor(n_estimators=5000, n_jobs=8, max_depth=3, max_leaf_nodes=10),
-    "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 50,),
+    "decision_tree": DecisionTreeRegressor(max_depth=4, max_leaf_nodes=50),
+    "linear_regression": LinearRegression(n_jobs=8),
+    "elastic_net": ElasticNet(),
+    "ridge": Ridge(),
+    "sgd_regressor": SGDRegressor(),
+    "random_forest_100": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=4, max_leaf_nodes=50),
+    "random_forest_500": RandomForestRegressor(n_estimators=500, n_jobs=8, max_depth=4, max_leaf_nodes=50),
+    "random_forest_1000": RandomForestRegressor(n_estimators=1000, n_jobs=8, max_depth=4, max_leaf_nodes=50),
+    "random_forest_2500": RandomForestRegressor(n_estimators=2500, n_jobs=8, max_depth=4, max_leaf_nodes=50),
+    "random_forest_5000": RandomForestRegressor(n_estimators=5000, n_jobs=8, max_depth=4, max_leaf_nodes=50),
+    "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 100,),
                                 max_iter=200,
                                 validation_fraction=0.2,
                                 early_stopping=True,
                                 activation="relu"),
-    "adaboost": AdaBoostRegressor(),
-    "bagging": BaggingRegressor(),
-    "gradient_boosting": GradientBoostingRegressor()
+    "mlp_100": MLPRegressor(hidden_layer_sizes=(100,),
+                            max_iter=200,
+                            validation_fraction=0.2,
+                            early_stopping=True,
+                            activation="relu"),
+    "mlp_200": MLPRegressor(hidden_layer_sizes=(200,),
+                            max_iter=200,
+                            validation_fraction=0.2,
+                            early_stopping=True,
+                            activation="relu"),
+    "mlp_200_100_50": MLPRegressor(hidden_layer_sizes=(200, 100, 50,),
+                                   max_iter=200,
+                                   validation_fraction=0.2,
+                                   early_stopping=True,
+                                   activation="relu"),
+    "mlp_1000_100": MLPRegressor(hidden_layer_sizes=(1000, 100,),
+                                 max_iter=200,
+                                 validation_fraction=0.2,
+                                 early_stopping=True,
+                                 activation="relu"),
+    "svr_rbf": SVR(C=1.0, epsilon=0.2, kernel="rbf"),
+    "svr_linear": SVR(C=1.0, epsilon=0.2, kernel="linear"),
+    "svr_sigmoid": SVR(C=1.0, epsilon=0.2, kernel="sigmoid"),
+    "svr_poly_2": SVR(C=1.0, epsilon=0.2, kernel="poly", degree=2),
+    "svr_poly_3": SVR(C=1.0, epsilon=0.2, kernel="poly", degree=3),
+    "svr_poly_4": SVR(C=1.0, epsilon=0.2, kernel="poly", degree=5),
+    "adaboost": AdaBoostRegressor(n_estimators=100, learning_rate=0.1),
+    "bagging": BaggingRegressor(n_estimators=100, n_jobs=8, oob_score=True),
+    "gradient_boosting": GradientBoostingRegressor(random_state=int(time.time()) % (2 ** 32) - 1)
 }
 
 
+@ignore_warnings(category=ConvergenceWarning)
 def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech_representation):
     results_test = list()
     results_train = list()
-    print("Training Regressors")
+    # print("Training Regressors")
     time.sleep(0.5)
 
     for key in REGRESSION_MODELS.keys():
-        print("Training", key)
-        print_time()
+        # print("Training", key)
         time.sleep(1)
 
-        for i in tqdm.tqdm(range(1)):
+        for i in range(1):
             model = REGRESSION_MODELS[key]
 
             model.random_state = random.randint(1, 2 ** 32 - 1)
@@ -89,7 +124,7 @@ def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech
 
 
 def linear_regression(x_train, y_train, x_test, y_test):
-    print("Regressor")
+    # print("Regressor")
     model = LinearRegression()
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
@@ -98,7 +133,7 @@ def linear_regression(x_train, y_train, x_test, y_test):
 
 
 def svm_regression(x_train, y_train, x_test, y_test):
-    print("SVR")
+    # print("SVR")
 
     model = SVR(C=1.0, epsilon=0.2)
     model.fit(x_train, y_train)

@@ -19,7 +19,37 @@ def process_row_metric(row):
     r2_score = metrics.r2_score(y_test, y_pred)
     mae = metrics.mean_absolute_error(y_test, y_pred)
 
-    return [key, np.round(mse, 2), np.round(rmse, 2), np.round(r2_score, 4), np.round(mae, 2)]
+    return [key, mse, rmse, r2_score, mae]
+
+
+def get_cross_validation_average(result_list):
+    new_list = list()
+
+    new_results = list()
+    for fold in result_list:
+        for row in fold:
+            new_results.append(row)
+
+    df = pd.DataFrame(new_results, columns=["tech", "rmse_test", "rmse_train", "rmse_ratio",
+                                            "r2_train", "r2_test", "r2_ratio",
+                                            "mae_train", "mae_test", "mae_ratio", "k"])
+    list_tech = list(df["tech"].unique())
+
+    for tech in list_tech:
+        rmse_test = np.mean(df[df["tech"] == tech]["rmse_test"])
+        rmse_train = np.mean(df[df["tech"] == tech]["rmse_train"])
+        rmse_ratio = np.mean(df[df["tech"] == tech]["rmse_ratio"])
+        r2_test = np.mean(df[df["tech"] == tech]["r2_test"])
+        r2_train = np.mean(df[df["tech"] == tech]["r2_train"])
+        r2_ratio = np.mean(df[df["tech"] == tech]["r2_ratio"])
+        mae_test = np.mean(df[df["tech"] == tech]["mae_test"])
+        mae_train = np.mean(df[df["tech"] == tech]["mae_train"])
+        mae_ratio = np.mean(df[df["tech"] == tech]["mae_ratio"])
+        k = round(np.mean(df[df["tech"] == tech]["k"]))
+
+        new_list.append([tech, rmse_train, rmse_test, rmse_ratio, r2_train, r2_test, r2_ratio, mae_train, mae_test, mae_ratio, k])
+
+    return new_list
 
 
 def percentage_error(y_pred, y_test):
@@ -37,14 +67,51 @@ def compare_results(metrics_train, metrics_test):
     techs.extend(list(metrics_test["algorithm"]))
 
     techs = set(techs)
-
+    results = list()
     for tech in techs:
         m_train = metrics_train[metrics_train["algorithm"] == tech]
         m_test = metrics_test[metrics_test["algorithm"] == tech]
+
         rmse_train = float(np.mean(m_train["rmse"]))
         rmse_test = float(np.mean(m_test["rmse"]))
+        rmse_ratio = (rmse_test / rmse_train) - 1
+        r2_train = float(np.mean(m_train["r2"]))
+        r2_test = float(np.mean(m_test["r2"]))
+        r2_ratio = (r2_test / r2_train) - 1
+        mae_train = float(np.mean(m_train["mae"]))
+        mae_test = float(np.mean(m_test["mae"]))
+        mae_ratio = (mae_test / mae_train) - 1
 
-        print(tech, "\t", round(rmse_test, 2), round(rmse_train, 2), round((rmse_test / rmse_train) - 1, 5))
+        results.append([tech, rmse_train, rmse_test, rmse_ratio, r2_train, r2_test, r2_ratio, mae_train, mae_test, mae_ratio])
+
+    return results
+
+
+def overfitting_evaluation(results_train, results_test):
+    metrics_test = list()
+    metrics_train = list()
+
+    for row in results_test:
+        metrics_test.append(process_row_metric(row))
+    for row in results_train:
+        metrics_train.append(process_row_metric(row))
+    columns = ["algorithm", "mse", "rmse", "r2", "mae"]
+
+    df_test = pd.DataFrame(columns=columns, data=metrics_test)
+    df_train = pd.DataFrame(columns=columns, data=metrics_train)
+
+    return compare_results(df_train, df_test)
+
+
+def overfitting_prediction(results_train, results_test, sentence_train, sentences_test, description=""):
+    list_predictions = dict()
+    set_techs = set()
+
+    for i in range(len(results_train)):
+        predictions_dict = dict()
+
+
+
 
 
 def batch_evaluation(results_train, results_test, sentence_train, sentences_test, description=""):
@@ -60,7 +127,7 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
     df_test = pd.DataFrame(columns=columns, data=metrics_test)
     df_train = pd.DataFrame(columns=columns, data=metrics_train)
 
-    compare_results(df_train, df_test)
+    # compare_results(df_train, df_test)
 
     filename = "data/regression_metrics_test_" + str(datetime.datetime.today()).replace(":", "-").replace(".", "-") + "_" + description + ".csv"
     df_test.to_csv(filename.replace(" ", "_"))

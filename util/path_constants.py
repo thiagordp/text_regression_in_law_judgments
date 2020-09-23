@@ -28,7 +28,7 @@ JEC_CLASS_PATHS = [
 # Moral Damage Values Dataset
 #
 DAMAGE_VALUES_DATASET_PATH = "data/regression_attributes_classes.csv"
-INCLUDE_ZERO_VALUES = True
+INCLUDE_ZERO_VALUES = False
 
 #
 # Merge Dataset
@@ -36,6 +36,7 @@ INCLUDE_ZERO_VALUES = True
 MERGE_DATASET = "data/merge_dataset.csv"
 
 PROCESSED_DATASET = "data/processed_dataset.csv"
+PROCESSED_DATASET_W_SW = "data/processed_dataset_w_sw.csv"
 
 # EMBEDDINGS_PATH = "/media/egov/Acer/Experiments/Datasets/law_embeddings_database/embeddings/air_transport/word2vec_cbow_10000000_100.txt"
 # EMBEDDINGS_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/law_embeddings_database/embeddings/general/glove_3500000000_100.txt"
