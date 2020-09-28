@@ -62,9 +62,9 @@ def merge_databases():
         for jec_judge in jec_list:
             # print(num_judgement, jec_class, indenizacao, jec_judge)
 
-            if int(jec_judge[0]) == int(num_judgement) and \
-                    jec_judge[1] == jec_class and \
-                    (int(last_num) != int(num_judgement) or last_class != jec_class):
+            if int(jec_judge[0]) == int(num_judgement):
+                    # jec_judge[1] == jec_class and \
+                    #(int(last_num) != int(num_judgement) or last_class != jec_class):
                 processed_text = process_text(jec_judge[2], remove_stopwords=True, stemming=False)
                 final_data.append([int(num_judgement), jec_class, indenizacao, processed_text])
 

@@ -9,4 +9,3 @@ def test_log_evaluation():
     for repr_path in REPRESENTATIONS:
         log_path = PATH_LOGS + repr_path
 
-        regression_logs_evaluation.process_log(log_path)

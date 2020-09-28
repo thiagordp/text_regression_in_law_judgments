@@ -14,13 +14,13 @@ from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
 
 from evaluation import regression_evaluation
-from evaluation.regression_evaluation import get_cross_validation_average
+from evaluation.regression_evaluation import get_cross_validation_average, overfitting_prediction
 from model import vsm_regression_models, embeddings_regression_models
 from model.feature_selections import bow_feature_selection
 from representation import bow_tf, bow_tf_idf, word_embeddings, bow_binary
 from util.aux_function import print_time
 from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_PATH, INCLUDE_ZERO_VALUES, PROCESSED_DATASET_W_SW
-from util.value_contants import K_BEST_FEATURES_LIST
+from util.value_contants import K_BEST_FEATURES_LIST, SAVE_PREDICTIONS
 
 
 def test_tf_feature_selection():
@@ -46,7 +46,9 @@ def test_tf_feature_selection():
         data.append([label, row])
 
     time.sleep(0.1)
-    std_bow, feature_names = bow_binary.document_vector(x, remove_stopwords=True, stemming=False)
+    # std_bow, feature_names = bow_binary.document_vector(x, remove_stopwords=True, stemming=False)
+    # std_bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
+    std_bow, feature_names = bow_tf_idf.document_vector(x, remove_stopwords=True, stemming=False)
     list_results = list()
 
     for k in K_BEST_FEATURES_LIST:
@@ -58,7 +60,7 @@ def test_tf_feature_selection():
         bow = bow_feature_selection(std_bow, y, k)
         bow = list(bow)
 
-        for repetition in tqdm.tqdm(range(5)):
+        for repetition in tqdm.tqdm(range(1)):
             arr = list()
 
             for i in range(len(sentenca_num)):
@@ -70,13 +72,20 @@ def test_tf_feature_selection():
                           shuffle=True,
                           random_state=int((random.random() * random.random() * time.time())) % 2 ** 32)
             results_cross_val = list()
+
+            sentence_test_list = list()
+            test_predictions_list = list()
+
             for train_ix, test_ix in kfold.split(arr, y):
                 x_train = np.array(arr)[train_ix.astype(int)]
                 x_test = np.array(arr)[test_ix.astype(int)]
                 y_train = np.array(y)[train_ix.astype(int)]
                 y_test = np.array(y)[test_ix.astype(int)]
 
+                sentence_test = [int(row[0]) for row in x_test]
+                sentence_train = [row[0] for row in x_train]
 
+                sentence_test_list.extend(sentence_test)
 
                 x_train = [row[1] for row in x_train]
                 x_test = [row[1] for row in x_test]
@@ -88,8 +97,10 @@ def test_tf_feature_selection():
                     row.append(k)
 
                 results_cross_val.append(dict_results)
+                test_predictions_list.extend(test_predictions)
 
-
+            if SAVE_PREDICTIONS:
+                overfitting_prediction(sentence_test_list, test_predictions_list)
             list_results.extend(get_cross_validation_average(results_cross_val))
 
         # regression_evaluation.batch_evaluation(train_predictions, test_predictions, sentence_train, sentence_test, description="tf")
@@ -97,8 +108,8 @@ def test_tf_feature_selection():
         df = pd.DataFrame(list_results, columns=["tech", "rmse_test", "rmse_train", "rmse_ratio",
                                                  "r2_train", "r2_test", "r2_ratio",
                                                  "mae_train", "mae_test", "mae_ratio", "k"])
-        df.to_csv("data/overfitting/results_regression_k_100_1000.csv")
-        df.to_excel("data/overfitting/results_regression_k_100_1000.xlsx")
+        df.to_csv("data/overfitting/bigger/results_regression_k_100_1000.csv")
+        df.to_excel("data/overfitting/bigger/results_regression_k_100_1000.xlsx")
 
 
 def test_bow_tf():

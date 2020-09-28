@@ -103,15 +103,29 @@ def overfitting_evaluation(results_train, results_test):
     return compare_results(df_train, df_test)
 
 
-def overfitting_prediction(results_train, results_test, sentence_train, sentences_test, description=""):
-    list_predictions = dict()
-    set_techs = set()
+def overfitting_prediction(sentence_test_list, test_predictions_list):
+    dict_predictions = dict()
 
-    for i in range(len(results_train)):
-        predictions_dict = dict()
+    dict_predictions["sentence"] = list(sentence_test_list)
 
+    for test_predictions in test_predictions_list:
+        tech = test_predictions[0]
+        actual = test_predictions[1]
+        pred = test_predictions[2]
 
+        if tech in dict_predictions.keys():
+            dict_predictions[tech].extend(pred)
+        else:
+            dict_predictions[tech] = list(pred)
 
+    df = pd.DataFrame(dict_predictions)
+    print(df.describe())
+    print(df.columns)
+    print(df.head(10))
+
+    file_name = "data/overfitting/predictions_binary_k_150.csv"
+    df.to_csv(file_name, index=False)
+    df.to_excel(file_name.replace(".csv", ".xlsx"), index=False)
 
 
 def batch_evaluation(results_train, results_test, sentence_train, sentences_test, description=""):

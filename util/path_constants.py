@@ -8,20 +8,25 @@ PROJECT_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Projects/tex
 #
 # Original Judgements
 #
-JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/merge_sem_dispositivo/"
+#JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/merge_sem_dispositivo/"
+
+JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/txts_atualizados_sd/"
 # Classes
 PROCEDENTE = "procedente/"
 IMPROCEDENTE = "improcedente/"
 PARC_PROCEDENTE = "parcialmente_procedente/"
 EXTINCAO = "extincao/"
 
-JEC_CLASS_PATHS = [
-    PROCEDENTE,
-    IMPROCEDENTE,
-    PARC_PROCEDENTE,
-    EXTINCAO
-]
+# JEC_CLASS_PATHS = [
+#     PROCEDENTE,
+#     IMPROCEDENTE,
+#     PARC_PROCEDENTE,
+#     EXTINCAO
+# ]
 
+JEC_CLASS_PATHS = [
+    "novos/"
+]
 
 
 #
