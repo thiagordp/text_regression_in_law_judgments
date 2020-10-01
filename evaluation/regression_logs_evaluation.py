@@ -63,24 +63,6 @@ def get_mean_metrics(values_dict):
     return final_values
 
 
-def plot_metrics(type, mean_dict):
-    x = list(mean_dict.keys())
-
-    mse = list()
-    rmse = list()
-    r2 = list()
-    mae = list()
-
-    for alg in mean_dict.keys():
-        mse.append(mean_dict[alg][0])
-        rmse.append(mean_dict[alg][1])
-        r2.append(mean_dict[alg][2])
-        mae.append(mean_dict[alg][3])
-
-    plt.plot(x, rmse)
-    plt.show()
-
-
 def process_log(log_path):
     print("-------------------------------------------------")
     print(log_path)
@@ -105,8 +87,6 @@ def process_log(log_path):
         values_dict[alg] = values
 
     mean_dict = get_mean_metrics(values_dict)
-
-    plot_metrics(log_path, mean_dict)
 
 
 def process_overfitting_log(log_path, description=""):
@@ -142,18 +122,21 @@ def process_overfitting_log(log_path, description=""):
         dict_rmse_test[tech] = rmse_test_results
         dict_mae_test[tech] = mae_test_results
 
-    plot_metrics_dict(dict_r2_test, "r2_test", "R² Test", description)
-    plot_metrics_dict(dict_rmse_test, "rmse_test", "RMSE Test", description)
-    plot_metrics_dict(dict_mae_test, "mae_test", "MAE Test", description)
+    plot_metrics(dict_r2_test, "r2_test", "R² Test", description)
+    plot_metrics(dict_rmse_test, "rmse_test", "RMSE Test", description)
+    plot_metrics(dict_mae_test, "mae_test", "MAE Test", description)
 
 
-def plot_metrics_dict(dict_data, metric, metrics_desc, description):
-    plt.figure(figsize=(10, 7))
+def plot_metrics(dict_data, metric, metrics_desc, description):
+    plt.figure(figsize=(15, 10))
     plt.grid(linestyle=':')
 
     keys = sorted(dict_data.keys())
 
+    markers = ["s", "X", "D", "o", "v", "^", "<", ">", "8"]
+    i = -1
     for key in keys:
+        i += 1
         if key in IGNORE_TECHS:
             continue
 
@@ -163,19 +146,21 @@ def plot_metrics_dict(dict_data, metric, metrics_desc, description):
         ks = list([str(x) for x in df["k"]])
         rmses = list(df[metric])
 
-        plt.plot(ks, rmses, "-s", label=key, linewidth=3, markersize=8)
+        marker = markers[i % len(markers)]
+        plt.plot(ks, rmses, "-" + marker, label=key, linewidth=3, markersize=10)
 
-    plt.xlabel('k', fontsize=15)
-    plt.ylabel(metrics_desc.split()[0], fontsize=15)
+    plt.xlabel('k', fontsize=18)
+    plt.ylabel(metrics_desc.split()[0], fontsize=18)
     title_rmse = metrics_desc
 
     if description != "":
         title_rmse += " - " + description
 
-    plt.title(title_rmse, fontsize=15)
-    plt.legend(bbox_to_anchor=(0.5,-0.1),ncol=5, loc='upper center', borderaxespad=0.)
+    plt.title(title_rmse, fontsize=18)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=14)
 
     plt.tight_layout()
     plt.savefig("test.png")
     plt.show()
-

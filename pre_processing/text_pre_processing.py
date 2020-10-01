@@ -5,8 +5,8 @@
 import re
 
 import nltk
+import pandas as pd
 from nltk.corpus import stopwords
-
 from nltk.tokenize import word_tokenize
 
 nltk.download('stopwords')
@@ -68,3 +68,16 @@ def process_text(text, remove_stopwords=True, stemming=False):
         text = _stemming(text)
 
     return text
+
+
+def process_judge(judges, type_judges):
+    judges = [str(judge_name).strip().lower().replace(" ", "_") for judge_name in judges]
+    type_judges = [str(judge_type).strip().lower().replace(" ", "_") for judge_type in type_judges]
+
+    judges = pd.get_dummies(judges, prefix='juiz')
+    type_judges = pd.get_dummies(type_judges, prefix="tipo_juiz")
+
+    judges = [list(judge) for judge in list(judges.to_numpy())]
+    type_judges = [list(type_judge) for type_judge in list(type_judges.to_numpy())]
+
+    return judges, type_judges

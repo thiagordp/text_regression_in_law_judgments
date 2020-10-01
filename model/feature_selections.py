@@ -11,5 +11,5 @@ def bow_feature_selection(bow, y, k):
 
     test = SelectKBest(score_func=f_regression, k=k)
     bow = test.fit_transform(bow, y)
-
+    bow = [list(row) for row in bow]
     return bow

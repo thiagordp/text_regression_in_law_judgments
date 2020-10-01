@@ -17,16 +17,17 @@ from evaluation import regression_evaluation
 from evaluation.regression_evaluation import get_cross_validation_average, overfitting_prediction
 from model import vsm_regression_models, embeddings_regression_models
 from model.feature_selections import bow_feature_selection
+from pre_processing.text_pre_processing import process_judge
 from representation import bow_tf, bow_tf_idf, word_embeddings, bow_binary
 from util.aux_function import print_time
 from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_PATH, INCLUDE_ZERO_VALUES, PROCESSED_DATASET_W_SW
 from util.value_contants import K_BEST_FEATURES_LIST, SAVE_PREDICTIONS
 
 
-def test_tf_feature_selection():
+def test_tf_feature_selection(tech):
     print("===============================================================================")
     print("Train / Test ")
-    raw_data_df = pd.read_csv(PROCESSED_DATASET_W_SW, index_col=0)
+    raw_data_df = pd.read_csv(PROCESSED_DATASET_W_SW)
     raw_data_df.dropna(inplace=True)
 
     if not INCLUDE_ZERO_VALUES:
@@ -34,21 +35,31 @@ def test_tf_feature_selection():
 
     # Representation
     x = [row for row in raw_data_df["sentenca"].values]
+    # dates = [row for row in raw_data_df["data"].values]
+    # judges = [row for row in raw_data_df["judges"].values]
     sentenca_num = [str(row) for row in raw_data_df["judgement"].values]
+
+    days_list = list(raw_data_df["dia"])
+    months_list = list(raw_data_df["mes"])
+    years_list = list(raw_data_df["ano"])
+    day_week_list = list(raw_data_df["dia_semana"])
+    judges = list(raw_data_df["juiz"])
+    type_judges = list(raw_data_df["tipo_juiz"])
+
+    judges, type_judges = process_judge(judges, type_judges)
+
 
     print(raw_data_df["indenizacao"].unique())
     y = raw_data_df["indenizacao"].values
 
-    data = list()
-    for i in tqdm.tqdm(range(len(x))):
-        row = x[i]
-        label = y[i]
-        data.append([label, row])
-
     time.sleep(0.1)
-    # std_bow, feature_names = bow_binary.document_vector(x, remove_stopwords=True, stemming=False)
-    # std_bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
-    std_bow, feature_names = bow_tf_idf.document_vector(x, remove_stopwords=True, stemming=False)
+    if tech == "TF":
+        std_bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
+    elif tech == "TF-IDF":
+        std_bow, feature_names = bow_tf_idf.document_vector(x, remove_stopwords=True, stemming=False)
+    else:  # if tech == "Binary"
+        std_bow, feature_names = bow_binary.document_vector(x, remove_stopwords=True, stemming=False)
+
     list_results = list()
 
     for k in K_BEST_FEATURES_LIST:
@@ -58,9 +69,23 @@ def test_tf_feature_selection():
         print("K", k)
 
         bow = bow_feature_selection(std_bow, y, k)
+
         bow = list(bow)
 
-        for repetition in tqdm.tqdm(range(1)):
+        # Concatenate new features to bag of words
+        for i in range(len(bow)):
+            day = days_list[i]
+            month = months_list[i]
+            year = years_list[i]
+            day_week = day_week_list[i]
+            judge = judges[i]
+            type_judge = type_judges[i]
+
+            bow[i].extend([day, month, year, day_week])
+            bow[i].extend(judge)
+            bow[i].extend(type_judge)
+
+        for repetition in tqdm.tqdm(range(5)):
             arr = list()
 
             for i in range(len(sentenca_num)):
@@ -108,8 +133,14 @@ def test_tf_feature_selection():
         df = pd.DataFrame(list_results, columns=["tech", "rmse_test", "rmse_train", "rmse_ratio",
                                                  "r2_train", "r2_test", "r2_ratio",
                                                  "mae_train", "mae_test", "mae_ratio", "k"])
-        df.to_csv("data/overfitting/bigger/results_regression_k_100_1000.csv")
-        df.to_excel("data/overfitting/bigger/results_regression_k_100_1000.xlsx")
+
+        file_name = "data/overfitting/bigger/results_regression_k_100_1000_&_@.#"
+        file_name = file_name.replace("@", str(tech).lower())
+        file_name = file_name.replace("&", "attr_wo_fs")
+        # file_name = file_name.replace("&", "attr_w_fs")
+
+        df.to_csv(file_name.replace("#", "csv"))
+        df.to_excel(file_name.replace("#", "xlsx"))
 
 
 def test_bow_tf():
@@ -238,7 +269,3 @@ def test_embeddings_cnn():
             models_predictions = embeddings_regression_models.simple_cnn_model(x_train, y_train, x_test, y_test, x_val, y_val, vocabulary_size, emb_len, embeddings_matrix,
                                                                                emb_path)
             regression_evaluation.batch_evaluation(models_predictions, independent_vars=100, description="cnn")
-
-
-def test_tf_predictions():
-    x = 0

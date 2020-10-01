@@ -11,7 +11,9 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 def test_representation():
-    test_representations.test_tf_feature_selection()
+    test_representations.test_tf_feature_selection("TF")
+    test_representations.test_tf_feature_selection("TF-IDF")
+    test_representations.test_tf_feature_selection("Binary")
     # test_representations.test_tf_predictions()
     # test_representations.test_bow_tf()
     # test_representations.test_bow_tf_idf()
@@ -33,18 +35,18 @@ def test_evaluations():
 def test_log():
     path_log = "data/overfitting/bigger/"
 
-    tf_path = path_log + "results_regression_k_100_1000_tf.csv"
-    tf_idf_path = path_log + "results_regression_k_100_1000_tf_idf.csv"
-    binary_path = path_log + "results_regression_k_100_1000_tf_binary.csv"
+    tf_path = path_log + "results_regression_k_100_1000_attr_wo_fs_tf.csv"
+    #tf_idf_path = path_log + "results_regression_k_100_1000_tf_idf.csv"
+    #binary_path = path_log + "results_regression_k_100_1000_tf_binary.csv"
 
     process_overfitting_log(tf_path, "TF")
-    process_overfitting_log(tf_idf_path, "TF-IDF")
-    process_overfitting_log(binary_path, "TF-Binary")
+    #process_overfitting_log(tf_idf_path, "TF-IDF")
+    #process_overfitting_log(binary_path, "TF-Binary")
 
 
 def main():
     # test_pre_processings()
-    # test_representation()
+    #test_representation()
     test_log()
 
 
