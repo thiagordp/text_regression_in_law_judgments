@@ -5,13 +5,12 @@
 import random
 import time
 
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, BaggingRegressor, AdaBoostRegressor
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.linear_model import LinearRegression, Ridge, SGDRegressor, ElasticNet
+import numpy as np
+import xgboost as xgb
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, BaggingRegressor, AdaBoostRegressor, VotingRegressor
+from sklearn.linear_model import ElasticNet
 from sklearn.neural_network import MLPRegressor
-from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.utils._testing import ignore_warnings
 
 # REGRESSION_MODELS = {
 # "random_forest_5": RandomForestRegressor(n_estimators=5, n_jobs=8),
@@ -49,12 +48,23 @@ REGRESSION_MODELS = {
     "decision_tree": DecisionTreeRegressor(max_depth=4, max_leaf_nodes=50),
     # "linear_regression": LinearRegression(n_jobs=8),
     "elastic_net": ElasticNet(),
-    "ridge": Ridge(),
+    # "ridge": Ridge(),
     # "sgd_regressor": SGDRegressor(),
-    "random_forest_100_4_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=4, max_leaf_nodes=50),
-    "random_forest_100_5_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=5, max_leaf_nodes=50),
-    "random_forest_100_4_100": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=4, max_leaf_nodes=100),
-    "random_forest_100_5_100": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=5, max_leaf_nodes=100),
+    # "random_forest_100_04_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=4, max_leaf_nodes=50,
+    # random_state=int(time.time_ns()) % 32),
+    # "random_forest_100_5_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=5, max_leaf_nodes=50),
+    # "random_forest_100_06_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=6, max_leaf_nodes=50,
+    # random_state=int(random.random() * time.time_ns()) % 32),
+    # "random_forest_100_7_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=7, max_leaf_nodes=50),
+    # "random_forest_100_08_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=8, max_leaf_nodes=50,
+    # random_state=int(random.random() * time.time_ns()) % 32),
+    # "random_forest_100_9_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=9, max_leaf_nodes=50),
+    "random_forest_100_10_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=10, max_leaf_nodes=50,
+                                                     random_state=int(time.time_ns()) % 32),
+    # "huber": HuberRegressor(),
+    # "ransac": RANSACRegressor(),
+    # "theil_sen": TheilSenRegressor(),
+    # "passive_agressive": PassiveAggressiveRegressor(),
     # "random_forest_1000": RandomForestRegressor(n_estimators=1000, n_jobs=8, max_depth=4, max_leaf_nodes=50),
     # "random_forest_5000": RandomForestRegressor(n_estimators=5000, n_jobs=8, max_depth=4, max_leaf_nodes=50),
     "mlp_200_100": MLPRegressor(hidden_layer_sizes=(200, 100,),
@@ -62,30 +72,40 @@ REGRESSION_MODELS = {
                                 validation_fraction=0.2,
                                 early_stopping=True,
                                 activation="relu"),
-    # "mlp_100": MLPRegressor(hidden_layer_sizes=(100,),
-    #                         max_iter=200,
-    #                         validation_fraction=0.2,
-    #                         early_stopping=True,
-    #                         activation="relu"),
-    # "mlp_200": MLPRegressor(hidden_layer_sizes=(200,),
-    #                         max_iter=200,
-    #                         validation_fraction=0.2,
-    #                         early_stopping=True,
-    #                         activation="relu"),
+    "mlp_100": MLPRegressor(hidden_layer_sizes=(100,),
+                            max_iter=200,
+                            validation_fraction=0.2,
+                            early_stopping=True,
+                            activation="relu"),
+    "mlp_200": MLPRegressor(hidden_layer_sizes=(200,),
+                            max_iter=200,
+                            validation_fraction=0.2,
+                            early_stopping=True,
+                            activation="relu"),
     "mlp_200_100_50": MLPRegressor(hidden_layer_sizes=(200, 100, 50,),
                                    max_iter=200,
                                    validation_fraction=0.2,
                                    early_stopping=True,
+                                   shuffle=True,
                                    activation="relu"),
-    "mlp_100_50_25": MLPRegressor(hidden_layer_sizes=(100, 50, 25,),
-                                  max_iter=200,
-                                  validation_fraction=0.2,
-                                  early_stopping=True,
-                                  activation="relu"),
+    # "mlp_100_50_25": MLPRegressor(hidden_layer_sizes=(100, 50, 25,),
+    #                               max_iter=200,
+    #                               validation_fraction=0.2,
+    #                               early_stopping=True,
+    #                               shuffle=True,
+    #                               activation="relu"),
+    "mlp_400_200_100_50": MLPRegressor(hidden_layer_sizes=(400, 200, 100, 50,),
+                                       max_iter=200,
+                                       validation_fraction=0.2,
+                                       early_stopping=True,
+                                       shuffle=True,
+                                       activation="relu"),
     "mlp_400_200_100": MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
                                     max_iter=200,
                                     validation_fraction=0.2,
                                     early_stopping=True,
+                                    shuffle=True,
+
                                     activation="relu"),
     # "mlp_1000_100": MLPRegressor(hidden_layer_sizes=(1000, 100,),
     #                              max_iter=200,
@@ -94,8 +114,50 @@ REGRESSION_MODELS = {
     #                              activation="relu"),
     "adaboost": AdaBoostRegressor(n_estimators=100, learning_rate=0.1),
     "bagging": BaggingRegressor(n_estimators=100, n_jobs=8, oob_score=True),
-    "gradient_boosting": GradientBoostingRegressor(random_state=int(time.time()) % (2 ** 32) - 1)
+    "gradient_boosting": GradientBoostingRegressor(random_state=int(time.time()) % (2 ** 32) - 1),
+    "xgboost": xgb.XGBRegressor(),
+    "xgboost_rf": xgb.XGBRFRegressor(),
 }
+
+REGRESSION_MODELS["emsemble_voting_bg_mlp_gd"] = VotingRegressor(n_jobs=8, estimators=[
+    ('bagging', REGRESSION_MODELS["bagging"]),
+    ('mlp', REGRESSION_MODELS["mlp_400_200_100_50"]),
+    ('gd', REGRESSION_MODELS["gradient_boosting"])
+])
+
+REGRESSION_MODELS["emsemble_voting_en_mlp_mlp"] = VotingRegressor(n_jobs=8, estimators=[
+    ('en', REGRESSION_MODELS["elastic_net"]),
+    ('mlp', REGRESSION_MODELS["mlp_400_200_100_50"]),
+    ('mlp2', REGRESSION_MODELS["mlp_400_200_100"])
+])
+
+REGRESSION_MODELS["adaboost_mlp_200"] = AdaBoostRegressor(random_state=int(time.time()) % (2 ** 32) - 1,
+                                                          base_estimator=REGRESSION_MODELS["mlp_200"])
+
+REGRESSION_MODELS["adaboost_mlp_100"] = AdaBoostRegressor(random_state=int(time.time()) % (2 ** 32) - 1,
+                                                          base_estimator=REGRESSION_MODELS["mlp_100"])
+
+REGRESSION_MODELS["adaboost_mlp_200_100"] = AdaBoostRegressor(random_state=int(time.time()) % (2 ** 32) - 1,
+                                                              base_estimator=REGRESSION_MODELS["mlp_200_100"])
+
+REGRESSION_MODELS["adaboost_mlp_200_100_50"] = AdaBoostRegressor(random_state=int(time.time()) % (2 ** 32) - 1,
+                                                                 base_estimator=REGRESSION_MODELS["mlp_200_100_50"])
+
+REGRESSION_MODELS["bagging_mlp_200"] = BaggingRegressor(random_state=int(time.time()) % (2 ** 32) - 1,
+                                                        base_estimator=REGRESSION_MODELS["mlp_200"],
+                                                        n_jobs=8)
+
+REGRESSION_MODELS["bagging_mlp_100"] = BaggingRegressor(random_state=int(time.time()) % (2 ** 32) - 1,
+                                                        base_estimator=REGRESSION_MODELS["mlp_100"],
+                                                        n_jobs=8)
+
+REGRESSION_MODELS["bagging_mlp_200_100"] = BaggingRegressor(random_state=int(time.time()) % (2 ** 32) - 1,
+                                                            base_estimator=REGRESSION_MODELS["mlp_200_100"],
+                                                            n_jobs=8)
+
+REGRESSION_MODELS["bagging_mlp_200_100_50"] = BaggingRegressor(random_state=int(time.time()) % (2 ** 32) - 1,
+                                                               base_estimator=REGRESSION_MODELS["mlp_200_100_50"],
+                                                               n_jobs=8)
 
 
 # REGRESSION_MODELS = {
@@ -110,8 +172,6 @@ REGRESSION_MODELS = {
 #     "gradient_boosting": GradientBoostingRegressor(random_state=int(time.time()) % (2 ** 32) - 1)
 # }
 
-
-@ignore_warnings(category=ConvergenceWarning)
 def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech_representation):
     results_test = list()
     results_train = list()
@@ -126,58 +186,15 @@ def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech
             model = REGRESSION_MODELS[key]
 
             model.random_state = random.randint(1, 2 ** 32 - 1)
-            model.fit(x_train, y_train)
+            model.fit(np.array(x_train), np.array(y_train))
 
-            y_pred = model.predict(x_test)
+            y_pred = model.predict(np.array(x_test))
             results_test.append([key, y_test, y_pred])
 
-            y_pred = model.predict(x_train)
+            y_pred = model.predict(np.array(x_train))
             results_train.append([key, y_train, y_pred])
 
             # if i == 0:
             #     vsm_models_visualization.setup_visualization(key, model, feature_names, tech_representation)
 
     return results_train, results_test
-
-
-def linear_regression(x_train, y_train, x_test, y_test):
-    # print("Regressor")
-    model = LinearRegression()
-    model.fit(x_train, y_train)
-    y_pred = model.predict(x_test)
-
-    return y_test, y_pred
-
-
-def svm_regression(x_train, y_train, x_test, y_test):
-    # print("SVR")
-
-    model = SVR(C=1.0, epsilon=0.2)
-    model.fit(x_train, y_train)
-    y_pred = model.predict(x_test)
-
-    return y_test, y_pred
-
-
-def random_forest(x_train, y_train, x_test, y_test):
-    model = RandomForestRegressor()
-    model.fit(x_train, y_train)
-    y_pred = model.predict(x_test)
-
-    return y_test, y_pred
-
-
-def neural_network(x_train, y_train, x_test, y_test):
-    model = MLPRegressor()
-    model.fit(x_train, y_train)
-    y_pred = model.predict(x_test)
-
-    return y_test, y_pred
-
-
-def decision_tree(x_train, y_train, x_test, y_test):
-    model = DecisionTreeRegressor()
-    model.fit(x_train, y_train)
-    y_pred = model.predict(x_test)
-
-    return y_test, y_pred

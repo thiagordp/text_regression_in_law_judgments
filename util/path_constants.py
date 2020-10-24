@@ -10,7 +10,7 @@ PROJECT_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Projects/tex
 #
 #JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/merge_sem_dispositivo/"
 
-JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/txts_atualizados_sd/"
+JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/txts_atualizados_sd_manual/"
 # Classes
 PROCEDENTE = "procedente/"
 IMPROCEDENTE = "improcedente/"
@@ -41,25 +41,27 @@ INCLUDE_ZERO_VALUES = False
 MERGE_DATASET = "data/merge_dataset.csv"
 
 PROCESSED_DATASET = "data/processed_dataset.csv"
-PROCESSED_DATASET_W_SW = "data/processed_dataset_w_sw.csv"
+PROCESSED_BASE_DATASET = "data/processed_dataset_@stopwords_@stemming.csv"
+PROCESSED_DATASET_WO_STOP = "data/processed_dataset_w_sw.csv"
+PROCESSED_DATASET_W_STOP = "data/processed_dataset_w_stop.csv"
 
 # EMBEDDINGS_PATH = "/media/egov/Acer/Experiments/Datasets/law_embeddings_database/embeddings/air_transport/word2vec_cbow_10000000_100.txt"
 # EMBEDDINGS_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/law_embeddings_database/embeddings/general/glove_3500000000_100.txt"
 
-# EMBEDDINGS_BASE_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/law_embeddings_database/embeddings/"
+EMBEDDINGS_BASE_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/law_embeddings_database/embeddings/"
 # EMBEDDINGS_BASE_PATH = "/media/egov/Acer/Experiments/Datasets/law_embeddings_database/embeddings/"
-EMBEDDINGS_BASE_PATH = "/media/egov/SSD_Files/Experiments/Datasets/law_embeddings_database/embeddings/"
+# EMBEDDINGS_BASE_PATH = "/media/egov/SSD_Files/Experiments/Datasets/law_embeddings_database/embeddings/"
 EMBEDDINGS_LIST = [
-    "air_transport/word2vec_cbow_10000000_100.txt",
-    "air_transport/word2vec_sg_10000000_100.txt",
+    "air_transport/word2vec_cbow_100000000_100.txt",
+    "air_transport/word2vec_sg_100000000_100.txt",
     "air_transport/glove_100000000_100.txt.txt",
-    "air_transport/fasttext_cbow_10000000_100.txt",
-    "air_transport/fasttext_sg_10000000_100.txt",
-    "general/glove_3500000000_100.txt.txt",
-    "general/fasttext_sg_3500000000_100.txt",
-    "general/fasttext_cbow_3500000000_100.txt",
-    "general/word2vec_sg_3500000000_100.txt",
-    "general/word2vec_cbow_3500000000_100.txt",
+    "air_transport/fasttext_cbow_100000000_100.txt",
+    "air_transport/fasttext_sg_100000000_100.txt",
+    # "general/glove_3500000000_100.txt.txt",
+    # "general/fasttext_sg_3500000000_100.txt",
+    # "general/fasttext_cbow_3500000000_100.txt",
+    # "general/word2vec_sg_3500000000_100.txt",
+    # "general/word2vec_cbow_3500000000_100.txt",
 ]
 
 # ============== Contants for log evaluation ============== #

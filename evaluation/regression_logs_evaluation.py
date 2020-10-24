@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+
 COLUMNS = [
     "index",
     "alg",
@@ -32,7 +33,12 @@ IGNORE_TECHS = [
     "random_forest_100",
     "random_forest_1000",
     "svr_linear",
-    "mlp_200_100"
+    "mlp_200_100",
+    "mlp_200_100_50",
+    #"ridge",
+    "random_forest_100_04_50",
+    "random_forest_100_06_50",
+    "random_forest_100_08_50",
 ]
 
 
@@ -95,39 +101,55 @@ def process_overfitting_log(log_path, description=""):
     # print(df.head())
     # print(df.describe())
 
-    k_features = [int(k) for k in df["k"].unique()]
+    k_features = sorted([int(k) for k in df["k"].unique()])
     techs = df["tech"].unique()
 
     dict_rmse_test = dict()
     dict_r2_test = dict()
     dict_mae_test = dict()
+    dict_rmse_ratio = dict()
 
     for tech in techs:
         rmse_test_results = list()
         r2_test_results = list()
         mae_test_results = list()
+        rmse_ratio_results = list()
 
         for k in k_features:
             new_df = df[(df["k"] == k) & (df["tech"] == tech)]
 
-            rmse_test = np.mean(new_df["rmse_test"])
+            rmse_test_mean = np.mean(new_df["rmse_test"])
             r2_mean = np.mean(new_df["r2_test"])
             mae_mean = np.mean(new_df["mae_test"])
+            rmse_ratio_mean = np.mean(new_df["rmse_ratio"])
 
-            rmse_test_results.append([k, rmse_test])
+            if k == 5000:
+                print(tech, rmse_test_mean, r2_mean, sep="\t")
+                #print("R2 Test\t", r2_mean)
+
+            rmse_test_results.append([k, rmse_test_mean])
             r2_test_results.append([k, r2_mean])
             mae_test_results.append([k, mae_mean])
+            rmse_ratio_results.append([k, rmse_ratio_mean])
 
         dict_r2_test[tech] = r2_test_results
         dict_rmse_test[tech] = rmse_test_results
         dict_mae_test[tech] = mae_test_results
+        dict_rmse_ratio[tech] = rmse_ratio_results
 
-    plot_metrics(dict_r2_test, "r2_test", "R² Test", description)
-    plot_metrics(dict_rmse_test, "rmse_test", "RMSE Test", description)
-    plot_metrics(dict_mae_test, "mae_test", "MAE Test", description)
+    dest_file = log_path.replace(".csv", "_#.pdf")
+    print(dest_file)
+    plot_metrics(dict_r2_test, dest_file, "r2_test", "R² Test", description, y_range=[0, 0.8])
+    plot_metrics(dict_rmse_test, dest_file, "rmse_test", "RMSE Test", description, y_range=[1500, 3200])
+    plot_metrics(dict_rmse_ratio, dest_file, "rmse_ratio", "Ratio RMSE", description, y_range=[-0.2, 2])
+
+    plot_metrics(dict_mae_test, dest_file, "mae_test", "MAE Test", description, y_range=[500, 3000])
 
 
-def plot_metrics(dict_data, metric, metrics_desc, description):
+def plot_metrics(dict_data, dest_file, metric, metrics_desc, description, y_range=[], x_range=[]):
+
+    dest_file = dest_file.replace("#", metric)
+    print(dest_file)
     plt.figure(figsize=(15, 10))
     plt.grid(linestyle=':')
 
@@ -150,6 +172,9 @@ def plot_metrics(dict_data, metric, metrics_desc, description):
         plt.plot(ks, rmses, "-" + marker, label=key, linewidth=3, markersize=10)
 
     plt.xlabel('k', fontsize=18)
+    if len(y_range) > 0:
+        plt.ylim(top=y_range[1], bottom=y_range[0])
+
     plt.ylabel(metrics_desc.split()[0], fontsize=18)
     title_rmse = metrics_desc
 
@@ -162,5 +187,5 @@ def plot_metrics(dict_data, metric, metrics_desc, description):
     plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=14)
 
     plt.tight_layout()
-    plt.savefig("test.png")
+    plt.savefig(dest_file)
     plt.show()

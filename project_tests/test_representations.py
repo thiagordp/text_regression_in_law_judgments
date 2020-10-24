@@ -1,6 +1,7 @@
 """
 
 """
+import gc
 import random
 import time
 
@@ -16,18 +17,24 @@ from sklearn.model_selection import train_test_split
 from evaluation import regression_evaluation
 from evaluation.regression_evaluation import get_cross_validation_average, overfitting_prediction
 from model import vsm_regression_models, embeddings_regression_models
-from model.feature_selections import bow_feature_selection
+from model.feature_selections import bow_feature_selection, remove_outliers
 from pre_processing.text_pre_processing import process_judge
-from representation import bow_tf, bow_tf_idf, word_embeddings, bow_binary
+from representation import bow_tf, bow_tf_idf, word_embeddings, bow_binary, bow_mean_embeddings
 from util.aux_function import print_time
-from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_PATH, INCLUDE_ZERO_VALUES, PROCESSED_DATASET_W_SW
-from util.value_contants import K_BEST_FEATURES_LIST, SAVE_PREDICTIONS
+from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_PATH, INCLUDE_ZERO_VALUES
+from util.value_contants import K_BEST_FEATURES_LIST, SAVE_PREDICTIONS, INCLUDE_ATTRIBUTES, REMOVE_OUTLIERS, FEATURE_SELECTION
 
 
-def test_tf_feature_selection(tech):
+def test_feature_selection(tech):
     print("===============================================================================")
     print("Train / Test ")
-    raw_data_df = pd.read_csv(PROCESSED_DATASET_W_SW)
+
+    if tech == "AVG-EMB":
+        raw_data_df = pd.read_csv("data/processed_dataset_w_stopwords_wo_stemming.csv")
+    else:
+        raw_data_df = pd.read_csv("data/processed_dataset_wo_stopwords_wo_stemming.csv")
+    print("Processed documents:", raw_data_df.shape[0])
+
     raw_data_df.dropna(inplace=True)
 
     if not INCLUDE_ZERO_VALUES:
@@ -37,7 +44,7 @@ def test_tf_feature_selection(tech):
     x = [row for row in raw_data_df["sentenca"].values]
     # dates = [row for row in raw_data_df["data"].values]
     # judges = [row for row in raw_data_df["judges"].values]
-    sentenca_num = [str(row) for row in raw_data_df["judgement"].values]
+    sentenca_std = [str(row) for row in raw_data_df["judgement"].values]
 
     days_list = list(raw_data_df["dia"])
     months_list = list(raw_data_df["mes"])
@@ -48,32 +55,32 @@ def test_tf_feature_selection(tech):
 
     judges, type_judges = process_judge(judges, type_judges)
 
-
-    print(raw_data_df["indenizacao"].unique())
-    y = raw_data_df["indenizacao"].values
+    std_y = raw_data_df["indenizacao"].values
 
     time.sleep(0.1)
     if tech == "TF":
         std_bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
     elif tech == "TF-IDF":
         std_bow, feature_names = bow_tf_idf.document_vector(x, remove_stopwords=True, stemming=False)
+    elif tech == "AVG-EMB":
+        std_bow, feature_names = bow_mean_embeddings.document_vector(x)
     else:  # if tech == "Binary"
         std_bow, feature_names = bow_binary.document_vector(x, remove_stopwords=True, stemming=False)
 
     list_results = list()
 
-    for k in K_BEST_FEATURES_LIST:
+    list_bow = list(std_bow)
+    print("Total documents:", len(list_bow))
 
-        print("--------------------------------------------")
-        print_time()
-        print("K", k)
+    del std_bow
+    gc.collect()
 
-        bow = bow_feature_selection(std_bow, y, k)
+    # std_bow = [list(row) for row in std_bow]
 
-        bow = list(bow)
-
-        # Concatenate new features to bag of words
-        for i in range(len(bow)):
+    # Concatenate new features to bag of words
+    # Include features before selection
+    if INCLUDE_ATTRIBUTES:
+        for i in range(len(list_bow)):
             day = days_list[i]
             month = months_list[i]
             year = years_list[i]
@@ -81,9 +88,33 @@ def test_tf_feature_selection(tech):
             judge = judges[i]
             type_judge = type_judges[i]
 
-            bow[i].extend([day, month, year, day_week])
-            bow[i].extend(judge)
-            bow[i].extend(type_judge)
+            list_bow[i] = np.append(list_bow[i], [day, month, year, day_week])
+            list_bow[i] = np.append(list_bow[i], judge)
+            list_bow[i] = np.append(list_bow[i], type_judge)
+
+            del judge, type_judge, day, month, year, day_week
+
+        del judges, type_judges, days_list, day_week_list, months_list, years_list
+        gc.collect()
+
+    random.shuffle(K_BEST_FEATURES_LIST)
+
+    for k in K_BEST_FEATURES_LIST:
+
+        print("-" * 150)
+        print_time()
+        print("K", k)
+
+        if FEATURE_SELECTION:
+            bow = bow_feature_selection(list_bow, std_y, k)
+        else:
+            bow = list_bow
+
+        y = std_y
+
+        sentenca_num = sentenca_std
+
+        sum_lens = 0
 
         for repetition in tqdm.tqdm(range(5)):
             arr = list()
@@ -115,6 +146,12 @@ def test_tf_feature_selection(tech):
                 x_train = [row[1] for row in x_train]
                 x_test = [row[1] for row in x_test]
 
+                l1 = len(x_train)
+                if REMOVE_OUTLIERS:
+                    x_train, y_train, sentence_train = remove_outliers(x_train, y_train, sentence_train)
+                l2 = len(x_train)
+                sum_lens += l2
+
                 train_predictions, test_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test, feature_names, "tf")
                 dict_results = regression_evaluation.overfitting_evaluation(train_predictions, test_predictions)
 
@@ -124,9 +161,19 @@ def test_tf_feature_selection(tech):
                 results_cross_val.append(dict_results)
                 test_predictions_list.extend(test_predictions)
 
+                del sentence_test, sentence_train, x_train, x_test, y_train, y_test
+                del train_predictions, test_predictions
+
             if SAVE_PREDICTIONS:
                 overfitting_prediction(sentence_test_list, test_predictions_list)
+                del sentence_test_list, test_predictions_list
+
             list_results.extend(get_cross_validation_average(results_cross_val))
+
+            del results_cross_val
+
+        print("Average w/o outliers:", round(sum_lens / 50, 2))
+        del sentenca_num,
 
         # regression_evaluation.batch_evaluation(train_predictions, test_predictions, sentence_train, sentence_test, description="tf")
         # tech, rmse_train, rmse_test, rmse_ratio, r2_train, r2_test, r2_ratio, mae_train, mae_test, mae_ratio
@@ -134,13 +181,23 @@ def test_tf_feature_selection(tech):
                                                  "r2_train", "r2_test", "r2_ratio",
                                                  "mae_train", "mae_test", "mae_ratio", "k"])
 
-        file_name = "data/overfitting/bigger/results_regression_k_100_1000_&_@.#"
+        file_name = "data/overfitting/bigger/results_regression_k_100_1000_&_@_$.#"
         file_name = file_name.replace("@", str(tech).lower())
-        file_name = file_name.replace("&", "attr_wo_fs")
-        # file_name = file_name.replace("&", "attr_w_fs")
+        # file_name = file_name.replace("&", "attr_wo_fs")
+
+        if REMOVE_OUTLIERS:
+            file_name = file_name.replace("$", "wo_outlier")
+        else:
+            file_name = file_name.replace("$", "w_outlier")
+
+        if FEATURE_SELECTION:
+            file_name = file_name.replace("&", "attr_w_fs")
+        else:
+            file_name = file_name.replace("&", "attr_wo_fs")
 
         df.to_csv(file_name.replace("#", "csv"))
         df.to_excel(file_name.replace("#", "xlsx"))
+        df.to_json(file_name.replace("#", "json"), orient="records")
 
 
 def test_bow_tf():
