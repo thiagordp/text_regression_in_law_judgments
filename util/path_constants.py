@@ -8,7 +8,7 @@ PROJECT_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Projects/tex
 #
 # Original Judgements
 #
-#JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/merge_sem_dispositivo/"
+# JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/merge_sem_dispositivo/"
 
 JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/txts_atualizados_sd_manual/"
 # Classes
@@ -27,7 +27,6 @@ EXTINCAO = "extincao/"
 JEC_CLASS_PATHS = [
     "novos/"
 ]
-
 
 #
 # Moral Damage Values Dataset

@@ -2,6 +2,7 @@
 
 """
 import glob
+import re
 from datetime import datetime
 
 import pandas as pd
@@ -20,7 +21,7 @@ def create_final_dataset(remove_stopwords, stemming):
     print("-" * 65)
     print("Loading JEC judgements")
     print("Remove Stopwords:", remove_stopwords)
-    print("Stemming:", stemming)
+    print("Apply Stemming:  ", stemming)
 
     for jec_class in JEC_CLASS_PATHS:
         class_path = JEC_DATASET_PATH + jec_class
@@ -51,8 +52,27 @@ def create_final_dataset(remove_stopwords, stemming):
 
     if GET_INDIVIDUAL_VALUES:
         attributes_df = pd.read_csv(DAMAGE_VALUES_DATASET_PATH,
-                                    usecols=["Sentença", "Julgamento", "Valor individual do dano moral", "Data do Julgamento", "Julgador(a)", "Tipo Julgador(a)"])
+                                    usecols=[
+                                        "Sentença",
+                                        "Julgamento",
+                                        "Valor individual do dano moral",
+                                        "Data do Julgamento",
+                                        "Julgador(a)",
+                                        "Tipo Julgador(a)",
+                                        "Extravio Definitivo",
+                                        "Extravio Temporário",
+                                        "Intervalo do Extravio (dias)",
+                                        "Violação (furto, avaria)",
+                                        "Cancelamento (sem realocação)/Alteração de destino",
+                                        "Atraso (com realocação)",
+                                        "Intervalo do Atraso (horas:minutos)",
+                                        "Culpa exclusiva do consumidor",
+                                        "Condições climáticas desfavoráveis/Fechamento aeroporto"
+                                    ])
+        # Remove rows which has one of the collumns with Null values
         attributes_df.dropna(subset=["Julgamento"], inplace=True)
+        attributes_df.dropna(subset=["Atraso (com realocação)"], inplace=True)
+
         attributes_df.sort_values('Valor individual do dano moral')
 
         attributes_df["Julgamento"] = attributes_df["Julgamento"].apply(lambda x: CLASSE_DICT[x])
@@ -92,12 +112,22 @@ def create_final_dataset(remove_stopwords, stemming):
         judge = row["Julgador(a)"]
         type_judge = row["Tipo Julgador(a)"]
 
+        has_permanent_loss = row["Extravio Definitivo"]
+        has_temporally_loss = row["Extravio Temporário"]
+        interval_loss = row["Intervalo do Extravio (dias)"]
+        has_luggage_violation = row["Violação (furto, avaria)"]
+        has_flight_cancellation = row["Cancelamento (sem realocação)/Alteração de destino"]
+        has_flight_delay = row["Atraso (com realocação)"]
+        flight_delay = row["Intervalo do Atraso (horas:minutos)"]
+        is_consumers_fault = row["Culpa exclusiva do consumidor"]
+        has_adverse_flight_conditions = row["Condições climáticas desfavoráveis/Fechamento aeroporto"]
+
         if GET_INDIVIDUAL_VALUES:
             indenizacao = float(str(row["Valor individual do dano moral"]).replace("R$ ", "").replace(".", "").replace(",", "."))
         else:
             indenizacao = float(str(row["Valor total do dano moral"]).replace("R$ ", "").replace(".", "").replace(",", "."))
 
-        attributes_list.append([num_judgement, jec_class, indenizacao])
+        # attributes_list.append([num_judgement, jec_class, indenizacao])
 
         for jec_judge in jec_list:
             # print(num_judgement, jec_class, indenizacao, jec_judge)
@@ -106,14 +136,55 @@ def create_final_dataset(remove_stopwords, stemming):
                 # jec_judge[1] == jec_class and \
                 # (int(last_num) != int(num_judgement) or last_class != jec_class):
                 processed_text = process_text(jec_judge[2], remove_stopwords=remove_stopwords, stemming=stemming)
-                final_data.append([int(num_judgement), jec_class, year, month, day, weekday, judge, type_judge, indenizacao, processed_text])
+                final_data.append([
+                    int(num_judgement),
+                    jec_class,
+                    year,
+                    month,
+                    day,
+                    weekday,
+                    judge,
+                    type_judge,
+                    indenizacao,
+                    has_permanent_loss,
+                    has_temporally_loss,
+                    interval_loss,
+                    has_luggage_violation,
+                    has_flight_delay,
+                    has_flight_cancellation,
+                    flight_delay,
+                    is_consumers_fault,
+                    has_adverse_flight_conditions,
+                    re.sub(r'\W+', ' ', processed_text).replace("  ", " ").replace("  ", " ").strip()
+                ])
 
                 break
 
         last_class = jec_class
         last_num = num_judgement
 
-    final_df = pd.DataFrame(data=final_data, columns=["judgement", "jec_class", "ano", "mes", "dia", "dia_semana", "juiz", "tipo_juiz", "indenizacao", "sentenca"])
+    final_df = pd.DataFrame(data=final_data,
+                            columns=[
+                                "judgement",
+                                "jec_class",
+                                "ano",
+                                "mes",
+                                "dia",
+                                "dia_semana",
+                                "juiz",
+                                "tipo_juiz",
+                                "indenizacao",
+                                "extravio_permanente",
+                                "extravio_temporario",
+                                "intevalo_extravio",
+                                "tem_violacao_bagagem",
+                                "tem_atraso_voo",
+                                "tem_cancelamento_voo",
+                                "qtd_atraso_voo",
+                                "culpa_consumidor",
+                                "tem_condicao_adversa_voo",
+                                "sentenca"
+                            ])
 
     file_path = PROCESSED_BASE_DATASET
     if remove_stopwords:

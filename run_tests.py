@@ -6,10 +6,8 @@ import os
 import sys
 import warnings
 
-from sklearn.exceptions import ConvergenceWarning
-
 from evaluation.regression_logs_evaluation import process_overfitting_log
-from project_tests import test_representations, test_pre_processing, test_lda
+from project_tests import test_pre_processing, test_lda, test_paper_experiments
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -20,9 +18,13 @@ if not sys.warnoptions:
 
 def test_representation():
     # test_representations.test_feature_selection("AVG-EMB")
-    test_representations.test_feature_selection("TF")
+    # test_representations.test_feature_selection("TF")
+    test_paper_experiments.run_experiments("TF")
+
     # test_representations.test_feature_selection("TF-IDF")
     # test_representations.test_feature_selection("Binary")
+
+    #####################################################################
     # test_representations.test_tf_predictions()
     # test_representations.test_bow_tf()
     # test_representations.test_bow_tf_idf()

@@ -18,7 +18,7 @@ from evaluation import regression_evaluation
 from evaluation.regression_evaluation import get_cross_validation_average, overfitting_prediction
 from model import vsm_regression_models, embeddings_regression_models
 from model.feature_selections import bow_feature_selection, remove_outliers
-from pre_processing.text_pre_processing import process_judge
+from pre_processing.text_pre_processing import process_judge, process_has_x, process_loss, process_time_delay
 from representation import bow_tf, bow_tf_idf, word_embeddings, bow_binary, bow_mean_embeddings
 from util.aux_function import print_time
 from util.path_constants import MERGE_DATASET, EMBEDDINGS_LIST, EMBEDDINGS_BASE_PATH, INCLUDE_ZERO_VALUES
@@ -55,17 +55,27 @@ def test_feature_selection(tech):
 
     judges, type_judges = process_judge(judges, type_judges)
 
+    has_permanent_loss_list = process_has_x(raw_data_df["extravio_permanente"].values)
+    has_temporally_loss_list = process_has_x(raw_data_df["extravio_temporario"].values)
+    interval_loss_list = process_loss(raw_data_df["intevalo_extravio"].values)
+    has_luggage_violation_list = process_has_x(raw_data_df["tem_violacao_bagagem"].values)
+    has_flight_delay_list = process_has_x(raw_data_df["tem_atraso_voo"].values)
+    has_flight_cancellation_list = process_has_x(raw_data_df["tem_cancelamento_voo"].values)
+    flight_delay_list = process_time_delay(raw_data_df["qtd_atraso_voo"].values)
+    is_consumers_fault_list = process_has_x(raw_data_df["culpa_consumidor"].values)
+    has_adverse_flight_conditions_list = process_has_x(raw_data_df["tem_condicao_adversa_voo"].values)
+
     std_y = raw_data_df["indenizacao"].values
 
     time.sleep(0.1)
     if tech == "TF":
-        std_bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
+        std_bow, feature_names = bow_tf.document_vector(x)
     elif tech == "TF-IDF":
-        std_bow, feature_names = bow_tf_idf.document_vector(x, remove_stopwords=True, stemming=False)
+        std_bow, feature_names = bow_tf_idf.document_vector(x)
     elif tech == "AVG-EMB":
         std_bow, feature_names = bow_mean_embeddings.document_vector(x)
     else:  # if tech == "Binary"
-        std_bow, feature_names = bow_binary.document_vector(x, remove_stopwords=True, stemming=False)
+        std_bow, feature_names = bow_binary.document_vector(x)
 
     list_results = list()
 
@@ -88,16 +98,35 @@ def test_feature_selection(tech):
             judge = judges[i]
             type_judge = type_judges[i]
 
+            has_permanent_loss = has_permanent_loss_list[i]
+            has_temporally_loss = has_temporally_loss_list[i]
+            interval_loss = interval_loss_list[i]
+            has_luggage_violation = has_luggage_violation_list[i]
+            has_flight_delay = has_flight_delay_list[i]
+            has_flight_cancellation = has_flight_cancellation_list[i]
+            flight_delay = flight_delay_list[i]
+            is_consumers_fault = is_consumers_fault_list[i]
+            has_adverse_flight_conditions = has_adverse_flight_conditions_list[i]
+
             list_bow[i] = np.append(list_bow[i], [day, month, year, day_week])
             list_bow[i] = np.append(list_bow[i], judge)
             list_bow[i] = np.append(list_bow[i], type_judge)
+            list_bow[i] = np.append(list_bow[i], has_permanent_loss)
+            list_bow[i] = np.append(list_bow[i], has_temporally_loss)
+            list_bow[i] = np.append(list_bow[i], [interval_loss, flight_delay])
+            list_bow[i] = np.append(list_bow[i], has_luggage_violation)
+            list_bow[i] = np.append(list_bow[i], has_flight_delay)
+            list_bow[i] = np.append(list_bow[i], has_flight_cancellation)
+            list_bow[i] = np.append(list_bow[i], is_consumers_fault)
+            list_bow[i] = np.append(list_bow[i], has_adverse_flight_conditions)
 
-            del judge, type_judge, day, month, year, day_week
+            del judge, type_judge, day, month, year, day_week, has_permanent_loss
+            del has_temporally_loss, interval_loss, has_luggage_violation
+            del has_flight_delay, has_flight_cancellation, flight_delay
+            del is_consumers_fault, has_adverse_flight_conditions
 
-        del judges, type_judges, days_list, day_week_list, months_list, years_list
-        gc.collect()
-
-    random.shuffle(K_BEST_FEATURES_LIST)
+    del judges, type_judges, days_list, day_week_list, months_list, years_list
+    gc.collect()
 
     for k in K_BEST_FEATURES_LIST:
 
@@ -107,6 +136,7 @@ def test_feature_selection(tech):
 
         if FEATURE_SELECTION:
             bow = bow_feature_selection(list_bow, std_y, k)
+            del list_bow
         else:
             bow = list_bow
 

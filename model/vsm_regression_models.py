@@ -7,8 +7,8 @@ import time
 
 import numpy as np
 import xgboost as xgb
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, BaggingRegressor, AdaBoostRegressor, VotingRegressor
-from sklearn.linear_model import ElasticNet
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, BaggingRegressor, AdaBoostRegressor, VotingRegressor, ExtraTreesRegressor
+from sklearn.linear_model import ElasticNet, Ridge
 from sklearn.neural_network import MLPRegressor
 from sklearn.tree import DecisionTreeRegressor
 
@@ -105,8 +105,8 @@ REGRESSION_MODELS = {
                                     validation_fraction=0.2,
                                     early_stopping=True,
                                     shuffle=True,
-
                                     activation="relu"),
+
     # "mlp_1000_100": MLPRegressor(hidden_layer_sizes=(1000, 100,),
     #                              max_iter=200,
     #                              validation_fraction=0.2,
@@ -114,7 +114,7 @@ REGRESSION_MODELS = {
     #                              activation="relu"),
     "adaboost": AdaBoostRegressor(n_estimators=100, learning_rate=0.1),
     "bagging": BaggingRegressor(n_estimators=100, n_jobs=8, oob_score=True),
-    "gradient_boosting": GradientBoostingRegressor(random_state=int(time.time()) % (2 ** 32) - 1),
+    "gradient_boosting": GradientBoostingRegressor(),
     "xgboost": xgb.XGBRegressor(),
     "xgboost_rf": xgb.XGBRFRegressor(),
 }
@@ -159,7 +159,6 @@ REGRESSION_MODELS["bagging_mlp_200_100_50"] = BaggingRegressor(random_state=int(
                                                                base_estimator=REGRESSION_MODELS["mlp_200_100_50"],
                                                                n_jobs=8)
 
-
 # REGRESSION_MODELS = {
 #     "ridge": Ridge(),
 #     "random_forest_500": RandomForestRegressor(n_estimators=500, n_jobs=8, max_depth=4, max_leaf_nodes=50),
@@ -172,18 +171,97 @@ REGRESSION_MODELS["bagging_mlp_200_100_50"] = BaggingRegressor(random_state=int(
 #     "gradient_boosting": GradientBoostingRegressor(random_state=int(time.time()) % (2 ** 32) - 1)
 # }
 
-def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech_representation):
+
+REGRESSION_MODELS_PAPER = {
+    "ridge": Ridge(),
+    "decision_tree": DecisionTreeRegressor(max_depth=4, max_leaf_nodes=50),
+    "adaboost": AdaBoostRegressor(n_estimators=100, learning_rate=0.1),
+    "bagging": BaggingRegressor(n_estimators=100, n_jobs=8, oob_score=True),
+    "gradient_boosting": GradientBoostingRegressor(),
+    "xgboost": xgb.XGBRegressor(),
+    "xgboost_rf": xgb.XGBRFRegressor(),
+    "extra_trees": ExtraTreesRegressor(),
+    # "mlp_5": MLPRegressor(hidden_layer_sizes=(5,),
+    #                       max_iter=200,
+    #                       validation_fraction=0.2,
+    #                       early_stopping=True,
+    #                       shuffle=True,
+    #                       activation="relu"),
+    # "mlp_20": MLPRegressor(hidden_layer_sizes=(20,),
+    #                        max_iter=200,
+    #                        validation_fraction=0.2,
+    #                        early_stopping=True,
+    #                        shuffle=True,
+    #                        activation="relu"),
+    # "mlp_400_200_100_50": MLPRegressor(hidden_layer_sizes=(400, 200, 100, 50,),
+    #                                    max_iter=200,
+    #                                    validation_fraction=0.2,
+    #                                    early_stopping=True,
+    #                                    shuffle=True,
+    #                                    activation="relu"),
+    # "mlp_400_200_100": MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
+    #                                 max_iter=200,
+    #                                 validation_fraction=0.2,
+    #                                 early_stopping=True,
+    #                                 shuffle=True,
+    #                                 activation="relu"),
+    # "random_forest_100_10_50": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=10, max_leaf_nodes=50),
+    # "svr_linear": SVR(C=1.0, epsilon=0.2, kernel="linear"),
+    # "svr_poly_2": SVR(C=1.0, epsilon=0.2, kernel="poly", degree=2),
+    # "svr_poly_3": SVR(C=1.0, epsilon=0.2, kernel="poly", degree=3),
+    # "svr_poly_4": SVR(C=1.0, epsilon=0.2, kernel="poly", degree=4),
+    # "svr_poly_rbf": SVR(C=1.0, epsilon=0.2, kernel="rbf"),
+}
+
+
+#
+# REGRESSION_MODELS_PAPER["bagging_mlp_5"] = BaggingRegressor(base_estimator=REGRESSION_MODELS_PAPER["mlp_5"], n_jobs=8)
+# REGRESSION_MODELS_PAPER["bagging_mlp_20"] = BaggingRegressor(base_estimator=REGRESSION_MODELS_PAPER["mlp_20"], n_jobs=8)
+# REGRESSION_MODELS_PAPER["emsemble_voting_bg_mlp_gd"] = VotingRegressor(n_jobs=8, estimators=[
+#     ('bagging', REGRESSION_MODELS_PAPER["bagging"]),
+#     ('mlp', REGRESSION_MODELS_PAPER["mlp_400_200_100_50"]),
+#     ('gd', REGRESSION_MODELS_PAPER["gradient_boosting"])
+# ])
+#
+# estimators = [
+#     ('rf', RandomForestRegressor(n_estimators=100, max_depth=4, max_leaf_nodes=50)),
+#     ('gb', GradientBoostingRegressor())
+# ]
+#
+# REGRESSION_MODELS_PAPER["stacking_rf_mlp"] = StackingRegressor(
+#     estimators=estimators,
+#     final_estimator=MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
+#                                  max_iter=200,
+#                                  validation_fraction=0.2,
+#                                  early_stopping=True,
+#                                  shuffle=True,
+#                                  activation="relu")
+# )
+
+
+# "stacking": StackingRegressor(estimators=[
+#     ('rf', RandomForestClassifier(n_estimators=10, random_state=42)),
+#     ('svr', MLPRegressor))
+# ], final_estimator = LogisticRegression() )
+
+
+def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech_representation, papers_models=False):
     results_test = list()
     results_train = list()
     # print("Training Regressors")
     time.sleep(0.5)
 
-    for key in REGRESSION_MODELS.keys():
+    if papers_models:
+        models_list = REGRESSION_MODELS_PAPER
+    else:
+        models_list = REGRESSION_MODELS
+
+    for key in models_list.keys():
         # print("Training", key)
         time.sleep(1)
 
         for i in range(1):
-            model = REGRESSION_MODELS[key]
+            model = models_list[key]
 
             model.random_state = random.randint(1, 2 ** 32 - 1)
             model.fit(np.array(x_train), np.array(y_train))

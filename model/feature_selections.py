@@ -7,7 +7,7 @@ from sklearn.feature_selection import SelectKBest, f_regression
 
 
 def remove_outliers(x, y, sents):
-    iforest = IsolationForest(contamination=0.1)
+    iforest = IsolationForest(contamination=0.1, n_jobs=8)
     yhat = iforest.fit_predict(x, y)
 
     mask = yhat != -1

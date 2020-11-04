@@ -8,7 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from pre_processing.text_pre_processing import process_text
 
 
-def document_vector(corpus, dim=0, remove_stopwords=True, stemming=False):
+def document_vector(corpus, dim=0, n_grams=True):
     print("TF-IDF BOW Document Vector")
     time.sleep(0.2)
     processed_corpus = list(corpus)
@@ -16,7 +16,11 @@ def document_vector(corpus, dim=0, remove_stopwords=True, stemming=False):
     #     proc = process_text(doc, remove_stopwords=remove_stopwords, stemming=stemming)
     #     processed_corpus.append(proc)
 
-    vectorizer = TfidfVectorizer(ngram_range=(1, 4))
+    if n_grams:
+        vectorizer = TfidfVectorizer(ngram_range=(1, 4))
+    else:
+        vectorizer = TfidfVectorizer()
+
     x = vectorizer.fit_transform(processed_corpus).toarray()
     feature_names = vectorizer.get_feature_names()
 

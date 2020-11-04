@@ -11,13 +11,17 @@ from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import CountVectorizer
 
 
-def document_vector(corpus, dim=0, remove_stopwords=True, stemming=False):
+def document_vector(corpus, dim=0, n_grams=True):
     print("Binary BOW Document Vector")
 
     time.sleep(0.2)
     processed_corpus = list(corpus)
 
-    vectorizer = CountVectorizer(binary=True, ngram_range=(1, 4))
+    if n_grams:
+        vectorizer = CountVectorizer(binary=True, ngram_range=(1, 4))
+    else:
+        vectorizer = CountVectorizer(binary=True)
+
     x = vectorizer.fit_transform(processed_corpus).toarray()
     feature_names = vectorizer.get_feature_names()
 

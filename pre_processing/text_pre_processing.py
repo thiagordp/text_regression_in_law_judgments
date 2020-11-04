@@ -5,9 +5,11 @@
 import re
 
 import nltk
+import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from sklearn.preprocessing import LabelEncoder
 
 nltk.download('stopwords')
 nltk.download('rslp')
@@ -81,3 +83,33 @@ def process_judge(judges, type_judges):
     type_judges = [list(type_judge) for type_judge in list(type_judges.to_numpy())]
 
     return judges, type_judges
+
+
+def process_has_x(feature=np.array([])):
+    lb_make = LabelEncoder()
+
+    return lb_make.fit_transform(feature)
+
+
+def process_loss(feature=np.array([])):
+    feature = [float(str(num).replace("-", "0").replace(",", ".")) for num in feature]
+
+    return feature
+
+
+def process_time_delay(feature=np.array([])):
+
+    delay_minutes = list()
+
+    for time_delay in feature:
+        time_delay = time_delay.replace("- (superior a 4)", "00:00:00")
+        time_delay = time_delay.replace("-", "00:00:00")
+        splits = time_delay.split(":")
+
+        seconds = float(splits[-1].strip()) / 60
+        minutes = float(splits[-2].strip())
+        hours = float(splits[-3].strip()) * 60
+
+        delay_minutes.append(hours + minutes + seconds)
+
+    return np.array(delay_minutes)

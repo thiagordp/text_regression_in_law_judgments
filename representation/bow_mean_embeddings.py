@@ -7,16 +7,16 @@ VSM using mean of embeddings
 import random
 import time
 
-import tqdm
 import numpy as np
+import tqdm
 from gensim.models import KeyedVectors
 
 from util.path_constants import EMBEDDINGS_BASE_PATH, EMBEDDINGS_LIST
 
 
 def average_arrays(list_arrays):
-
     x = 0
+
 
 def document_vector(corpus, dim=0, embeddings_path=EMBEDDINGS_BASE_PATH + EMBEDDINGS_LIST[0]):
     print("Mean Embeddings Document Vector")
