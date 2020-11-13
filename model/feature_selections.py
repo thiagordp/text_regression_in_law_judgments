@@ -6,7 +6,7 @@ from sklearn.ensemble import IsolationForest
 from sklearn.feature_selection import SelectKBest, f_regression
 
 
-def remove_outliers(x, y, sents):
+def remove_outliers_iforest(x, y, sents):
     iforest = IsolationForest(contamination=0.1, n_jobs=8)
     yhat = iforest.fit_predict(x, y)
 

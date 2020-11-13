@@ -67,7 +67,11 @@ def create_final_dataset(remove_stopwords, stemming):
                                         "Atraso (com realocação)",
                                         "Intervalo do Atraso (horas:minutos)",
                                         "Culpa exclusiva do consumidor",
-                                        "Condições climáticas desfavoráveis/Fechamento aeroporto"
+                                        "Condições climáticas desfavoráveis/Fechamento aeroporto",
+                                        "No Show",
+                                        "Overbooking",
+                                        "Cancelamento pelo consumidor e problemas com o reembolso",
+                                        "Descumprimento de oferta (assento)",
                                     ])
         # Remove rows which has one of the collumns with Null values
         attributes_df.dropna(subset=["Julgamento"], inplace=True)
@@ -121,6 +125,10 @@ def create_final_dataset(remove_stopwords, stemming):
         flight_delay = row["Intervalo do Atraso (horas:minutos)"]
         is_consumers_fault = row["Culpa exclusiva do consumidor"]
         has_adverse_flight_conditions = row["Condições climáticas desfavoráveis/Fechamento aeroporto"]
+        has_no_show = row["No Show"]
+        has_overbooking = row["Overbooking"]
+        has_cancel_user_refunding_problem = row["Cancelamento pelo consumidor e problemas com o reembolso"]
+        has_offer_disagreement = row["Descumprimento de oferta (assento)"]
 
         if GET_INDIVIDUAL_VALUES:
             indenizacao = float(str(row["Valor individual do dano moral"]).replace("R$ ", "").replace(".", "").replace(",", "."))
@@ -155,6 +163,10 @@ def create_final_dataset(remove_stopwords, stemming):
                     flight_delay,
                     is_consumers_fault,
                     has_adverse_flight_conditions,
+                    has_no_show,
+                    has_overbooking,
+                    has_cancel_user_refunding_problem,
+                    has_offer_disagreement,
                     re.sub(r'\W+', ' ', processed_text).replace("  ", " ").replace("  ", " ").strip()
                 ])
 
@@ -183,6 +195,10 @@ def create_final_dataset(remove_stopwords, stemming):
                                 "qtd_atraso_voo",
                                 "culpa_consumidor",
                                 "tem_condicao_adversa_voo",
+                                "tem_no_show",
+                                "tem_overbooking",
+                                "tem_cancelamento_usuario_ressarcimento",
+                                "tem_desacordo_oferta",
                                 "sentenca"
                             ])
 

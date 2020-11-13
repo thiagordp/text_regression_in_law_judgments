@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 from evaluation import regression_evaluation
 from evaluation.regression_evaluation import get_cross_validation_average, overfitting_prediction
 from model import vsm_regression_models, embeddings_regression_models
-from model.feature_selections import bow_feature_selection, remove_outliers
+from model.feature_selections import bow_feature_selection, remove_outliers_iforest
 from pre_processing.text_pre_processing import process_judge, process_has_x, process_loss, process_time_delay
 from representation import bow_tf, bow_tf_idf, word_embeddings, bow_binary, bow_mean_embeddings
 from util.aux_function import print_time
@@ -178,7 +178,7 @@ def test_feature_selection(tech):
 
                 l1 = len(x_train)
                 if REMOVE_OUTLIERS:
-                    x_train, y_train, sentence_train = remove_outliers(x_train, y_train, sentence_train)
+                    x_train, y_train, sentence_train = remove_outliers_iforest(x_train, y_train, sentence_train)
                 l2 = len(x_train)
                 sum_lens += l2
 
@@ -254,7 +254,7 @@ def test_bow_tf():
             data.append([label, row])
 
         time.sleep(0.1)
-        bow, feature_names = bow_tf.document_vector(x, remove_stopwords=True, stemming=False)
+        bow, feature_names = bow_tf.document_vector(x)
 
         print(bow.shape)
         arr = list()

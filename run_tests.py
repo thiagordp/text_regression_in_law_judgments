@@ -16,10 +16,11 @@ if not sys.warnoptions:
     os.environ["PYTHONWARNINGS"] = "ignore"
 
 
-def test_representation():
+def test_regression():
     # test_representations.test_feature_selection("AVG-EMB")
     # test_representations.test_feature_selection("TF")
     test_paper_experiments.run_experiments("TF")
+    # test_paper_experiments.evaluate_results()
 
     # test_representations.test_feature_selection("TF-IDF")
     # test_representations.test_feature_selection("Binary")
@@ -64,7 +65,7 @@ def main():
 
     # test_lda_jec()
     # test_pre_processings()
-    test_representation()
+    test_regression()
     # test_log()
 
 

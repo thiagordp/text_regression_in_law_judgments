@@ -17,7 +17,7 @@ from sklearn.model_selection import KFold, train_test_split
 from evaluation import regression_evaluation
 from evaluation.regression_evaluation import get_cross_validation_average
 from model import vsm_regression_models
-from model.feature_selections import bow_feature_selection
+from model.feature_selections import bow_feature_selection, remove_outliers_iforest
 from pre_processing.text_pre_processing import process_judge, process_has_x, process_loss, process_time_delay
 from representation import bow_tf, bow_tf_idf, bow_mean_embeddings, bow_binary
 from util.path_constants import INCLUDE_ZERO_VALUES
@@ -27,15 +27,70 @@ from util.value_contants import K_BEST_FEATURE_PAPER
 
 def run_experiments(tech):
     # Just Feature Selection
-    build_test_setup(tech, feature_selection=True, use_cross_validation=False, remove_outliers=False, include_attributes=False, n_grams=False)
+    # build_test_setup(tech,
+    #                  feature_selection=True,
+    #                  use_cross_validation=False,
+    #                  remove_outliers=False,
+    #                  include_attributes=False,
+    #                  n_grams=False)
+
+    # All
+    # build_test_setup(tech,
+    #                  feature_selection=True,
+    #                  use_cross_validation=True,
+    #                  remove_outliers=True,
+    #                  include_attributes=True,
+    #                  n_grams=True,
+    #                  reduce_models=True)
+
+    # None
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=False,
+                     reduce_models=False)
+
+    ################################################
+    print("Finished")
+    time.sleep(2 ** 32)
+
     # Just Cross Validation
-    build_test_setup(tech, feature_selection=False, use_cross_validation=True, remove_outliers=False, include_attributes=False, n_grams=False)
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=True,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=False,
+                     reduce_models=False)
+
     # Just Remove Outliers
-    build_test_setup(tech, feature_selection=False, use_cross_validation=False, remove_outliers=True, include_attributes=False, n_grams=False)
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=True,
+                     include_attributes=False,
+                     n_grams=False,
+                     reduce_models=True)
+
     # Just include attributes
-    build_test_setup(tech, feature_selection=False, use_cross_validation=False, remove_outliers=False, include_attributes=True, n_grams=False)
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=False,
+                     reduce_models=True)
+
     # Just include N-Grams
-    build_test_setup(tech, feature_selection=False, use_cross_validation=False, remove_outliers=False, include_attributes=False, n_grams=True)
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=True,
+                     reduce_models=False)
 
     ##############################################################################################################################
 
@@ -49,22 +104,27 @@ def run_experiments(tech):
     # - 3 Best
     # - 2 Best
 
-    # Feature Selecion and Cross Validation
-    build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=False, include_attributes=False, n_grams=False)
-
     # Feature Selection, cross validation, Remove Outliers, N-Grams
-    build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=False, n_grams=True)
+    # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=False, n_grams=True)
     #
-    build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=False, include_attributes=False, n_grams=True)
+    # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=False, include_attributes=False, n_grams=True)
 
-    build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=False, n_grams=False)
+    # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=False, n_grams=False)
 
-    build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=True, n_grams=True)
+    # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=True, n_grams=True)
 
 
-def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes, n_grams):
+def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes, n_grams, reduce_models):
     print("=" * 100)
-    print("Paper Experiments")
+    print("PAPER EXPERIMENTS")
+    print("Tech:              ", tech)
+    print("Feature Selection: ", feature_selection)
+    print("Cross Validation:  ", use_cross_validation)
+    print("Remove Outliers:   ", remove_outliers)
+    print("Include Attributes:", include_attributes)
+    print("Include N-Grams:   ", n_grams)
+    print("Reduce Models:     ", reduce_models)
+    print("")
 
     # Read CSV with processed documents
     raw_data_df = pd.read_csv("data/processed_dataset_wo_stopwords_wo_stemming.csv")
@@ -102,6 +162,10 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     flight_delay_list = process_time_delay(raw_data_df["qtd_atraso_voo"].values)
     is_consumers_fault_list = process_has_x(raw_data_df["culpa_consumidor"].values)
     has_adverse_flight_conditions_list = process_has_x(raw_data_df["tem_condicao_adversa_voo"].values)
+    has_no_show_list = process_has_x(raw_data_df["tem_no_show"].values)
+    has_overbooking_list = process_has_x(raw_data_df["tem_overbooking"].values)
+    has_cancel_refunding_problem_list = process_has_x(raw_data_df["tem_cancelamento_usuario_ressarcimento"].values)
+    has_offer_disagreement_list = process_has_x(raw_data_df["tem_desacordo_oferta"].values)
 
     # Compensation values
     std_y = raw_data_df["indenizacao"].values
@@ -149,6 +213,10 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             flight_delay = flight_delay_list[i]
             is_consumers_fault = is_consumers_fault_list[i]
             has_adverse_flight_conditions = has_adverse_flight_conditions_list[i]
+            has_overbooking = has_overbooking_list[i]
+            has_no_show = has_no_show_list[i]
+            has_cancel_refunding = has_cancel_refunding_problem_list[i]
+            has_offer_disagreement = has_offer_disagreement_list[i]
 
             # Include attributes to bag of words
             list_bow[i] = np.append(list_bow[i], [day, month, year, day_week])
@@ -162,16 +230,22 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             list_bow[i] = np.append(list_bow[i], has_flight_cancellation)
             list_bow[i] = np.append(list_bow[i], is_consumers_fault)
             list_bow[i] = np.append(list_bow[i], has_adverse_flight_conditions)
+            list_bow[i] = np.append(list_bow[i], has_no_show)
+            list_bow[i] = np.append(list_bow[i], has_overbooking)
+            list_bow[i] = np.append(list_bow[i], has_cancel_refunding)
+            list_bow[i] = np.append(list_bow[i], has_offer_disagreement)
 
             del judge, type_judge, day, month, year, day_week, has_permanent_loss
             del has_temporally_loss, interval_loss, has_luggage_violation
             del has_flight_delay, has_flight_cancellation, flight_delay
             del is_consumers_fault, has_adverse_flight_conditions
+            del has_no_show, has_overbooking, has_cancel_refunding, has_offer_disagreement
 
     del judges, type_judges, days_list, day_week_list, months_list, years_list
     del has_permanent_loss_list, has_temporally_loss_list, interval_loss_list
     del has_luggage_violation_list, has_flight_delay_list, has_flight_cancellation_list
     del flight_delay_list, is_consumers_fault_list, has_adverse_flight_conditions_list
+    del has_no_show_list, has_overbooking_list, has_cancel_refunding_problem_list, has_offer_disagreement_list
 
     gc.collect()
 
@@ -187,9 +261,11 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
     sentenca_num = sentenca_std
 
-    sum_lens = 0
+    repetitions = 10
+    if not use_cross_validation:
+        repetitions = 100
 
-    for repetition in tqdm.tqdm(range(5)):
+    for repetition in tqdm.tqdm(range(repetitions)):
         arr = list()
 
         for i in range(len(sentenca_num)):
@@ -205,15 +281,18 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         #              cross_validation             #
         #############################################
         if use_cross_validation:
-            kfold = KFold(n_splits=10, shuffle=True, random_state=int((random.random() * random.random() * time.time())) % 2 ** 32)
+            random_state = int((random.random() * random.random() * time.time())) % 2 ** 32
+            kfold = KFold(n_splits=10, shuffle=True, random_state=random_state)
 
             final_set = kfold.split(arr, y)
         else:
-            x_train, x_test, y_train, y_test = train_test_split(arr, y, test_size=0.3, random_state=int(time.time()) % 2 ** 32)
+            random_state = int((random.random() * random.random() * time.time())) % 2 ** 32
+
+            x_train, x_test, y_train, y_test = train_test_split(arr, y, test_size=0.3, random_state=random_state)
 
             final_set = [[[x_train, y_train], [x_test, y_test]]]
 
-        for train_ix, test_ix in final_set:
+        for train_ix, test_ix in tqdm.tqdm(final_set):
 
             if use_cross_validation:
                 x_train = np.array(arr)[train_ix.astype(int)]
@@ -233,17 +312,21 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             x_train = [row[1] for row in x_train]
             x_test = [row[1] for row in x_test]
 
-            l1 = len(x_train)
-
+            #############################################
+            #              remove outliers              #
+            #############################################
             if remove_outliers:
-                x_train, y_train, sentence_train = remove_outliers(x_train, y_train, sentence_train)
+                x_train, y_train, sentence_train = remove_outliers_iforest(x_train, y_train, sentence_train)
 
-            l2 = len(x_train)
-            sum_lens += l2
-
-            train_predictions, test_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test, feature_names, "tf")
+            # Train the models
+            train_predictions, test_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test,
+                                                                                               feature_names, "tf",
+                                                                                               papers_models=True,
+                                                                                               reduce_models=reduce_models)
+            # Evaluate the predictions
             dict_results = regression_evaluation.overfitting_evaluation(train_predictions, test_predictions)
 
+            # Get the used k
             if feature_selection:
                 k = K_BEST_FEATURE_PAPER
             else:
@@ -255,21 +338,24 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             results_cross_val.append(dict_results)
             test_predictions_list.extend(test_predictions)
 
+            # Clean Memory
             del sentence_test, sentence_train, x_train, x_test, y_train, y_test
             del train_predictions, test_predictions
 
+        # Append results to the list
         list_results.extend(get_cross_validation_average(results_cross_val))
 
         del results_cross_val
 
-    print("Average w/o outliers:", round(sum_lens / 50, 2))
     del sentenca_num
 
+    # Create dataframe using results' list
     df = pd.DataFrame(list_results, columns=["tech", "rmse_test", "rmse_train", "rmse_ratio",
                                              "r2_train", "r2_test", "r2_ratio",
                                              "mae_train", "mae_test", "mae_ratio", "k"])
 
-    file_name = "data/overfitting/bigger/results_regression_@fs_@tech_@outlier_@n_gram_@attr_@cross_val.#"
+    # Write file name according to the experimental setup.
+    file_name = "data/paper/results_regression_@fs_@tech_@outlier_@n_gram_@attr_@cross_val_@reduce_model.#"
 
     file_name = file_name.replace("@tech", str(tech).lower())
 
@@ -298,6 +384,18 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     else:
         file_name = file_name.replace("@cross_val", "wo_cros_val")
 
-    df.to_csv(file_name.replace("#", "csv"))
-    df.to_excel(file_name.replace("#", "xlsx"))
+    if reduce_models:
+        file_name = file_name.replace("@reduce_model", "w_reduce_model")
+    else:
+        file_name = file_name.replace("@reduce_model", "wo_reduce_model")
+
+    df.to_csv(file_name.replace("#", "csv"), index=False)
+    df.to_excel(file_name.replace("#", "xlsx"), index=False)
     df.to_json(file_name.replace("#", "json"), orient="records")
+
+
+def evaluate_results():
+    """
+    Evaluate Results
+    """
+    x = 0
