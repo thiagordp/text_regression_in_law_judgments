@@ -120,13 +120,13 @@ REGRESSION_MODELS = {
     "xgboost_rf": xgb.XGBRFRegressor(),
 }
 
-REGRESSION_MODELS["emsemble_voting_bg_mlp_gd"] = VotingRegressor(n_jobs=8, estimators=[
+REGRESSION_MODELS["ensemble_voting_bg_mlp_gd"] = VotingRegressor(n_jobs=8, estimators=[
     ('bagging', REGRESSION_MODELS["bagging"]),
     ('mlp', REGRESSION_MODELS["mlp_400_200_100_50"]),
     ('gd', REGRESSION_MODELS["gradient_boosting"])
 ])
 
-REGRESSION_MODELS["emsemble_voting_en_mlp_mlp"] = VotingRegressor(n_jobs=8, estimators=[
+REGRESSION_MODELS["ensemble_voting_en_mlp_mlp"] = VotingRegressor(n_jobs=8, estimators=[
     ('en', REGRESSION_MODELS["elastic_net"]),
     ('mlp', REGRESSION_MODELS["mlp_400_200_100_50"]),
     ('mlp2', REGRESSION_MODELS["mlp_400_200_100"])
@@ -160,6 +160,8 @@ REGRESSION_MODELS["bagging_mlp_200_100_50"] = BaggingRegressor(random_state=int(
                                                                base_estimator=REGRESSION_MODELS["mlp_200_100_50"],
                                                                n_jobs=8)
 
+#######################################################################################################################
+
 REGRESSION_MODELS_PAPER = {
     "elastic_net": ElasticNet(max_iter=200),
     "ridge": Ridge(max_iter=200),
@@ -186,7 +188,7 @@ REGRESSION_MODELS_PAPER = {
     "svr_poly_rbf": SVR(C=1.0, epsilon=0.2, kernel="rbf", max_iter=200)
 }
 
-REGRESSION_MODELS_PAPER["emsemble_voting_bg_mlp_gd_xgb"] = VotingRegressor(n_jobs=8, estimators=[
+REGRESSION_MODELS_PAPER["ensemble_voting_bg_mlp_gd_xgb"] = VotingRegressor(n_jobs=8, estimators=[
     ('bagging', REGRESSION_MODELS_PAPER["bagging"]),
     ('mlp', REGRESSION_MODELS_PAPER["mlp_400_200_100"]),
     ('xgb', REGRESSION_MODELS_PAPER["xgboost"]),
@@ -217,7 +219,7 @@ REGRESSION_BIG_MODELS_PAPER = {
     "svr_poly_rbf": SVR(C=1.0, epsilon=0.2, kernel="rbf")
 }
 
-REGRESSION_BIG_MODELS_PAPER["emsemble_voting_bg_mlp_gd_xgb"] = VotingRegressor(n_jobs=8, estimators=[
+REGRESSION_BIG_MODELS_PAPER["ensemble_voting_bg_mlp_gd_xgb"] = VotingRegressor(n_jobs=8, estimators=[
     ('bagging', REGRESSION_BIG_MODELS_PAPER["bagging"]),
     ('mlp', REGRESSION_BIG_MODELS_PAPER["mlp_400_200_100"]),
     ('xgb', REGRESSION_BIG_MODELS_PAPER["xgboost"]),

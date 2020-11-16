@@ -6,9 +6,13 @@
 
 # Import Libraries
 import gc
+import glob
 import random
 import time
+from datetime import datetime
 
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import tqdm
@@ -26,6 +30,7 @@ from util.value_contants import K_BEST_FEATURE_PAPER
 
 
 def run_experiments(tech):
+    ################################################
     # Just Feature Selection
     # build_test_setup(tech,
     #                  feature_selection=True,
@@ -33,6 +38,8 @@ def run_experiments(tech):
     #                  remove_outliers=False,
     #                  include_attributes=False,
     #                  n_grams=False)
+
+    ################################################
 
     # All
     # build_test_setup(tech,
@@ -43,9 +50,33 @@ def run_experiments(tech):
     #                  n_grams=True,
     #                  reduce_models=True)
 
-    # None
+    ################################################
+
+    # Data acquisition (Include Attributes)
     build_test_setup(tech,
                      feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=False,
+                     reduce_models=False)
+
+    ################################################
+
+    # Preprocessing (N-Grams)
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=True,
+                     reduce_models=False)
+
+    ################################################
+
+    # Representation (Feature Selection, TF)
+    build_test_setup(tech,
+                     feature_selection=True,
                      use_cross_validation=False,
                      remove_outliers=False,
                      include_attributes=False,
@@ -53,41 +84,23 @@ def run_experiments(tech):
                      reduce_models=False)
 
     ################################################
-    print("Finished")
-    time.sleep(2 ** 32)
 
-    # Just Cross Validation
+    # Models (Reduce Models)
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=False,
+                     reduce_models=True)
+
+    ################################################
+
+    # Training (Cross- Validation and Remove Outliers)
     build_test_setup(tech,
                      feature_selection=False,
                      use_cross_validation=True,
-                     remove_outliers=False,
-                     include_attributes=False,
-                     n_grams=False,
-                     reduce_models=False)
-
-    # Just Remove Outliers
-    build_test_setup(tech,
-                     feature_selection=False,
-                     use_cross_validation=False,
                      remove_outliers=True,
-                     include_attributes=False,
-                     n_grams=False,
-                     reduce_models=True)
-
-    # Just include attributes
-    build_test_setup(tech,
-                     feature_selection=False,
-                     use_cross_validation=False,
-                     remove_outliers=False,
-                     include_attributes=True,
-                     n_grams=False,
-                     reduce_models=True)
-
-    # Just include N-Grams
-    build_test_setup(tech,
-                     feature_selection=False,
-                     use_cross_validation=False,
-                     remove_outliers=False,
                      include_attributes=False,
                      n_grams=True,
                      reduce_models=False)
@@ -116,6 +129,7 @@ def run_experiments(tech):
 
 def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes, n_grams, reduce_models):
     print("=" * 100)
+    print(datetime.today())
     print("PAPER EXPERIMENTS")
     print("Tech:              ", tech)
     print("Feature Selection: ", feature_selection)
@@ -292,7 +306,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
             final_set = [[[x_train, y_train], [x_test, y_test]]]
 
-        for train_ix, test_ix in tqdm.tqdm(final_set):
+        for train_ix, test_ix in final_set:
 
             if use_cross_validation:
                 x_train = np.array(arr)[train_ix.astype(int)]
@@ -398,4 +412,126 @@ def evaluate_results():
     """
     Evaluate Results
     """
-    x = 0
+    skip_techs = [
+        "svr_linear"
+    ]
+
+    logs = glob.glob("data/paper/*.csv")
+    fullresults = dict()
+
+    for log in logs:
+        print("=" * 128)
+        print(log)
+
+        df = pd.read_csv(log)
+
+        techs = sorted(set(list(df["tech"])))
+
+        results = list()
+        for tech in techs:
+            if tech in skip_techs:
+                continue
+
+            sub_df = df[df["tech"] == tech]
+            rmse_test_mean = np.mean(sub_df["rmse_test"])
+            mae_test_mean = np.mean(sub_df["mae_test"])
+            r2_test_mean = np.mean(sub_df["r2_test"])
+
+            tech = tech.replace("emsemble_voting_bg_mlp_gd_xgb", "ensemble_voting")
+
+            results.append([tech, rmse_test_mean, mae_test_mean, r2_test_mean])
+
+        df = pd.DataFrame(results, columns=["tech", "rmse_test", "mae_test", "r2_test"])
+        fullresults[log] = df
+        plot_metrics(df, log)
+
+
+def plot_metrics(results, log):
+    techs = sorted(set(results["tech"]))
+    matplotlib.style.use("seaborn")
+
+    plt.figure(figsize=(15, 10))
+    plt.grid(linestyle=':')
+
+    # R2 plot
+    for tech in techs:
+        data = results[results["tech"] == tech]["r2_test"]
+        plt.bar(tech, data)
+
+    data = results["r2_test"]
+    for tech, data_tech in zip(techs, data):
+        label = "{:.4f}".format(data_tech)
+
+        plt.annotate(label,  # this is the text
+                     (tech, data_tech),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 2),  # distance from text to points (x,y)
+                     fontsize=14,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+    plt.xticks(rotation='vertical')
+    plt.title("R2 Test", fontsize=18)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=14)
+
+    plt.tight_layout()
+    plt.savefig(log.replace(".csv", "_r2_test.png"))
+
+    #########################################################
+
+    plt.figure(figsize=(15, 10))
+    plt.grid(linestyle=':')
+
+    # R2 plot
+    for tech in techs:
+        data = results[results["tech"] == tech]["rmse_test"]
+        plt.bar(tech, data)
+
+    data = results["rmse_test"]
+    for tech, data_tech in zip(techs, data):
+        label = "{:.2f}".format(data_tech)
+
+        plt.annotate(label,  # this is the text
+                     (tech, data_tech),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     fontsize=14,
+                     xytext=(0, 2),  # distance from text to points (x,y)
+                     ha='center')  # horizontal alignment can be left, right or center
+
+    plt.xticks(rotation='vertical')
+    plt.title("RMSE Test", fontsize=18)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=14)
+
+    plt.tight_layout()
+    plt.savefig(log.replace(".csv", "_rmse_test.png"))
+
+    plt.figure(figsize=(15, 10))
+    plt.grid(linestyle=':')
+
+    # R2 plot
+    for tech in techs:
+        data = results[results["tech"] == tech]["mae_test"]
+        plt.bar(tech, data)
+
+    data = results["mae_test"]
+    for tech, data_tech in zip(techs, data):
+        label = "{:.2f}".format(data_tech)
+
+        plt.annotate(label,  # this is the text
+                     (tech, data_tech),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     fontsize=14,
+                     xytext=(0, 2),  # distance from text to points (x,y)
+                     ha='center')  # horizontal alignment can be left, right or center
+
+    plt.xticks(rotation='vertical')
+    plt.title("MAE Test", fontsize=18)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=14)
+
+    plt.tight_layout()
+    plt.savefig(log.replace(".csv", "_mae_test.png"))

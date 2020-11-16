@@ -77,20 +77,20 @@ def compare_results(metrics_train, metrics_test):
         try:
             rmse_ratio = (rmse_test / rmse_train) - 1
         except:
-            rmse_ratio = 2**32
+            rmse_ratio = 2 ** 32
 
         r2_train = float(np.mean(m_train["r2"]))
         r2_test = float(np.mean(m_test["r2"]))
         try:
             r2_ratio = (r2_test / r2_train) - 1
         except:
-            r2_ratio = 2**32
+            r2_ratio = 2 ** 32
         mae_train = float(np.mean(m_train["mae"]))
         mae_test = float(np.mean(m_test["mae"]))
         try:
             mae_ratio = (mae_test / mae_train) - 1
         except:
-            mae_ratio = 2**32
+            mae_ratio = 2 ** 32
 
         results.append([tech, rmse_train, rmse_test, rmse_ratio, r2_train, r2_test, r2_ratio, mae_train, mae_test, mae_ratio])
 

@@ -19,7 +19,6 @@ if not sys.warnoptions:
 def test_regression():
     # test_representations.test_feature_selection("AVG-EMB")
     # test_representations.test_feature_selection("TF")
-    test_paper_experiments.run_experiments("TF")
     # test_paper_experiments.evaluate_results()
 
     # test_representations.test_feature_selection("TF-IDF")
@@ -30,6 +29,8 @@ def test_regression():
     # test_representations.test_bow_tf()
     # test_representations.test_bow_tf_idf()
     # test_representations.test_embeddings_cnn()
+
+    test_paper_experiments.run_experiments("TF")
 
 
 def test_pre_processings():
@@ -47,13 +48,14 @@ def test_evaluations():
 def test_log():
     path_log = "data/overfitting/bigger/"
 
-    tf_path = path_log + "results_regression_k_100_1000_attr_w_fs_tf_wo_outlier.csv"
+    # tf_path = path_log + "results_regression_k_100_1000_attr_w_fs_tf_wo_outlier.csv"
     # tf_idf_path = path_log + "results_regression_k_100_1000_tf_idf.csv"
     # binary_path = path_log + "results_regression_k_100_1000_tf_binary.csv"
 
-    process_overfitting_log(tf_path, "TF")
+    # process_overfitting_log(tf_path, "TF")
     # process_overfitting_log(tf_idf_path, "TF-IDF")
     # process_overfitting_log(binary_path, "TF-Binary")
+    test_paper_experiments.evaluate_results()
 
 
 def test_lda_jec():
