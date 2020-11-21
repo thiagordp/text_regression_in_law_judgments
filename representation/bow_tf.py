@@ -23,12 +23,13 @@ def document_vector(corpus, dim=0, n_grams=True):
     #     processed_corpus.append(proc)
 
     if n_grams:
-        vectorizer = CountVectorizer(ngram_range=(1, 4))
+        vectorizer = CountVectorizer(ngram_range=(1, 4), max_features=50000)
     else:
         vectorizer = CountVectorizer()
 
     x = vectorizer.fit_transform(processed_corpus).toarray()
     feature_names = vectorizer.get_feature_names()
+    print("Features: ", len(feature_names))
 
     if dim > 0:
         print("Applying PCA to reduce to", dim, "dimensions")

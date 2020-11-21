@@ -243,3 +243,8 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
     result.to_excel("results.xlsx", index=False)
 
     # export_data_to_sheets(result, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME)
+
+
+def save_predictions(pred_test, y_test, sentence_test, pred_traint, y_train, sentence_train):
+
+    return None

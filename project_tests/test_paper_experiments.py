@@ -48,18 +48,19 @@ def run_experiments(tech):
     #                  remove_outliers=True,
     #                  include_attributes=True,
     #                  n_grams=True,
-    #                  reduce_models=True)
+    #                  reduce_models=True,
+    #                  fs_after=False)
 
     ################################################
 
     # Data acquisition (Include Attributes)
-    build_test_setup(tech,
-                     feature_selection=False,
-                     use_cross_validation=False,
-                     remove_outliers=False,
-                     include_attributes=True,
-                     n_grams=False,
-                     reduce_models=False)
+    # build_test_setup(tech,
+    #                 feature_selection=False,
+    #                 use_cross_validation=False,
+    #                 remove_outliers=False,
+    #                 include_attributes=True,
+    #                 n_grams=False,
+    #                 reduce_models=False)
 
     ################################################
 
@@ -75,36 +76,62 @@ def run_experiments(tech):
     ################################################
 
     # Representation (Feature Selection, TF)
-    build_test_setup(tech,
-                     feature_selection=True,
-                     use_cross_validation=False,
-                     remove_outliers=False,
-                     include_attributes=False,
-                     n_grams=False,
-                     reduce_models=False)
+    # build_test_setup(tech,
+    #                 feature_selection=True,
+    #                 use_cross_validation=False,
+    #                 remove_outliers=False,
+    #                 include_attributes=False,
+    #                 n_grams=False,
+    #                 reduce_models=False)
 
     ################################################
 
     # Models (Reduce Models)
-    build_test_setup(tech,
-                     feature_selection=False,
-                     use_cross_validation=False,
-                     remove_outliers=False,
-                     include_attributes=False,
-                     n_grams=False,
-                     reduce_models=True)
+    # build_test_setup(tech,
+    #                 feature_selection=False,
+    #                 use_cross_validation=False,
+    #                 remove_outliers=False,
+    #                 include_attributes=False,
+    #                 n_grams=False,
+    #                 reduce_models=True)
 
     ################################################
 
-    # Training (Cross- Validation and Remove Outliers)
+    # Models (Cross Validation and Remove Outlier)
     build_test_setup(tech,
                      feature_selection=False,
                      use_cross_validation=True,
                      remove_outliers=True,
                      include_attributes=False,
+                     n_grams=False,
+                     reduce_models=False)
+
+    ################################################
+
+    # Training (Attributes, N-grams, Feature Selection)
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
                      n_grams=True,
                      reduce_models=False)
 
+    ##############################################################################################################################
+
+    # Training (Attributes, N-grams, Feature Selection, Reduce Model)
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=True,
+                     reduce_models=True)
+
+    ##############################################################################################################################
+
+    print("Waiting")
+    time.sleep(2 ** 32 - 1)
     ##############################################################################################################################
 
     print("Waiting")
@@ -127,7 +154,7 @@ def run_experiments(tech):
     # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=True, n_grams=True)
 
 
-def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes, n_grams, reduce_models):
+def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes, n_grams, reduce_models, fs_after=True):
     print("=" * 100)
     print(datetime.today())
     print("PAPER EXPERIMENTS")
@@ -138,6 +165,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     print("Include Attributes:", include_attributes)
     print("Include N-Grams:   ", n_grams)
     print("Reduce Models:     ", reduce_models)
+    print("After FS:          ", fs_after)
     print("")
 
     # Read CSV with processed documents
@@ -150,6 +178,11 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     # Remove documentos with Zero values
     if not INCLUDE_ZERO_VALUES:
         raw_data_df = raw_data_df.loc[raw_data_df["indenizacao"] > 1.0]
+
+    # In case you want to filter by judge, uncomment the following lines.
+    # raw_data_df["juiz"] = raw_data_df["juiz"].apply(lambda  x: str(x).strip())
+    # raw_data_df = raw_data_df.loc[raw_data_df["juiz"] == "Vânia Petermann"]
+    # print("After:            ", raw_data_df.shape[0])
 
     # Convert np.array of texts to list
     x = [row for row in raw_data_df["sentenca"].values]
@@ -205,6 +238,12 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     # Clean the memory
     del std_bow
     gc.collect()
+
+    #############################################
+    #              feature_selection            #
+    #############################################
+    if feature_selection and not fs_after:
+        list_bow = bow_feature_selection(list_bow, std_y, K_BEST_FEATURE_PAPER)
 
     if include_attributes:
         for i in range(len(list_bow)):
@@ -266,7 +305,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     #############################################
     #              feature_selection            #
     #############################################
-    if feature_selection:
+    if feature_selection and fs_after:
         bow = bow_feature_selection(list_bow, std_y, K_BEST_FEATURE_PAPER)
     else:
         bow = list_bow
@@ -275,7 +314,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
     sentenca_num = sentenca_std
 
-    repetitions = 10
+    repetitions = 5
     if not use_cross_validation:
         repetitions = 100
 
@@ -295,7 +334,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         #              cross_validation             #
         #############################################
         if use_cross_validation:
-            random_state = int((random.random() * random.random() * time.time())) % 2 ** 32
+            random_state = int(str(int((random.random() * random.random() * time.time())) % 2 ** 32)[::-1])
             kfold = KFold(n_splits=10, shuffle=True, random_state=random_state)
 
             final_set = kfold.split(arr, y)
@@ -339,6 +378,9 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
                                                                                                reduce_models=reduce_models)
             # Evaluate the predictions
             dict_results = regression_evaluation.overfitting_evaluation(train_predictions, test_predictions)
+
+            # TODO:  Include prediction saving here
+            save_preditions()
 
             # Get the used k
             if feature_selection:
@@ -384,7 +426,11 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         file_name = file_name.replace("@n_gram", "wo_n_gram")
 
     if feature_selection:
-        file_name = file_name.replace("@fs", "w_fs_" + str(K_BEST_FEATURE_PAPER))
+        file_name = file_name.replace("@fs", "w_fs_@fs_after" + str(K_BEST_FEATURE_PAPER))
+        if fs_after:
+            file_name = file_name.replace("@fs_after", "after")
+        else:
+            file_name = file_name.replace("@fs_after", "before")
     else:
         file_name = file_name.replace("@fs", "wo_fs")
 
@@ -453,12 +499,16 @@ def plot_metrics(results, log):
     plt.figure(figsize=(15, 10))
     plt.grid(linestyle=':')
 
+    r2_mean = list()
     # R2 plot
     for tech in techs:
         data = results[results["tech"] == tech]["r2_test"]
+        r2_mean.append(float(data))
         plt.bar(tech, data)
 
     data = results["r2_test"]
+    print("Mean R2:", round(float(np.mean(data)), 4))
+
     for tech, data_tech in zip(techs, data):
         label = "{:.4f}".format(data_tech)
 
@@ -483,12 +533,13 @@ def plot_metrics(results, log):
     plt.figure(figsize=(15, 10))
     plt.grid(linestyle=':')
 
-    # R2 plot
+    # RMSE plot
     for tech in techs:
         data = results[results["tech"] == tech]["rmse_test"]
         plt.bar(tech, data)
 
     data = results["rmse_test"]
+    print("Mean RMSE:", round(float(np.mean(data)), 2))
     for tech, data_tech in zip(techs, data):
         label = "{:.2f}".format(data_tech)
 
@@ -511,12 +562,13 @@ def plot_metrics(results, log):
     plt.figure(figsize=(15, 10))
     plt.grid(linestyle=':')
 
-    # R2 plot
+    # MAE plot
     for tech in techs:
         data = results[results["tech"] == tech]["mae_test"]
         plt.bar(tech, data)
 
     data = results["mae_test"]
+    print("Mean MAE:", round(float(np.mean(data)), 2))
     for tech, data_tech in zip(techs, data):
         label = "{:.2f}".format(data_tech)
 
