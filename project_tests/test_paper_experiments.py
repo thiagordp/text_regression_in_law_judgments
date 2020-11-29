@@ -29,7 +29,294 @@ from util.path_constants import INCLUDE_ZERO_VALUES
 from util.value_contants import K_BEST_FEATURE_PAPER
 
 
+def run_individual_experiments(tech):
+    print("#" * 100)
+    print("\t\t\t\t\tIndividual RESULTS")
+
+    """
+    Exp 1:
+        - Include Attributes
+    """
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=False,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 2:
+        - N-Grams
+    """
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  use_cross_validation=False,
+    #                  remove_outliers=False,
+    #                  include_attributes=False,
+    #                  n_grams=True,
+    #                  reduce_models=False,
+    #                  fs_after=False)
+
+    """
+    Exp 3:
+        - Feature Selection
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=False,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 4:
+        - Cross Validation
+    """
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=True,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=False,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 5:
+        - Remove Outliers
+    """
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=True,
+                     include_attributes=False,
+                     n_grams=False,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+
+def run_incremental_experiments(tech):
+    print("#" * 100)
+    print("\t\t\t\t\tINCREMENTAL RESULTS")
+    """
+    Exp 1:
+        - Include Attributes
+        - N-Grams
+    """
+    build_test_setup(tech,
+                     feature_selection=False,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=True,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 2:
+        - Include Attributes
+        - N-Grams
+        - Feature Selections
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=True,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 3:
+        - Include Attributes
+        - N-Grams
+        - Feature Selection
+        - Reduce Models
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=True,
+                     overfitting_avoidance=True,
+                     fs_after=False)
+
+    """
+    Exp 4:
+        - Include Attributes
+        - N-Grams
+        - Feature Selection
+        - Reduce Models
+        - Outliers
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=False,
+                     remove_outliers=True,
+                     include_attributes=True,
+                     n_grams=True,
+                     overfitting_avoidance=True,
+                     fs_after=False)
+
+    """
+    Exp 5:
+        - Include Attributes
+        - N-Grams
+        - Feature Selection
+        - Reduce Models
+        - Cross-Validation
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=True,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=True,
+                     overfitting_avoidance=True,
+                     fs_after=False)
+
+
+def combination_experiments(tech):
+    print("#" * 100)
+    print("\t\t\t\t\tCombination RESULTS")
+    """
+    Exp 1:
+        - N-Grams
+        - Feature Selection
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=True,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 2:
+        - Attributes
+        - Feature Selection
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=False,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=False,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 3:
+        - N-Grams
+        - Feature Selection
+        - Cross val
+        - Include Attr
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=True,
+                     remove_outliers=False,
+                     include_attributes=True,
+                     n_grams=True,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 5:
+        - N-Grams
+        - Feature Selection
+        - Cross Validation
+        - Overfitting Avoidance
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=True,
+                     remove_outliers=False,
+                     include_attributes=False,
+                     n_grams=True,
+                     overfitting_avoidance=True,
+                     fs_after=False)
+
+    """
+    Exp 6: 100111
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     remove_outliers=False,
+                     n_grams=False,
+                     include_attributes=True,
+                     use_cross_validation=True,
+                     overfitting_avoidance=True,
+                     fs_after=False)
+
+    """
+    Exp 7: 101011
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     remove_outliers=False,
+                     n_grams=True,
+                     include_attributes=False,
+                     use_cross_validation=True,
+                     overfitting_avoidance=True,
+                     fs_after=False)
+
+    """
+    Exp 8: 101101
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     remove_outliers=False,
+                     n_grams=True,
+                     include_attributes=True,
+                     use_cross_validation=False,
+                     overfitting_avoidance=True,
+                     fs_after=False)
+
+    """
+    Exp 9: 101110
+    """
+    build_test_setup(tech,
+                     feature_selection=True,
+                     remove_outliers=False,
+                     n_grams=True,
+                     include_attributes=True,
+                     use_cross_validation=True,
+                     overfitting_avoidance=False,
+                     fs_after=False)
+
+    """
+    Exp 10: 001111
+    """
+    build_test_setup(tech,
+                     feature_selection=False,
+                     remove_outliers=False,
+                     n_grams=True,
+                     include_attributes=True,
+                     use_cross_validation=True,
+                     overfitting_avoidance=True,
+                     fs_after=False)
+
+
 def run_experiments(tech):
+
+    # run_incremental_experiments(tech)
+
+    combination_experiments(tech)
+
+    run_individual_experiments(tech)
+
+
+    print("Waiting...")
+    time.sleep(2 ** 32)
     ################################################
     # Just Feature Selection
     # build_test_setup(tech,
@@ -42,14 +329,15 @@ def run_experiments(tech):
     ################################################
 
     # All
-    # build_test_setup(tech,
-    #                  feature_selection=True,
-    #                  use_cross_validation=True,
-    #                  remove_outliers=True,
-    #                  include_attributes=True,
-    #                  n_grams=True,
-    #                  reduce_models=True,
-    #                  fs_after=False)
+    build_test_setup(tech,
+                     feature_selection=True,
+                     use_cross_validation=True,
+                     remove_outliers=True,
+                     include_attributes=True,
+                     n_grams=True,
+                     overfitting_avoidance=True,
+                     fs_after=False,
+                     make_predictions="ensemble_voting_bg_mlp_gd_xgb")
 
     ################################################
 
@@ -65,13 +353,13 @@ def run_experiments(tech):
     ################################################
 
     # Preprocessing (N-Grams)
-    build_test_setup(tech,
-                     feature_selection=False,
-                     use_cross_validation=False,
-                     remove_outliers=False,
-                     include_attributes=False,
-                     n_grams=True,
-                     reduce_models=False)
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  use_cross_validation=False,
+    #                  remove_outliers=False,
+    #                  include_attributes=False,
+    #                  n_grams=True,
+    #                  reduce_models=False)
 
     ################################################
 
@@ -98,35 +386,35 @@ def run_experiments(tech):
     ################################################
 
     # Models (Cross Validation and Remove Outlier)
-    build_test_setup(tech,
-                     feature_selection=False,
-                     use_cross_validation=True,
-                     remove_outliers=True,
-                     include_attributes=False,
-                     n_grams=False,
-                     reduce_models=False)
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  use_cross_validation=True,
+    #                  remove_outliers=True,
+    #                  include_attributes=False,
+    #                  n_grams=False,
+    #                  reduce_models=False)
 
     ################################################
 
     # Training (Attributes, N-grams, Feature Selection)
-    build_test_setup(tech,
-                     feature_selection=True,
-                     use_cross_validation=False,
-                     remove_outliers=False,
-                     include_attributes=True,
-                     n_grams=True,
-                     reduce_models=False)
+    # build_test_setup(tech,
+    #                  feature_selection=True,
+    #                  use_cross_validation=False,
+    #                  remove_outliers=False,
+    #                  include_attributes=True,
+    #                  n_grams=True,
+    #                  reduce_models=False)
 
     ##############################################################################################################################
 
     # Training (Attributes, N-grams, Feature Selection, Reduce Model)
-    build_test_setup(tech,
-                     feature_selection=True,
-                     use_cross_validation=False,
-                     remove_outliers=False,
-                     include_attributes=True,
-                     n_grams=True,
-                     reduce_models=True)
+    # build_test_setup(tech,
+    #                  feature_selection=True,
+    #                  use_cross_validation=False,
+    #                  remove_outliers=False,
+    #                  include_attributes=True,
+    #                  n_grams=True,
+    #                  reduce_models=True)
 
     ##############################################################################################################################
 
@@ -137,24 +425,9 @@ def run_experiments(tech):
     print("Waiting")
     time.sleep(2 ** 32 - 1)
 
-    # TODO: Setup composite experiments using the following:
-    # - ALL
-    # - 5 Best
-    # - 4 Best
-    # - 3 Best
-    # - 2 Best
 
-    # Feature Selection, cross validation, Remove Outliers, N-Grams
-    # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=False, n_grams=True)
-    #
-    # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=False, include_attributes=False, n_grams=True)
-
-    # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=False, n_grams=False)
-
-    # build_test_setup(tech, feature_selection=True, use_cross_validation=True, remove_outliers=True, include_attributes=True, n_grams=True)
-
-
-def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes, n_grams, reduce_models, fs_after=True):
+def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes,
+                     n_grams, overfitting_avoidance, fs_after=True, make_predictions=None):
     print("=" * 100)
     print(datetime.today())
     print("PAPER EXPERIMENTS")
@@ -164,7 +437,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     print("Remove Outliers:   ", remove_outliers)
     print("Include Attributes:", include_attributes)
     print("Include N-Grams:   ", n_grams)
-    print("Reduce Models:     ", reduce_models)
+    print("Reduce Models:     ", overfitting_avoidance)
     print("After FS:          ", fs_after)
     print("")
 
@@ -314,9 +587,12 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
     sentenca_num = sentenca_std
 
-    repetitions = 5
+    repetitions = 10
     if not use_cross_validation:
         repetitions = 100
+
+    if make_predictions is not None:
+        repetitions = 1
 
     for repetition in tqdm.tqdm(range(repetitions)):
         arr = list()
@@ -329,12 +605,13 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         results_cross_val = list()
         sentence_test_list = list()
         test_predictions_list = list()
+        y_test_list = list()
 
         #############################################
         #              cross_validation             #
         #############################################
         if use_cross_validation:
-            random_state = int(str(int((random.random() * random.random() * time.time())) % 2 ** 32)[::-1])
+            random_state = int(str(int((random.random() * random.random() * time.time())))[::-1]) % 2 ** 32
             kfold = KFold(n_splits=10, shuffle=True, random_state=random_state)
 
             final_set = kfold.split(arr, y)
@@ -360,8 +637,6 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             sentence_test = [int(row[0]) for row in x_test]
             sentence_train = [row[0] for row in x_train]
 
-            sentence_test_list.extend(sentence_test)
-
             x_train = [row[1] for row in x_train]
             x_test = [row[1] for row in x_test]
 
@@ -375,12 +650,9 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             train_predictions, test_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test,
                                                                                                feature_names, "tf",
                                                                                                papers_models=True,
-                                                                                               reduce_models=reduce_models)
+                                                                                               reduce_models=overfitting_avoidance)
             # Evaluate the predictions
             dict_results = regression_evaluation.overfitting_evaluation(train_predictions, test_predictions)
-
-            # TODO:  Include prediction saving here
-            save_preditions()
 
             # Get the used k
             if feature_selection:
@@ -392,7 +664,10 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
                 row.append(k)
 
             results_cross_val.append(dict_results)
-            test_predictions_list.extend(test_predictions)
+
+            test_predictions_list.extend(list(test_predictions))
+            y_test_list.extend(list(y_test))
+            sentence_test_list.extend(list(sentence_test))
 
             # Clean Memory
             del sentence_test, sentence_train, x_train, x_test, y_train, y_test
@@ -401,7 +676,12 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         # Append results to the list
         list_results.extend(get_cross_validation_average(results_cross_val))
 
-        del results_cross_val
+        # regression_evaluation.save_predictions(tech=tech,
+        #                                        pred_test=test_predictions_list,
+        #                                        sentence_test=sentence_test_list,
+        #                                        output_file_path="data/paper/final/predictions_" + tech + ".@")
+
+        del results_cross_val, test_predictions_list, sentence_test_list
 
     del sentenca_num
 
@@ -444,7 +724,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     else:
         file_name = file_name.replace("@cross_val", "wo_cros_val")
 
-    if reduce_models:
+    if overfitting_avoidance:
         file_name = file_name.replace("@reduce_model", "w_reduce_model")
     else:
         file_name = file_name.replace("@reduce_model", "wo_reduce_model")
@@ -466,6 +746,9 @@ def evaluate_results():
     fullresults = dict()
 
     for log in logs:
+        if log.find("_table") != -1:
+            continue
+
         print("=" * 128)
         print(log)
 
@@ -479,6 +762,7 @@ def evaluate_results():
                 continue
 
             sub_df = df[df["tech"] == tech]
+
             rmse_test_mean = np.mean(sub_df["rmse_test"])
             mae_test_mean = np.mean(sub_df["mae_test"])
             r2_test_mean = np.mean(sub_df["r2_test"])
@@ -501,6 +785,9 @@ def plot_metrics(results, log):
 
     r2_mean = list()
     # R2 plot
+
+    table_results_list = list()
+
     for tech in techs:
         data = results[results["tech"] == tech]["r2_test"]
         r2_mean.append(float(data))
@@ -587,3 +874,25 @@ def plot_metrics(results, log):
 
     plt.tight_layout()
     plt.savefig(log.replace(".csv", "_mae_test.png"))
+
+    metrics = ["r2_test", "rmse_test", "mae_test"]
+
+    data = list()
+    techs = sorted(set(results["tech"]))
+    columns = ["metric"]
+    columns = columns + techs
+
+    for metric in metrics:
+        row_data = list()
+        row_data.append(metric)
+
+        for tech in techs:
+            metric_value = results[results["tech"] == tech][metric]
+
+            row_data.append(float(metric_value))
+
+        data.append(row_data)
+
+    df = pd.DataFrame(data=data, columns=columns)
+    df.to_csv(log.replace(".csv", "_table.csv"), index=False)
+    df.to_excel(log.replace(".csv", "_table.xlsx"), index=False)

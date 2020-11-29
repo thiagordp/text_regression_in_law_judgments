@@ -227,22 +227,6 @@ REGRESSION_BIG_MODELS_PAPER["ensemble_voting_bg_mlp_gd_xgb"] = VotingRegressor(n
 ])
 
 
-# estimators = [
-#     ('rf', RandomForestRegressor(n_estimators=100, max_depth=4, max_leaf_nodes=50)),
-#     ('gb', GradientBoostingRegressor())
-# ]
-#
-# REGRESSION_MODELS_PAPER["stacking_rf_gb_mlp"] = StackingRegressor(
-#     estimators=estimators,
-#     final_estimator=MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
-#                                  max_iter=200,
-#                                  validation_fraction=0.2,
-#                                  early_stopping=True,
-#                                  shuffle=True,
-#                                  activation="relu")
-# )
-
-
 def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech_representation, papers_models=False, reduce_models=True):
     results_test = list()
     results_train = list()
@@ -265,6 +249,11 @@ def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech
 
     # For each model, fit it to the data and make predictions
     for key in models_list.keys():
+
+        # TODO: Remove after making predictions
+        # if key != "ensemble_voting_bg_mlp_gd_xgb":
+        #     continue
+
         # print("Training", key)
         model = models_list[key]
 

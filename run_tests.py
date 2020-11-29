@@ -6,7 +6,6 @@ import os
 import sys
 import warnings
 
-from evaluation.regression_logs_evaluation import process_overfitting_log
 from project_tests import test_pre_processing, test_lda, test_paper_experiments
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -67,8 +66,8 @@ def main():
 
     # test_lda_jec()
     # test_pre_processings()
-    test_regression()
-    # test_log()
+    # test_regression()
+    test_log()
 
 
 if __name__ == "__main__":

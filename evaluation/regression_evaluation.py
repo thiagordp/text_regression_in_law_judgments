@@ -245,6 +245,18 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
     # export_data_to_sheets(result, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME)
 
 
-def save_predictions(pred_test, y_test, sentence_test, pred_traint, y_train, sentence_train):
+def save_predictions(tech, pred_test, sentence_test, output_file_path):
 
-    return None
+    predictions_values = list()
+    actual_values = list()
+
+    for pred_cross_val in pred_test:
+        predictions_values.extend(list(pred_cross_val[2]))
+        actual_values.extend(list(pred_cross_val[1]))
+
+    data = zip(sentence_test, predictions_values, actual_values)
+    df = pd.DataFrame(data, columns=["sentence", "pred", "actual"])
+    df.to_csv(output_file_path.replace("@", "csv"), index=False)
+    df.to_excel(output_file_path.replace("@", "xlsx"), index=False)
+
+
