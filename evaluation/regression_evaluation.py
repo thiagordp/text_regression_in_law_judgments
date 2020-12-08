@@ -4,8 +4,10 @@
 """
 import datetime
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from sklearn import metrics
 
 from util.sheets_api import pull_sheet_data, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME
@@ -246,17 +248,219 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
 
 
 def save_predictions(tech, pred_test, sentence_test, output_file_path):
-
     predictions_values = list()
     actual_values = list()
 
-    for pred_cross_val in pred_test:
+    for i in range(len(pred_test)):
+        pred_cross_val = pred_test[i]
+
         predictions_values.extend(list(pred_cross_val[2]))
         actual_values.extend(list(pred_cross_val[1]))
 
-    data = zip(sentence_test, predictions_values, actual_values)
+    # data = zip(sentence_test, predictions_values, actual_values)
+    # data = np.concatenate([sentence_test, predictions_values, actual_values])
+    data = list()
+
+    for i in range(len(predictions_values)):
+        pred_i = predictions_values[i]
+        actual_i = actual_values[i]
+        sent_i = sentence_test[i]
+
+        data.append([sent_i, pred_i, actual_i])
+
     df = pd.DataFrame(data, columns=["sentence", "pred", "actual"])
     df.to_csv(output_file_path.replace("@", "csv"), index=False)
     df.to_excel(output_file_path.replace("@", "xlsx"), index=False)
 
 
+def feature_relations():
+    df = pd.read_excel("data/paper/binary_table_final.xlsx", sheet_name='Compare')
+
+    df.drop(columns=["dec", "concat"], inplace=True)
+    # df.drop(columns=["% R2", "% RMSE", "R2 MLP", "RMSE MLP", "BIN"], inplace=True)
+
+    print(df.columns)
+
+    print(df.head(n=10))
+
+    df_corr = df.corr()
+
+    plt.figure(figsize=(15, 8))
+    sns.color_palette("vlag")
+    sns.heatmap(df_corr, cmap="RdBu_r")
+    plt.title("Correlation Heat Map")
+    plt.xticks(rotation='vertical')
+    plt.tight_layout()
+    plt.savefig("data/paper/correlation_heatmap.png", dpi=300)
+
+    df_corr.to_excel("data/paper/correlation_compare.xlsx")
+    print(df.describe())
+
+    # plt.figure(figsize=(15, 8))
+
+    sns.clustermap(df_corr, z_score=1, row_cluster=False, cmap="RdBu_r")
+    plt.title("Clustering Heat Map")
+    plt.xticks(rotation='vertical')
+    plt.tight_layout()
+    plt.savefig("data/paper/clustering_heatmap_z_score.png", dpi=300)
+
+
+def get_binary_code(file_name):
+    bin_code = ""
+    result = list()
+
+    tokens = file_name.split("/")[-1]
+
+    # Feature Selection
+    if tokens.find("wo_fs") >= 0:
+        fs = "0"
+    else:
+        fs = "1"
+
+    result.append(fs)
+
+    # Outlier Removal 1 (Only in test set)
+    if tokens.find("w_or1") >= 0:  # w_or1 significa com outliers
+        or1 = "0"  # Não aplica remoção de ouliers
+    else:
+        or1 = "1"
+
+    result.append(or1)
+
+    # N-Grams
+    if tokens.find("wo_ng") >= 0:
+        ng = "0"
+    else:
+        ng = "1"
+
+    result.append(ng)
+
+    # Attributes
+    if tokens.find("wo_at") >= 0:
+        at = "0"
+    else:
+        at = "1"
+
+    result.append(at)
+
+    # Cross-Validation
+    if tokens.find("wo_cv") >= 0:
+        cv = "0"
+    else:
+        cv = "1"
+
+    result.append(cv)
+
+    # Overfitting Avoidance
+    if tokens.find("wo_oa") >= 0:
+        oa = "0"
+    else:
+        oa = "1"
+
+    result.append(oa)
+
+    # Overfitting Removal 2 (On train and test sets)
+    if tokens.find("w_or2") >= 0:  # Foi programado errado lá no início... é ao contrário mesmo
+        or2 = "1"
+    else:
+        or2 = "0"
+
+    result.append(or2)
+
+    bin_code = "".join(result)
+
+    return bin_code
+
+
+def build_binary_table(files_list, techs):
+    print("Build Binary Table")
+
+    results = list()
+
+    columns = ["fs", "or1", "ng", "at", "cv", "oa", "or2"]
+
+    for tech in techs:
+        t = "_".join(tech.split("_")[:1])
+        columns.extend(["R2 " + t, "RMSE " + t, "MAE " + t])
+
+    for log_result in files_list:
+
+        if log_result.find("_table") >= 0:
+            continue
+
+        result = list()
+        tokens = log_result.split("/")[-1]
+
+        get_binary_code(log_result)
+
+        # Feature Selection
+        if tokens.find("wo_fs") >= 0:
+            fs = 0
+        else:
+            fs = 1
+
+        result.append(fs)
+
+        # Outlier Removal 1 (Only in test set)
+        if tokens.find("w_or1") >= 0:  # w_or1 significa com outliers
+            or1 = 0  # Não aplica remoção de ouliers
+        else:
+            or1 = 1
+
+        result.append(or1)
+
+        # N-Grams
+        if tokens.find("wo_ng") >= 0:
+            ng = 0
+        else:
+            ng = 1
+
+        result.append(ng)
+
+        # Attributes
+        if tokens.find("wo_at") >= 0:
+            at = 0
+        else:
+            at = 1
+
+        result.append(at)
+
+        # Cross-Validation
+        if tokens.find("wo_cv") >= 0:
+            cv = 0
+        else:
+            cv = 1
+
+        result.append(cv)
+
+        # Overfitting Avoidance
+        if tokens.find("wo_oa") >= 0:
+            oa = 0
+        else:
+            oa = 1
+
+        result.append(oa)
+
+        # Overfitting Removal 2 (On train and test sets)
+        if tokens.find("w_or2") >= 0:  # Foi programado errado lá no início... é ao contrário mesmo
+            or2 = 1
+        else:
+            or2 = 0
+
+        result.append(or2)
+
+        df = pd.read_csv(log_result)
+
+        for tech in techs:
+            r2_tech = np.mean(df[df["tech"] == tech]["r2_test"])
+            rmse_tech = np.mean(df[df["tech"] == tech]["rmse_test"])
+            mae_tech = np.mean(df[df["tech"] == tech]["mae_test"])
+            result.extend([r2_tech, rmse_tech, mae_tech])
+
+        results.append(result)
+
+    df_table = pd.DataFrame(data=results, columns=columns)
+
+    df_table.drop_duplicates(subset=["fs", "or1", "ng", "at", "cv", "oa", "or2"], inplace=True)
+    df_table.to_csv("data/paper/binary_table.csv", index=False)
+    df_table.to_excel("data/paper/binary_table.xlsx", index=False)

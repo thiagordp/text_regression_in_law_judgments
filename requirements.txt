@@ -7,3 +7,5 @@ gensim
 graphviz
 nltk
 xgboost
+seaborn
+pyqt5
