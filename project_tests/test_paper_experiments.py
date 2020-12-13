@@ -1017,25 +1017,44 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     df.to_json(file_name.replace("#", "json"), orient="records")
 
 
+def replace_tech_name(tech):
+
+    tech = tech.replace("svr_poly_rbf", "SVM RBF")
+    tech = tech.replace("svr_linear", "SVM Linear")
+    tech = tech.replace("gradient_boosting", "Gradient Boosting")
+    tech = tech.replace("ridge", "Ridge")
+    tech = tech.replace("adaboost", "Adaboost")
+    tech = tech.replace("decision_tree", "Decision Tree")
+    tech = tech.replace("mlp_400_200_100", "Neural Network")
+    tech = tech.replace("elastic_net", "Elastic Net")
+    tech = tech.replace("xgboost", "XGBoosting")
+    tech = tech.replace("xgboost_rf", "XGBoosting RF")
+    tech = tech.replace("bagging", "Bagging")
+    tech = tech.replace("ensemble_voting_bg_mlp_gd_xgb", "Ensemble Voting")
+
+    return tech
+
+
 def evaluate_results():
     """
     Evaluate Results
     """
     skip_techs = [
-        "svr_poly_rbf",
-        "svr_linear",
-        "gradient_boosting",
-        "ridge",
-        "adaboost",
-        "decision_tree",
-        "mlp_400_200_100_50",
-        "elastic_net",
-        "xgboost",
-        "xgboost_rf",
-        "bagging",
+        # "svr_poly_rbf",
+        # "svr_linear",
+        # "gradient_boosting",
+        # "ridge",
+        # "adaboost",
+        # "decision_tree",
+        # "mlp_400_200_100_50",
+        # "elastic_net",
+        # "xgboost",
+        # "xgboost_rf",
+        # "bagging",
     ]
 
     logs = glob.glob("data/paper/*.csv")
+    logs = [log_i for log_i in logs if log_i.find("_table") == -1]
     fullresults = dict()
 
     techs = []
@@ -1044,8 +1063,6 @@ def evaluate_results():
     mlp_results = list()
 
     for log in logs:
-        if log.find("_table") != -1:
-            continue
 
         print("=" * 128)
         print(log)
@@ -1059,8 +1076,10 @@ def evaluate_results():
         full_results = list()
 
         for tech in techs:
+
             if tech in skip_techs:
                 continue
+
 
             sub_df = df[df["tech"] == tech]
 
@@ -1072,14 +1091,17 @@ def evaluate_results():
             r2_test = np.array(sub_df["r2_test"])
 
             if tech.find("emsemble") >= 0 or tech.find("ensemble") >= 0:
-                tech = "ensemble_voting"
+
                 bin_code = get_binary_code(log)
+                tech = replace_tech_name(tech)
                 ensemble_results.append([tech, log, bin_code, rmse_test, mae_test, r2_test])
 
             elif tech[:5].find("mlp") >= 0:
                 bin_code = get_binary_code(log)
+                tech = replace_tech_name(tech)
                 mlp_results.append([tech, log, bin_code, rmse_test, mae_test, r2_test])
 
+            tech = replace_tech_name(tech)
             results.append([tech, rmse_test_mean, mae_test_mean, r2_test_mean])
             full_results.append([tech, log, rmse_test, mae_test, r2_test])
 
