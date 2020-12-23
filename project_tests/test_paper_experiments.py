@@ -11,7 +11,12 @@ import random
 import time
 from datetime import datetime
 
-import matplotlib
+from matplotlib import rcParams
+
+from model.vsm_regression_models import REGRESSION_MODELS_PAPER
+
+rcParams['font.family'] = 'serif'
+rcParams['font.sans-serif'] = ['Times']
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -125,106 +130,106 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     Experiment 0: 1001000
     """
-    build_test_setup(tech,
-                     feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=False,
-                     n_grams=True,
-                     include_attributes=False,
-                     use_cross_validation=False,
-                     overfitting_avoidance=False,
-                     fs_after=False)
-
-    """
-    Experiment 1: 1001001
-    """
-    build_test_setup(tech,
-                     feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=False,
-                     n_grams=True,
-                     include_attributes=False,
-                     use_cross_validation=False,
-                     overfitting_avoidance=True,
-                     fs_after=False)
-
-    """
-    Experiment 2: 1001010
-    """
-    build_test_setup(tech,
-                     feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=False,
-                     n_grams=True,
-                     include_attributes=False,
-                     use_cross_validation=True,
-                     overfitting_avoidance=False,
-                     fs_after=False)
-
-    """
-    Experiment 3: 1001011
-    """
-    build_test_setup(tech,
-                     feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=False,
-                     n_grams=True,
-                     include_attributes=False,
-                     use_cross_validation=True,
-                     overfitting_avoidance=True,
-                     fs_after=False)
-
-    """
-    Experiment 4: 1001100
-    """
-    build_test_setup(tech,
-                     feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=False,
-                     n_grams=True,
-                     include_attributes=True,
-                     use_cross_validation=False,
-                     overfitting_avoidance=False,
-                     fs_after=False)
-
-    """
-    Experiment 5: 1001101
-    """
-    build_test_setup(tech,
-                     feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=False,
-                     n_grams=True,
-                     include_attributes=True,
-                     use_cross_validation=False,
-                     overfitting_avoidance=True,
-                     fs_after=False)
-
-    """
-    Experiment 6: 1001110
-    """
-    build_test_setup(tech,
-                     feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=False,
-                     n_grams=True,
-                     include_attributes=True,
-                     use_cross_validation=True,
-                     overfitting_avoidance=False,
-                     fs_after=False)
-
-    """
-    Experiment 7: 1001111
-    """
-    build_test_setup(tech,
-                     feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=False,
-                     n_grams=True,
-                     include_attributes=True,
-                     use_cross_validation=True,
-                     overfitting_avoidance=True,
-                     fs_after=False)
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  remove_outliers=False,
+    #                  remove_outliers_both=False,
+    #                  n_grams=True,
+    #                  include_attributes=False,
+    #                  use_cross_validation=False,
+    #                  overfitting_avoidance=False,
+    #                  fs_after=False)
+    #
+    # """
+    # Experiment 1: 1001001
+    # """
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  remove_outliers=False,
+    #                  remove_outliers_both=False,
+    #                  n_grams=True,
+    #                  include_attributes=False,
+    #                  use_cross_validation=False,
+    #                  overfitting_avoidance=True,
+    #                  fs_after=False)
+    #
+    # """
+    # Experiment 2: 1001010
+    # """
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  remove_outliers=False,
+    #                  remove_outliers_both=False,
+    #                  n_grams=True,
+    #                  include_attributes=False,
+    #                  use_cross_validation=True,
+    #                  overfitting_avoidance=False,
+    #                  fs_after=False)
+    #
+    # """
+    # Experiment 3: 1001011
+    # """
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  remove_outliers=False,
+    #                  remove_outliers_both=False,
+    #                  n_grams=True,
+    #                  include_attributes=False,
+    #                  use_cross_validation=True,
+    #                  overfitting_avoidance=True,
+    #                  fs_after=False)
+    #
+    # """
+    # Experiment 4: 1001100
+    # """
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  remove_outliers=False,
+    #                  remove_outliers_both=False,
+    #                  n_grams=True,
+    #                  include_attributes=True,
+    #                  use_cross_validation=False,
+    #                  overfitting_avoidance=False,
+    #                  fs_after=False)
+    #
+    # """
+    # Experiment 5: 1001101
+    # """
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  remove_outliers=False,
+    #                  remove_outliers_both=False,
+    #                  n_grams=True,
+    #                  include_attributes=True,
+    #                  use_cross_validation=False,
+    #                  overfitting_avoidance=True,
+    #                  fs_after=False)
+    #
+    # """
+    # Experiment 6: 1001110
+    # """
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  remove_outliers=False,
+    #                  remove_outliers_both=False,
+    #                  n_grams=True,
+    #                  include_attributes=True,
+    #                  use_cross_validation=True,
+    #                  overfitting_avoidance=False,
+    #                  fs_after=False)
+    #
+    # """
+    # Experiment 7: 1001111
+    # """
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  remove_outliers=False,
+    #                  remove_outliers_both=False,
+    #                  n_grams=True,
+    #                  include_attributes=True,
+    #                  use_cross_validation=True,
+    #                  overfitting_avoidance=True,
+    #                  fs_after=False)
 
     ##############################################################
 
@@ -233,8 +238,8 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     build_test_setup(tech,
                      feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=True,
+                     remove_outliers=True,
+                     remove_outliers_both=False,
                      n_grams=True,
                      include_attributes=False,
                      use_cross_validation=False,
@@ -246,8 +251,8 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     build_test_setup(tech,
                      feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=True,
+                     remove_outliers=True,
+                     remove_outliers_both=False,
                      n_grams=True,
                      include_attributes=False,
                      use_cross_validation=False,
@@ -259,8 +264,8 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     build_test_setup(tech,
                      feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=True,
+                     remove_outliers=True,
+                     remove_outliers_both=False,
                      n_grams=True,
                      include_attributes=False,
                      use_cross_validation=True,
@@ -272,8 +277,8 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     build_test_setup(tech,
                      feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=True,
+                     remove_outliers=True,
+                     remove_outliers_both=False,
                      n_grams=True,
                      include_attributes=False,
                      use_cross_validation=True,
@@ -285,8 +290,8 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     build_test_setup(tech,
                      feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=True,
+                     remove_outliers=True,
+                     remove_outliers_both=False,
                      n_grams=True,
                      include_attributes=True,
                      use_cross_validation=False,
@@ -298,8 +303,8 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     build_test_setup(tech,
                      feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=True,
+                     remove_outliers=True,
+                     remove_outliers_both=False,
                      n_grams=True,
                      include_attributes=True,
                      use_cross_validation=False,
@@ -311,8 +316,8 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     build_test_setup(tech,
                      feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=True,
+                     remove_outliers=True,
+                     remove_outliers_both=False,
                      n_grams=True,
                      include_attributes=True,
                      use_cross_validation=True,
@@ -324,8 +329,8 @@ def run_16_experiments_set_fs_ngram(tech):
     """
     build_test_setup(tech,
                      feature_selection=False,
-                     remove_outliers=False,
-                     remove_outliers_both=True,
+                     remove_outliers=True,
+                     remove_outliers_both=False,
                      n_grams=True,
                      include_attributes=True,
                      use_cross_validation=True,
@@ -555,10 +560,12 @@ def combination_experiments(tech):
 
 
 def run_experiments(tech):
+    print(REGRESSION_MODELS_PAPER.keys())
+
     # run_individual_experiments(tech)
 
-    run_16_experiments_set_fs_ngram(tech)
-
+    # run_16_experiments_set_fs_ngram(tech)
+    # time.sleep(2 ** 32)
     # run_incremental_experiments(tech)
 
     # combination_experiments(tech)
@@ -576,17 +583,42 @@ def run_experiments(tech):
 
     ################################################
 
-    # All
+    # # All
+    list_k = [5000]
+
+    for k_value in list_k:
+        build_test_setup(tech,
+                         feature_selection=True,
+                         use_cross_validation=True,
+                         remove_outliers=False,
+                         include_attributes=True,
+                         n_grams=True,
+                         overfitting_avoidance=True,
+                         remove_outliers_both=True,
+                         fs_after=False,
+                         k_features=k_value)
+    # #
     # build_test_setup(tech,
-    #                   feature_selection=False,
+    #                  feature_selection=True,
     #                  use_cross_validation=True,
     #                  remove_outliers=True,
     #                  include_attributes=True,
     #                  n_grams=True,
     #                  overfitting_avoidance=True,
-    #                   remove_outliers_both=False,
-    #                  fs_after=False,
-    #                  make_predictions="ensemble_voting_bg_mlp_gd_xgb")
+    #                  remove_outliers_both=False,
+    #                  fs_after=False)
+    #
+    # # Nothing
+    # build_test_setup(tech,
+    #                  feature_selection=False,
+    #                  use_cross_validation=False,
+    #                  remove_outliers=False,
+    #                  include_attributes=False,
+    #                  n_grams=False,
+    #                  overfitting_avoidance=True,
+    #                  remove_outliers_both=False,
+    #                  fs_after=False)
+    #                 make_predictions="ensemble_voting_bg_mlp_gd_xgb")
 
     # build_test_setup(tech,
     #                   feature_selection=False,
@@ -699,7 +731,7 @@ def run_experiments(tech):
 
 
 def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes,
-                     n_grams, overfitting_avoidance, remove_outliers_both, fs_after=True, make_predictions=None):
+                     n_grams, overfitting_avoidance, remove_outliers_both, fs_after=True, make_predictions=None, k_features=None):
     print("=" * 100)
     print(datetime.today())
     print("PAPER EXPERIMENTS")
@@ -712,6 +744,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     print("Reduce Models:     ", overfitting_avoidance)
     print("After FS:          ", fs_after)
     print("Remove outlier_both", remove_outliers_both)
+    print("K Feature Select:  ", k_features)
     print("")
 
     # Read CSV with processed documents
@@ -790,7 +823,12 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     #              feature_selection            #
     #############################################
     if feature_selection and not fs_after:
-        list_bow = bow_feature_selection(list_bow, std_y, K_BEST_FEATURE_PAPER)
+        if k_features is None:
+            k_fs = K_BEST_FEATURE_PAPER
+        else:
+            k_fs = k_features
+        print("k = ", k_fs)
+        list_bow = bow_feature_selection(list_bow, std_y, k_fs, feature_names)
 
     if include_attributes:
         for i in range(len(list_bow)):
@@ -890,7 +928,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         #############################################
         if use_cross_validation:
             random_state = int(str(int((random.random() * random.random() * time.time())))[::-1]) % 2 ** 32
-            kfold = KFold(n_splits=3, shuffle=True, random_state=random_state)
+            kfold = KFold(n_splits=10, shuffle=True, random_state=random_state)
 
             final_set = kfold.split(arr, y)
         else:
@@ -984,7 +1022,11 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         file_name = file_name.replace("@n_gram", "wo_ng")
 
     if feature_selection:
-        file_name = file_name.replace("@fs", "w_fs_@fs_after_" + str(K_BEST_FEATURE_PAPER))
+        if k_features is None:
+            file_name = file_name.replace("@fs", "w_fs_@fs_after_" + str(K_BEST_FEATURE_PAPER))
+        else:
+            file_name = file_name.replace("@fs", "w_fs_@fs_after_" + str(k_features))
+
         if fs_after:
             file_name = file_name.replace("@fs_after", "after")
         else:
@@ -1018,7 +1060,6 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
 
 def replace_tech_name(tech):
-
     tech = tech.replace("svr_poly_rbf", "SVM RBF")
     tech = tech.replace("svr_linear", "SVM Linear")
     tech = tech.replace("gradient_boosting", "Gradient Boosting")
@@ -1027,9 +1068,10 @@ def replace_tech_name(tech):
     tech = tech.replace("decision_tree", "Decision Tree")
     tech = tech.replace("mlp_400_200_100", "Neural Network")
     tech = tech.replace("elastic_net", "Elastic Net")
-    tech = tech.replace("xgboost", "XGBoosting")
     tech = tech.replace("xgboost_rf", "XGBoosting RF")
+    tech = tech.replace("xgboost", "XGBoosting")
     tech = tech.replace("bagging", "Bagging")
+    tech = tech.replace("random_forest", "Random Forest")
     tech = tech.replace("ensemble_voting_bg_mlp_gd_xgb", "Ensemble Voting")
 
     return tech
@@ -1041,12 +1083,12 @@ def evaluate_results():
     """
     skip_techs = [
         # "svr_poly_rbf",
-        # "svr_linear",
+        "svr_linear",
         # "gradient_boosting",
         # "ridge",
         # "adaboost",
         # "decision_tree",
-        # "mlp_400_200_100_50",
+        "mlp_400_200_100_50",
         # "elastic_net",
         # "xgboost",
         # "xgboost_rf",
@@ -1054,7 +1096,9 @@ def evaluate_results():
     ]
 
     logs = glob.glob("data/paper/*.csv")
+    # logs = rename_log(logs)
     logs = [log_i for log_i in logs if log_i.find("_table") == -1]
+
     fullresults = dict()
 
     techs = []
@@ -1062,15 +1106,15 @@ def evaluate_results():
     ensemble_results = list()
     mlp_results = list()
 
-    for log in logs:
+    for log in tqdm.tqdm(logs):
 
-        print("=" * 128)
-        print(log)
+        # print("=" * 128)
+        # print(log)
 
         df = pd.read_csv(log)
         techs = [tech for tech in df["tech"] if tech not in skip_techs]
         techs = sorted(set(list(techs)))
-        techs_all.extend(techs)
+        # techs_all.extend(techs)
 
         results = list()
         full_results = list()
@@ -1080,6 +1124,7 @@ def evaluate_results():
             if tech in skip_techs:
                 continue
 
+            techs_all.append(tech)
 
             sub_df = df[df["tech"] == tech]
 
@@ -1090,8 +1135,10 @@ def evaluate_results():
             r2_test_mean = np.mean(sub_df["r2_test"])
             r2_test = np.array(sub_df["r2_test"])
 
-            if tech.find("emsemble") >= 0 or tech.find("ensemble") >= 0:
+            tech = tech.replace("emsemble", "ensemble")
 
+            if tech.find("emsemble") >= 0 or tech.find("ensemble") >= 0:
+                tech = tech.replace("emsemble", "ensemble")
                 bin_code = get_binary_code(log)
                 tech = replace_tech_name(tech)
                 ensemble_results.append([tech, log, bin_code, rmse_test, mae_test, r2_test])
@@ -1245,17 +1292,45 @@ def plot_violin_2(df_full, log):
     plt.savefig(log.replace(".csv", "_rmse_violin.png"))
 
 
+def rename_log(logs):
+    new_logs = list()
+
+    for log in logs:
+        new_log = log
+
+        new_log = new_log.replace("wo_outlier", "wo_or1")
+        new_log = new_log.replace("w_outlier", "w_or1")
+        new_log = new_log.replace("wo_n_gram", "wo_ng")
+        new_log = new_log.replace("w_n_gram", "w_ng")
+        new_log = new_log.replace("wo_attr", "wo_at")
+        new_log = new_log.replace("w_attr", "w_at")
+        new_log = new_log.replace("w_cros_val", "w_cv")
+        new_log = new_log.replace("wo_cross_val", "wo_cv")
+        new_log = new_log.replace("wo_reduce_model", "wo_oa")
+        new_log = new_log.replace("w_reduce_model", "w_oa")
+        new_log = new_log.replace("w_reduce_model", "w_oa")
+        new_log = new_log.replace("w_reduce_model", "w_oa")
+
+        if new_log.find("or2") <= -1:
+            new_log = new_log.replace(".csv", "_wo_or2.csv")
+
+        new_logs.append(new_logs)
+
+    return new_logs
+
+
 def plot_metrics(results, log):
     techs = sorted(set(results["tech"]))
-    matplotlib.style.use("seaborn")
+    # matplotlib.style.use("seaborn")
 
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(18, 10))
     plt.grid(linestyle=':')
 
     r2_mean = list()
 
     table_results_list = list()
 
+    """
     for tech in techs:
         data = results[results["tech"] == tech]["r2_test"]
         r2_mean.append(float(data))
@@ -1342,6 +1417,78 @@ def plot_metrics(results, log):
 
     plt.tight_layout()
     plt.savefig(log.replace(".csv", "_mae_test.png"))
+    """
+    #########################################################
+    # Plot R2 and RMSE in the same plot
+
+    # plt.figure(figsize=(15, 8))
+    plt.grid()
+    fig, ax1 = plt.subplots()
+
+    fig.set_figheight(8)
+    fig.set_figwidth(12)
+
+    color = 'tab:red'
+    # ax1.set_xlabel('Technique')
+    ax1.set_ylabel('RMSE', color="darkslategray", fontsize=12)
+
+    data = results["rmse_test"]
+    min_lim, max_lim = get_lim(data, "RMSE")
+    ax1.set_ylim(min_lim, max_lim)
+
+    # ax1.plot(t, r2, color=color)
+
+    for tech in techs:
+        data = float(results[results["tech"] == tech]["rmse_test"])
+        ax1.bar(tech, data, color="lightsteelblue")
+        label = format(data, ',.0f')
+
+        plt.annotate(label,  # this is the text
+                     (tech, data),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 3),  # distance from text to points (x,y)
+                     color="darkslategray",
+                     fontsize=12,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+    ax1.tick_params(axis='y', labelcolor="darkslategray", labelsize=12)
+    ax1.set_xticklabels(techs, rotation=90, fontsize=12)
+    ylabels = [format(label, ',.0f') for label in ax1.get_yticks()]
+    ax1.set_yticklabels(ylabels)
+
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+    color = 'tab:blue'
+    ax2.set_ylabel('R²', color="seagreen", fontsize=12)  # we already handled the x-label with ax1
+
+    data = list()
+    for tech in techs:
+        data.append(float(results[results["tech"] == tech]["r2_test"]))
+    ax2.plot(techs, data, "-s", color="mediumseagreen")
+    ax2.set_xticklabels(techs, rotation=90, fontsize=12)
+    ylabels = [format(label, ',.2f') for label in ax2.get_yticks()]
+    ax2.set_yticklabels(ylabels)
+
+    for tech, data_tech in zip(techs, data):
+        label = format(data_tech, ',.2f')
+
+        plt.annotate(label,  # this is the text
+                     (tech, data_tech),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 10),  # distance from text to points (x,y)
+                     color="darkslategray",
+                     fontsize=12,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+    ax2.tick_params(axis='y', labelcolor="seagreen", labelsize=12)
+
+    lim_min, lim_max = get_lim(data, "R2")
+
+    ax2.set_ylim(lim_min, lim_max)
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.savefig(log.replace(".csv", "_r2_rmse_test.pdf"))
+
+    #########################################################
 
     metrics = ["r2_test", "rmse_test", "mae_test"]
 
@@ -1364,3 +1511,38 @@ def plot_metrics(results, log):
     df = pd.DataFrame(data=data, columns=columns)
     df.to_csv(log.replace(".csv", "_table.csv"), index=False)
     df.to_excel(log.replace(".csv", "_table.xlsx"), index=False)
+
+
+def get_lim(data, type):
+    min_data = min(data)
+    max_data = max(data)
+
+    if type == "R2":
+
+        delta = 0.2
+        min_lim = 0
+        max_lim = 1
+
+        while min_lim > min_data:
+            min_lim -= delta
+
+        while max_lim < max_data:
+            max_lim += delta
+
+        return min_lim, max_lim
+    elif type == "RMSE":
+        delta = 500
+        min_lim = 0
+        max_lim = 3000
+
+        while min_lim > min_data:
+            min_lim -= delta
+
+        while max_lim < max_data:
+            max_lim += delta
+
+        return min_lim, max_lim
+    else:
+        print("Error type")
+
+    return 0, 1

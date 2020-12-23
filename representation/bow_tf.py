@@ -23,9 +23,9 @@ def document_vector(corpus, dim=0, n_grams=True):
     #     processed_corpus.append(proc)
 
     if n_grams:
-        vectorizer = CountVectorizer(ngram_range=(1, 4), max_features=50000)
+        vectorizer = CountVectorizer(ngram_range=(1, 4), max_features=50000, min_df=10)
     else:
-        vectorizer = CountVectorizer()
+        vectorizer = CountVectorizer(ngram_range=(1, 1), max_features=50000, min_df=10)
 
     x = vectorizer.fit_transform(processed_corpus).toarray()
     feature_names = vectorizer.get_feature_names()

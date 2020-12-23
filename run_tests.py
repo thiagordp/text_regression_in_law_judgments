@@ -6,6 +6,7 @@ import os
 import sys
 import warnings
 
+from evaluation import regression_evaluation
 from evaluation.regression_evaluation import feature_relations
 from project_tests import test_pre_processing, test_lda, test_paper_experiments
 
@@ -55,7 +56,7 @@ def test_log():
     # process_overfitting_log(tf_path, "TF")
     # process_overfitting_log(tf_idf_path, "TF-IDF")
     # process_overfitting_log(binary_path, "TF-Binary")
-
+    # regression_evaluation.fix_logs()
     test_paper_experiments.evaluate_results()
 
 
@@ -72,9 +73,9 @@ def main():
 
     # test_lda_jec()
     # test_pre_processings()
-    #test_regression()
+    test_regression()
     test_log()
-    #test_feature_relations()
+    # test_feature_relations()
 
 
 if __name__ == "__main__":

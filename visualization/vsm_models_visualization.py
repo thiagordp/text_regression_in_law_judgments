@@ -93,3 +93,4 @@ def visualize_cnn(model):
 
 def visualize_biggest_erros(model, y_test, y_pred):
     return None
+

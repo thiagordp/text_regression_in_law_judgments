@@ -3,11 +3,14 @@
 @author
 """
 import datetime
+import glob
+import itertools
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import tqdm
 from sklearn import metrics
 
 from util.sheets_api import pull_sheet_data, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME
@@ -281,6 +284,23 @@ def feature_relations():
 
     print(df.columns)
 
+    columns = list(df.columns)[:7]
+
+    list_processed = list()
+
+    for L in range(2, 7):
+        for subset in itertools.combinations(columns, L):
+            subset = list(subset)
+
+            str_subset = "_".join(subset)
+
+            df[str_subset] = 0
+            for f in subset:
+                df[str_subset] += df[f]
+
+            max_subset = max(df[str_subset])
+            df[str_subset] = df[str_subset].apply(lambda x: float(x) / max_subset)
+
     print(df.head(n=10))
 
     df_corr = df.corr()
@@ -379,8 +399,12 @@ def build_binary_table(files_list, techs):
 
     columns = ["fs", "or1", "ng", "at", "cv", "oa", "or2"]
 
+    techs = [tech.replace("emsemble", "ensemble") for tech in techs]
+    techs = [tech.replace("random_forest_100", "random_forest") for tech in techs]
+    techs = sorted(set(techs))
+
     for tech in techs:
-        t = "_".join(tech.split("_")[:1])
+        t = "_".join(tech.split("_"))
         columns.extend(["R2 " + t, "RMSE " + t, "MAE " + t])
 
     for log_result in files_list:
@@ -464,3 +488,33 @@ def build_binary_table(files_list, techs):
     df_table.drop_duplicates(subset=["fs", "or1", "ng", "at", "cv", "oa", "or2"], inplace=True)
     df_table.to_csv("data/paper/binary_table.csv", index=False)
     df_table.to_excel("data/paper/binary_table.xlsx", index=False)
+
+
+def fix_logs():
+    logs = glob.glob("data/paper/*.csv")
+    logs = [log for log in logs if log.find("_table") == -1]
+    techs = list()
+
+    for log in tqdm.tqdm(logs):
+        df = pd.read_csv(log)
+        #
+        # df["tech"] = df["tech"].apply(lambda row: row.replace("emsemble", "ensemble"))
+        # df["tech"] = df["tech"].apply(lambda row: row.replace("random_forest_100", "random_forest"))
+        #
+        print(log.split("/")[-1], "\t", sorted(set(df["tech"])))
+        #
+        # try:
+        #     df.drop(columns=["mlp_400_200_100_50"], inplace=True)
+        # except:
+        #     pass
+        #
+        # techs.extend(sorted(set(df["tech"])))
+        #
+        # df.to_csv(log, columns=df.columns)
+        # df.to_excel(log.replace(".csv", ".xlsx"), columns=df.columns)
+        # df.to_json(log.replace(".csv", ".json"), force_ascii=False, orient="records", lines=True)
+        text = open(log).read().replace("random_forest_100", "random_forest")
+
+        open(log, "w").write(text)
+
+    print(sorted(set(techs)))
