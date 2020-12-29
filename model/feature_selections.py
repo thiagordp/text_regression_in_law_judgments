@@ -3,16 +3,13 @@
 @author Thiago R. Dal Pont
 """
 import numpy as np
-import pandas as pd
-from sklearn.ensemble import IsolationForest, RandomForestRegressor
-from sklearn.feature_selection import SelectKBest, f_regression, RFE
-from sklearn.linear_model import LinearRegression, Lasso, Ridge
+from sklearn.ensemble import IsolationForest
+from sklearn.feature_selection import SelectKBest, mutual_info_regression
 from sklearn.preprocessing import MinMaxScaler
-from stability_selection import RandomizedLasso, StabilitySelection
 
 
 def remove_outliers_iforest(x, y, sents):
-    iforest = IsolationForest(contamination=0.1, n_jobs=8)
+    iforest = IsolationForest(n_jobs=8)
     yhat = iforest.fit_predict(x, y)
 
     mask = yhat != -1
@@ -30,8 +27,8 @@ def bow_feature_selection(bow, y, k, features_names=[]):
     # bow = variance_sel.fit_transform(bow)
     print("Feature Selection....")
 
-    # TODO: Change to mutual information
-    test = SelectKBest(score_func=f_regression, k=k)
+    test = SelectKBest(score_func=mutual_info_regression, k=k)
+    # test = SelectKBest(score_func=f_regression, k=k)
     fit_bow = test.fit_transform(bow, y)
 
     new_bow = [list(row) for row in fit_bow]
@@ -59,7 +56,7 @@ def bow_feature_selection(bow, y, k, features_names=[]):
     # ranks["Lasso"] = rank_to_dict(np.abs(lasso.coef_), features_names)
     # print("=", end="")
 
-    #rlasso = RandomizedLasso(alpha=0.04)
+    # rlasso = RandomizedLasso(alpha=0.04)
     # rlasso.fit(bow, y)
     # ranks["Stability"] = rank_to_dict(np.abs(rlasso.coef_), features_names)
     # print("=", end="")

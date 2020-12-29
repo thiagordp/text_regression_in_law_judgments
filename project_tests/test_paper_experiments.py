@@ -584,146 +584,41 @@ def run_experiments(tech):
     ################################################
 
     # # All
-    list_k = [5000]
+    i = 1
+    total_comb = 2 ** 7
+    for fs in [True, False]:
+        for or1 in [True, False]:
+            for cv in [True, False]:
+                for oa in [True, False]:
+                    for at in [True, False]:
+                        for or2 in [True, False]:
+                            for ng in [True, False]:
 
-    for k_value in list_k:
-        build_test_setup(tech,
-                         feature_selection=True,
-                         use_cross_validation=True,
-                         remove_outliers=False,
-                         include_attributes=True,
-                         n_grams=True,
-                         overfitting_avoidance=True,
-                         remove_outliers_both=True,
-                         fs_after=False,
-                         k_features=k_value)
-    # #
-    # build_test_setup(tech,
-    #                  feature_selection=True,
-    #                  use_cross_validation=True,
-    #                  remove_outliers=True,
-    #                  include_attributes=True,
-    #                  n_grams=True,
-    #                  overfitting_avoidance=True,
-    #                  remove_outliers_both=False,
-    #                  fs_after=False)
-    #
-    # # Nothing
-    # build_test_setup(tech,
-    #                  feature_selection=False,
-    #                  use_cross_validation=False,
-    #                  remove_outliers=False,
-    #                  include_attributes=False,
-    #                  n_grams=False,
-    #                  overfitting_avoidance=True,
-    #                  remove_outliers_both=False,
-    #                  fs_after=False)
-    #                 make_predictions="ensemble_voting_bg_mlp_gd_xgb")
+                                if or2 and or1:
+                                    total_comb -= 1
 
-    # build_test_setup(tech,
-    #                   feature_selection=False,
-    #                  use_cross_validation=True,
-    #                  remove_outliers=False,
-    #                  include_attributes=False,
-    #                  n_grams=True,
-    #                  overfitting_avoidance=False,
-    #                  remove_outliers_both=True,
-    #                  fs_after=False,
-    #                  make_predictions="ensemble_voting_bg_mlp_gd_xgb")
+                                    continue
 
-    # build_test_setup(tech,
-    #                   feature_selection=False,
-    #                  use_cross_validation=True,
-    #                  remove_outliers=False,
-    #                  include_attributes=False,
-    #                  n_grams=True,
-    #                  overfitting_avoidance=False,
-    #                  remove_outliers_both=True,
-    #                  fs_after=False,
-    #                  make_predictions="mlp_400_200_100")
-    # make_predictions="ensemble_voting_bg_mlp_gd_xgb_wo_or_wo_oa")
+                                print("=" * 50, "\t", i, "of", total_comb, "(", round((i - 1) / total_comb * 100, 1), "%)\t", "=" * 50)
 
-    ################################################
+                                i += 1
+                                t1 = datetime.now()
 
-    # Data acquisition (Include Attributes)
-    # build_test_setup(tech,
-    #                 feature_selection=False,
-    #                 use_cross_validation=False,
-    #                 remove_outliers=False,
-    #                 include_attributes=True,
-    #                 n_grams=False,
-    #                 reduce_models=False)
+                                build_test_setup(tech,
+                                                 feature_selection=fs,
+                                                 use_cross_validation=cv,
+                                                 remove_outliers=or1,
+                                                 include_attributes=at,
+                                                 n_grams=ng,
+                                                 overfitting_avoidance=oa,
+                                                 remove_outliers_both=or2,
+                                                 fs_after=False,
+                                                 k_features=500)
 
-    ################################################
+                                t2 = datetime.now()
+                                print("Elapsed Time:\t", (t2 - t1))
 
-    # Preprocessing (N-Grams)
-    # build_test_setup(tech,
-    #                  feature_selection=False,
-    #                  use_cross_validation=False,
-    #                  remove_outliers=False,
-    #                  include_attributes=False,
-    #                  n_grams=True,
-    #                  reduce_models=False)
 
-    ################################################
-
-    # Representation (Feature Selection, TF)
-    # build_test_setup(tech,
-    #                  feature_selection=False,
-    #                 use_cross_validation=False,
-    #                 remove_outliers=False,
-    #                 include_attributes=False,
-    #                 n_grams=False,
-    #                 reduce_models=False)
-
-    ################################################
-
-    # Models (Reduce Models)
-    # build_test_setup(tech,
-    #                 feature_selection=False,
-    #                 use_cross_validation=False,
-    #                 remove_outliers=False,
-    #                 include_attributes=False,
-    #                 n_grams=False,
-    #                 reduce_models=True)
-
-    ################################################
-
-    # Models (Cross Validation and Remove Outlier)
-    # build_test_setup(tech,
-    #                  feature_selection=False,
-    #                  use_cross_validation=True,
-    #                  remove_outliers=True,
-    #                  include_attributes=False,
-    #                  n_grams=False,
-    #                  reduce_models=False)
-
-    ################################################
-
-    # Training (Attributes, N-grams, Feature Selection)
-    # build_test_setup(tech,
-    #                   feature_selection=False,
-    #                  use_cross_validation=False,
-    #                  remove_outliers=False,
-    #                  include_attributes=True,
-    #                  n_grams=True,
-    #                  reduce_models=False)
-
-    ##############################################################################################################################
-
-    # Training (Attributes, N-grams, Feature Selection, Reduce Model)
-    # build_test_setup(tech,
-    #                   feature_selection=False,
-    #                  use_cross_validation=False,
-    #                  remove_outliers=False,
-    #                  include_attributes=True,
-    #                  n_grams=True,
-    #                  reduce_models=True)
-
-    ##############################################################################################################################
-
-    print("Waiting")
-    time.sleep(2 ** 32 - 1)
     ##############################################################################################################################
 
     print("Waiting")
@@ -732,7 +627,6 @@ def run_experiments(tech):
 
 def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes,
                      n_grams, overfitting_avoidance, remove_outliers_both, fs_after=True, make_predictions=None, k_features=None):
-    print("=" * 100)
     print(datetime.today())
     print("PAPER EXPERIMENTS")
     print("Tech:              ", tech)
@@ -827,6 +721,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             k_fs = K_BEST_FEATURE_PAPER
         else:
             k_fs = k_features
+
         print("k = ", k_fs)
         list_bow = bow_feature_selection(list_bow, std_y, k_fs, feature_names)
 
@@ -891,7 +786,11 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     #              feature_selection            #
     #############################################
     if feature_selection and fs_after:
-        bow = bow_feature_selection(list_bow, std_y, K_BEST_FEATURE_PAPER)
+        if k_features is None:
+            k_fs = K_BEST_FEATURE_PAPER
+        else:
+            k_fs = k_features
+        bow = bow_feature_selection(list_bow, std_y, k_fs)
     else:
         bow = list_bow
 
@@ -899,12 +798,13 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
     sentenca_num = sentenca_std
 
-    repetitions = 10
-    if not use_cross_validation:
-        repetitions = 100
+    # Same No of repetitions for both
+    repetitions = 25
+    # if not use_cross_validation:
+    #     repetitions = 100
 
-    if make_predictions is not None:
-        repetitions = 1
+    # if make_predictions is not None:
+    #     repetitions = 1
 
     if remove_outliers_both:
         bow, y, sentenca_num = remove_outliers_iforest(bow, y, sentenca_num)
@@ -926,16 +826,16 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         #############################################
         #              cross_validation             #
         #############################################
+        k_splits = 5
+
         if use_cross_validation:
             random_state = int(str(int((random.random() * random.random() * time.time())))[::-1]) % 2 ** 32
-            kfold = KFold(n_splits=10, shuffle=True, random_state=random_state)
+            kfold = KFold(n_splits=k_splits, shuffle=True, random_state=random_state)
 
             final_set = kfold.split(arr, y)
         else:
             random_state = int((random.random() * random.random() * time.time())) % 2 ** 32
-
-            x_train, x_test, y_train, y_test = train_test_split(arr, y, test_size=0.3, random_state=random_state)
-
+            x_train, x_test, y_train, y_test = train_test_split(arr, y, test_size=round((1 / k_splits), 2), random_state=random_state)
             final_set = [[[x_train, y_train], [x_test, y_test]]]
 
         for train_ix, test_ix in final_set:
@@ -957,7 +857,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             x_test = [row[1] for row in x_test]
 
             #############################################
-            #              remove outliers              #
+            #              remove outliers Simple       #
             #############################################
             if remove_outliers:
                 x_train, y_train, sentence_train = remove_outliers_iforest(x_train, y_train, sentence_train)
@@ -972,7 +872,10 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
             # Get the used k
             if feature_selection:
-                k = K_BEST_FEATURE_PAPER
+                if k_features is not None:
+                    k = k_features
+                else:
+                    k = K_BEST_FEATURE_PAPER
             else:
                 k = len(x_train[0])
 
@@ -1004,7 +907,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     # Create dataframe using results' list
     df = pd.DataFrame(list_results, columns=["tech", "rmse_test", "rmse_train", "rmse_ratio",
                                              "r2_train", "r2_test", "r2_ratio",
-                                             "mae_train", "mae_test", "mae_ratio", "k"])
+                                             "mae_train", "mae_test", "mae_ratio", "mpe_train", "mpe_test", "mpe_ratio", "k"])
 
     # Write file name according to the experimental setup.
     file_name = "data/paper/results_regression_@fs_@tech_@outlier_@n_gram_@attr_@cross_val_@reduce_model_@remove_outliers_both.#"
@@ -1066,7 +969,9 @@ def replace_tech_name(tech):
     tech = tech.replace("ridge", "Ridge")
     tech = tech.replace("adaboost", "Adaboost")
     tech = tech.replace("decision_tree", "Decision Tree")
-    tech = tech.replace("mlp_400_200_100", "Neural Network")
+
+    if tech.find("_") == -1:
+        tech = tech.replace("mlp", "Neural Network")
     tech = tech.replace("elastic_net", "Elastic Net")
     tech = tech.replace("xgboost_rf", "XGBoosting RF")
     tech = tech.replace("xgboost", "XGBoosting")
@@ -1084,6 +989,7 @@ def evaluate_results():
     skip_techs = [
         # "svr_poly_rbf",
         "svr_linear",
+        "mlp2"
         # "gradient_boosting",
         # "ridge",
         # "adaboost",
@@ -1113,7 +1019,10 @@ def evaluate_results():
 
         df = pd.read_csv(log)
         techs = [tech for tech in df["tech"] if tech not in skip_techs]
+
         techs = sorted(set(list(techs)))
+        df = df[df["tech"] != "mlp2"]
+
         # techs_all.extend(techs)
 
         results = list()
@@ -1160,10 +1069,10 @@ def evaluate_results():
         plot_metrics(df, log)
         # plot_violin(df_full, log, x_col="tech")
 
-    df_ensemble = pd.DataFrame(ensemble_results, columns=["tech", "log", "bin_code", "rmse_test", "mae_test", "r2_test"])
-    df_mlp = pd.DataFrame(mlp_results, columns=["tech", "log", "bin_code", "rmse_test", "mae_test", "r2_test"])
-    plot_violin_box_plot(df_ensemble, log="", x_col="bin_code", file_name="data/paper/ensemble_combinations_boxplot.#", plot_violin=False)
-    plot_violin_box_plot(df_mlp, log="", x_col="bin_code", file_name="data/paper/mlp_combinations_boxplot.#", plot_violin=False)
+    # df_ensemble = pd.DataFrame(ensemble_results, columns=["tech", "log", "bin_code", "rmse_test", "mae_test", "r2_test"])
+    # df_mlp = pd.DataFrame(mlp_results, columns=["tech", "log", "bin_code", "rmse_test", "mae_test", "r2_test"])
+    # plot_violin_box_plot(df_ensemble, log="", x_col="bin_code", file_name="data/paper/ensemble_combinations_boxplot.#", plot_violin=False)
+    # plot_violin_box_plot(df_mlp, log="", x_col="bin_code", file_name="data/paper/mlp_combinations_boxplot.#", plot_violin=False)
 
     regression_evaluation.build_binary_table(logs, sorted(set(techs_all)))
 
@@ -1320,6 +1229,7 @@ def rename_log(logs):
 
 
 def plot_metrics(results, log):
+
     techs = sorted(set(results["tech"]))
     # matplotlib.style.use("seaborn")
 

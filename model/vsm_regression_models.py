@@ -163,77 +163,64 @@ REGRESSION_MODELS["bagging_mlp_200_100_50"] = BaggingRegressor(random_state=int(
 #######################################################################################################################
 
 REGRESSION_MODELS_PAPER = {
-    "elastic_net": ElasticNet(max_iter=200),
-    "ridge": Ridge(max_iter=200),
+    "elastic_net": ElasticNet(max_iter=100),
+    "ridge": Ridge(max_iter=100),
     "decision_tree": DecisionTreeRegressor(max_depth=10, max_leaf_nodes=100),
     "adaboost": AdaBoostRegressor(n_estimators=100, learning_rate=0.1),
-    "bagging": BaggingRegressor(n_estimators=100, n_jobs=8, oob_score=True),
-    "gradient_boosting": GradientBoostingRegressor(max_depth=10, max_leaf_nodes=100),
-    "xgboost": xgb.XGBRegressor(),
-    "xgboost_rf": xgb.XGBRFRegressor(),
-    # "mlp_400_200_100_50": MLPRegressor(hidden_layer_sizes=(400, 200, 100, 50,),
-    #                                    max_iter=200,
-    #                                    validation_fraction=0.2,
-    #                                    early_stopping=True,
-    #                                    shuffle=True,
-    #                                    activation="relu"),
-    "mlp_400_200_100": MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
-                                    max_iter=200,
-                                    validation_fraction=0.2,
-                                    early_stopping=True,
-                                    shuffle=True,
-                                    activation="relu"),
+    "bagging": BaggingRegressor(n_estimators=100, n_jobs=8),
+    "gradient_boosting": GradientBoostingRegressor(n_estimators=100, max_depth=10, max_leaf_nodes=100),
+    "mlp": MLPRegressor(hidden_layer_sizes=(100, 50, 50,),
+                        max_iter=100,
+                        validation_fraction=0.2,
+                        early_stopping=True,
+                        shuffle=True,
+                        activation="relu"),
     "random_forest": RandomForestRegressor(n_estimators=100, n_jobs=8, max_depth=10, max_leaf_nodes=100),
-    "svr_linear": SVR(C=1.0, epsilon=0.2, kernel="linear", max_iter=200),
-    "svr_poly_rbf": SVR(C=1.0, epsilon=0.2, kernel="rbf", max_iter=200)
+    "svr_poly_rbf": SVR(C=1.0, epsilon=0.2, kernel="rbf", max_iter=100),
+    "xgboost": xgb.XGBRegressor(n_estimators=100, max_depth=10, n_jobs=8),
+    "ensemble_voting_bg_mlp_gd_xgb":
+        VotingRegressor(n_jobs=8, estimators=[
+            ('bagging', BaggingRegressor(n_estimators=100, n_jobs=8)),
+            ('mlp', MLPRegressor(hidden_layer_sizes=(100, 50, 50,),
+                                 max_iter=100,
+                                 validation_fraction=0.2,
+                                 early_stopping=True,
+                                 shuffle=True,
+                                 activation="relu")),
+            ('xgb', xgb.XGBRegressor(n_estimators=100, max_depth=10, n_jobs=8)),
+            ('gd', GradientBoostingRegressor(max_depth=10, max_leaf_nodes=100))
+        ])
 }
-
-REGRESSION_MODELS_PAPER["ensemble_voting_bg_mlp_gd_xgb"] = VotingRegressor(n_jobs=8, estimators=[
-    ('bagging', BaggingRegressor(n_estimators=100, n_jobs=8, oob_score=True)),
-    ('mlp', MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
-                         max_iter=200,
-                         validation_fraction=0.2,
-                         early_stopping=True,
-                         shuffle=True,
-                         activation="relu")),
-    ('xgb', xgb.XGBRegressor()),
-    ('gd', GradientBoostingRegressor(max_depth=10, max_leaf_nodes=100))
-])
 
 REGRESSION_BIG_MODELS_PAPER = {
     "elastic_net": ElasticNet(max_iter=200),
     "ridge": Ridge(max_iter=200),
     "decision_tree": DecisionTreeRegressor(),
-    "adaboost": AdaBoostRegressor(n_estimators=100, learning_rate=0.1),
-    "bagging": BaggingRegressor(n_estimators=100, n_jobs=8),
-    "gradient_boosting": GradientBoostingRegressor(),
-    "xgboost": xgb.XGBRegressor(),
-    "xgboost_rf": xgb.XGBRFRegressor(),
-    # "mlp_400_200_100_50": MLPRegressor(hidden_layer_sizes=(400, 200, 100, 50,),
-    #                                    max_iter=200,
-    #                                    validation_fraction=0.2,
-    #                                    shuffle=True,
-    #                                    activation="relu"),
-    "mlp_400_200_100": MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
-                                    max_iter=200,
-                                    validation_fraction=0.2,
-                                    shuffle=True,
-                                    activation="relu"),
-    "random_forest": RandomForestRegressor(n_estimators=100, n_jobs=8),
-    "svr_linear": SVR(C=1.0, epsilon=0.2, kernel="linear"),
-    "svr_poly_rbf": SVR(C=1.0, epsilon=0.2, kernel="rbf")
+    "adaboost": AdaBoostRegressor(n_estimators=200, learning_rate=0.1),
+    "bagging": BaggingRegressor(n_estimators=200, n_jobs=8),
+    "gradient_boosting": GradientBoostingRegressor(n_estimators=200),
+    "xgboost": xgb.XGBRegressor(n_estimators=200, n_jobs=8),
+    "mlp": MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
+                        max_iter=200,
+                        validation_fraction=0.2,
+                        early_stopping=False,
+                        shuffle=True,
+                        activation="relu"),
+    "random_forest": RandomForestRegressor(n_estimators=200, n_jobs=8),
+    "svr_poly_rbf": SVR(C=1.0, epsilon=0.2, kernel="rbf", max_iter=200),
+    "ensemble_voting_bg_mlp_gd_xgb":
+        VotingRegressor(n_jobs=8, estimators=[
+            ('bagging', BaggingRegressor(n_estimators=200, n_jobs=8)),
+            ('mlp', MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
+                                 max_iter=200,
+                                 validation_fraction=0.2,
+                                 early_stopping=False,
+                                 shuffle=True,
+                                 activation="relu")),
+            ('xgb', xgb.XGBRegressor(n_estimators=200, n_jobs=8)),
+            ('gd', GradientBoostingRegressor(n_estimators=200))
+        ])
 }
-
-REGRESSION_BIG_MODELS_PAPER["ensemble_voting_bg_mlp_gd_xgb"] = VotingRegressor(n_jobs=8, estimators=[
-    ('bagging', BaggingRegressor(n_estimators=100, n_jobs=8)),
-    ('mlp', MLPRegressor(hidden_layer_sizes=(400, 200, 100,),
-                         max_iter=200,
-                         validation_fraction=0.2,
-                         shuffle=True,
-                         activation="relu")),
-    ('xgb', xgb.XGBRegressor()),
-    ('gd', GradientBoostingRegressor())
-])
 
 
 def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech_representation, papers_models=False, reduce_models=True):
@@ -258,7 +245,6 @@ def full_models_regression(x_train, y_train, x_test, y_test, feature_names, tech
 
     # For each model, fit it to the data and make predictions
     for key in models_list.keys():
-        # TODO: Remove after making predictions
         # if key != "ensemble_voting_bg_mlp_gd_xgb":
         #     continue
 

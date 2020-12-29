@@ -16,6 +16,14 @@ from sklearn import metrics
 from util.sheets_api import pull_sheet_data, SCOPES, SAMPLE_SPREADSHEET_ID_input, SAMPLE_RANGE_NAME
 
 
+def mean_perc_error(y_test, y_pred):
+    errors = []
+    for i in range(len(y_test)):
+        errors.append(abs((y_pred[i] / y_test[i]) - 1))
+
+    return np.mean(errors)
+
+
 def process_row_metric(row):
     key, y_test, y_pred = row
 
@@ -23,8 +31,9 @@ def process_row_metric(row):
     rmse = np.sqrt(mse)
     r2_score = metrics.r2_score(y_test, y_pred)
     mae = metrics.mean_absolute_error(y_test, y_pred)
+    mpe = mean_perc_error(y_test, y_pred)
 
-    return [key, mse, rmse, r2_score, mae]
+    return [key, mse, rmse, r2_score, mae, mpe]
 
 
 def get_cross_validation_average(result_list):
@@ -37,7 +46,7 @@ def get_cross_validation_average(result_list):
 
     df = pd.DataFrame(new_results, columns=["tech", "rmse_test", "rmse_train", "rmse_ratio",
                                             "r2_train", "r2_test", "r2_ratio",
-                                            "mae_train", "mae_test", "mae_ratio", "k"])
+                                            "mae_train", "mae_test", "mae_ratio", "mpe_train", "mpe_test", "mpe_ratio", "k"])
     list_tech = list(df["tech"].unique())
 
     for tech in list_tech:
@@ -50,9 +59,16 @@ def get_cross_validation_average(result_list):
         mae_test = np.mean(df[df["tech"] == tech]["mae_test"])
         mae_train = np.mean(df[df["tech"] == tech]["mae_train"])
         mae_ratio = np.mean(df[df["tech"] == tech]["mae_ratio"])
-        k = round(np.mean(df[df["tech"] == tech]["k"]))
+        mpe_test = np.mean(df[df["tech"] == tech]["mpe_test"])
+        mpe_train = np.mean(df[df["tech"] == tech]["mpe_train"])
+        mpe_ratio = np.mean(df[df["tech"] == tech]["mpe_ratio"])
+        k = round(float(np.mean(df[df["tech"] == tech]["k"])))
 
-        new_list.append([tech, rmse_train, rmse_test, rmse_ratio, r2_train, r2_test, r2_ratio, mae_train, mae_test, mae_ratio, k])
+        new_list.append([tech, rmse_train, rmse_test, rmse_ratio,
+                         r2_train, r2_test, r2_ratio,
+                         mae_train, mae_test, mae_ratio,
+                         mpe_train, mpe_test, mpe_ratio,
+                         k])
 
     return new_list
 
@@ -97,7 +113,17 @@ def compare_results(metrics_train, metrics_test):
         except:
             mae_ratio = 2 ** 32
 
-        results.append([tech, rmse_train, rmse_test, rmse_ratio, r2_train, r2_test, r2_ratio, mae_train, mae_test, mae_ratio])
+        mpe_train = float(np.mean(m_train["mpe"]))
+        mpe_test = float(np.mean(m_test["mpe"]))
+
+        try:
+            mpe_ratio = (mpe_test / mpe_train) - 1
+        except:
+            mpe_ratio = 2 ** 32
+        results.append([tech, rmse_train, rmse_test, rmse_ratio,
+                        r2_train, r2_test, r2_ratio,
+                        mae_train, mae_test, mae_ratio,
+                        mpe_train, mpe_test, mpe_ratio])
 
     return results
 
@@ -110,7 +136,7 @@ def overfitting_evaluation(results_train, results_test):
         metrics_test.append(process_row_metric(row))
     for row in results_train:
         metrics_train.append(process_row_metric(row))
-    columns = ["algorithm", "mse", "rmse", "r2", "mae"]
+    columns = ["algorithm", "mse", "rmse", "r2", "mae", "mpe"]
 
     df_test = pd.DataFrame(columns=columns, data=metrics_test)
     df_train = pd.DataFrame(columns=columns, data=metrics_train)
@@ -277,9 +303,9 @@ def save_predictions(tech, pred_test, sentence_test, output_file_path):
 
 
 def feature_relations():
-    df = pd.read_excel("data/paper/binary_table_final.xlsx", sheet_name='Compare')
+    df = pd.read_excel("data/paper/binary_table.xlsx")
 
-    df.drop(columns=["dec", "concat"], inplace=True)
+    # df.drop(columns=["dec", "concat"], inplace=True)
     # df.drop(columns=["% R2", "% RMSE", "R2 MLP", "RMSE MLP", "BIN"], inplace=True)
 
     print(df.columns)
@@ -318,11 +344,11 @@ def feature_relations():
 
     # plt.figure(figsize=(15, 8))
 
-    sns.clustermap(df_corr, z_score=1, row_cluster=False, cmap="RdBu_r")
-    plt.title("Clustering Heat Map")
-    plt.xticks(rotation='vertical')
-    plt.tight_layout()
-    plt.savefig("data/paper/clustering_heatmap_z_score.png", dpi=300)
+    # sns.clustermap(df_corr, z_score=1, row_cluster=False, cmap="RdBu_r")
+    # plt.title("Clustering Heat Map")
+    # plt.xticks(rotation='vertical')
+    # plt.tight_layout()
+    # plt.savefig("data/paper/clustering_heatmap_z_score.png", dpi=300)
 
 
 def get_binary_code(file_name):
@@ -402,10 +428,11 @@ def build_binary_table(files_list, techs):
     techs = [tech.replace("emsemble", "ensemble") for tech in techs]
     techs = [tech.replace("random_forest_100", "random_forest") for tech in techs]
     techs = sorted(set(techs))
+    # techs.remove("mlp2")
 
     for tech in techs:
         t = "_".join(tech.split("_"))
-        columns.extend(["R2 " + t, "RMSE " + t, "MAE " + t])
+        columns.extend(["R2 " + t, "RMSE " + t, "MAE " + t, "MPE " + t])
 
     for log_result in files_list:
 
@@ -479,7 +506,8 @@ def build_binary_table(files_list, techs):
             r2_tech = np.mean(df[df["tech"] == tech]["r2_test"])
             rmse_tech = np.mean(df[df["tech"] == tech]["rmse_test"])
             mae_tech = np.mean(df[df["tech"] == tech]["mae_test"])
-            result.extend([r2_tech, rmse_tech, mae_tech])
+            mpe_tech = np.mean(df[df["tech"] == tech]["mpe_test"])
+            result.extend([r2_tech, rmse_tech, mae_tech, mpe_tech])
 
         results.append(result)
 

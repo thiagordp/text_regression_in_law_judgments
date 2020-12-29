@@ -76,8 +76,6 @@ def process_judge(judges, type_judges):
     judges = [str(judge_name).strip().lower().replace(" ", "_").replace(".", "") for judge_name in judges]
     type_judges = [str(judge_type).strip().lower().replace(" ", "_").replace(".", "") for judge_type in type_judges]
 
-    print(sorted(set(judges)))
-
     judges = pd.get_dummies(judges, prefix='juiz')
     type_judges = pd.get_dummies(type_judges, prefix="tipo_juiz")
 
