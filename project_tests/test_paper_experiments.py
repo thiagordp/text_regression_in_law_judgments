@@ -584,8 +584,10 @@ def run_experiments(tech):
     ################################################
 
     # # All
-    i = 1
+    i = 0
     total_comb = 2 ** 7
+
+    flag = False
     for fs in [True, False]:
         for or1 in [True, False]:
             for cv in [True, False]:
@@ -596,12 +598,19 @@ def run_experiments(tech):
 
                                 if or2 and or1:
                                     total_comb -= 1
-
                                     continue
+
+                                i += 1
+
+                                # Skip to the last run experiment
+                                # if not flag and \
+                                #         (fs or not cv or not or1 or not at or not ng or oa or or2):
+                                #     continue
+                                # elif not fs and cv and or1 and at and ng and not oa and not or2:
+                                #     flag = True
 
                                 print("=" * 50, "\t", i, "of", total_comb, "(", round((i - 1) / total_comb * 100, 1), "%)\t", "=" * 50)
 
-                                i += 1
                                 t1 = datetime.now()
 
                                 build_test_setup(tech,
@@ -618,6 +627,10 @@ def run_experiments(tech):
                                 t2 = datetime.now()
                                 print("Elapsed Time:\t", (t2 - t1))
 
+                                for i in range(200):
+                                    print("=", end="")
+                                    time.sleep(60)
+                                print("")
 
     ##############################################################################################################################
 
@@ -699,6 +712,8 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         std_bow, feature_names = bow_tf_idf.document_vector(x, n_grams=n_grams)
     elif tech == "AVG-EMB":
         std_bow, feature_names = bow_mean_embeddings.document_vector(x)
+    # elif tech == "LDA":
+    #     pass
     else:  # if tech == "Binary"
         std_bow, feature_names = bow_binary.document_vector(x)
 
@@ -1229,7 +1244,6 @@ def rename_log(logs):
 
 
 def plot_metrics(results, log):
-
     techs = sorted(set(results["tech"]))
     # matplotlib.style.use("seaborn")
 

@@ -73,9 +73,9 @@ def main():
 
     # test_lda_jec()
     # test_pre_processings()
-    # test_regression()
-    #test_log()
-    test_feature_relations()
+    test_regression()
+    # test_log()
+    # test_feature_relations()
 
 
 if __name__ == "__main__":

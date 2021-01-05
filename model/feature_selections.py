@@ -4,7 +4,7 @@
 """
 import numpy as np
 from sklearn.ensemble import IsolationForest
-from sklearn.feature_selection import SelectKBest, mutual_info_regression
+from sklearn.feature_selection import SelectKBest, mutual_info_regression, f_regression
 from sklearn.preprocessing import MinMaxScaler
 
 
