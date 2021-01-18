@@ -1,0 +1,307 @@
+(text_mining_env) egov@acer:/media/egov/HD_Files/Experiments/Projects/text_regression_in_law_judgments$ python run_tests.py 
+[nltk_data] Downloading package stopwords to /home/egov/nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+[nltk_data] Downloading package rslp to /home/egov/nltk_data...
+[nltk_data]   Package rslp is already up-to-date!
+dict_keys(['elastic_net', 'ridge', 'decision_tree', 'adaboost', 'bagging', 'gradient_boosting', 'mlp', 'random_forest', 'svr_poly_rbf', 'xgboost', 'ensemble_voting_bg_mlp_gd_xgb'])
+================================================== 	 1 of 112 ( 0.0 %)	 ==================================================
+2021-01-05 19:32:45.408594
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  True
+Cross Validation:   True
+Remove Outliers:    True
+Include Attributes: True
+Include N-Grams:    True
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  25000
+Total documents: 940
+k =  500
+Feature Selection....
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [1:02:57<00:00, 151.09s/it]
+Elapsed Time:	 1:06:08.740935
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-05 20:58:55.017462
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  True
+Cross Validation:   True
+Remove Outliers:    True
+Include Attributes: True
+Include N-Grams:    False
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  16904
+Total documents: 940
+k =  500
+Feature Selection....
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [54:35<00:00, 131.01s/it]
+Elapsed Time:	 0:56:46.862866
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-05 22:15:42.797252
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  True
+Cross Validation:   False
+Remove Outliers:    True
+Include Attributes: True
+Include N-Grams:    True
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  25000
+Total documents: 940
+k =  500
+Feature Selection....
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [12:51<00:00, 30.85s/it]
+Elapsed Time:	 0:16:06.976649
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-05 22:51:50.830098
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  True
+Cross Validation:   False
+Remove Outliers:    True
+Include Attributes: True
+Include N-Grams:    False
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  16904
+Total documents: 940
+k =  500
+Feature Selection....
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [10:59<00:00, 26.39s/it]
+Elapsed Time:	 0:13:12.762064
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-05 23:25:04.366582
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  True
+Cross Validation:   True
+Remove Outliers:    True
+Include Attributes: False
+Include N-Grams:    True
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  25000
+Total documents: 940
+k =  500
+Feature Selection....
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [39:50<00:00, 95.64s/it]
+Elapsed Time:	 0:43:05.445600
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-06 00:28:10.633981
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  True
+Cross Validation:   True
+Remove Outliers:    True
+Include Attributes: False
+Include N-Grams:    False
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  16904
+Total documents: 940
+k =  500
+Feature Selection....
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [35:21<00:00, 84.85s/it]
+Elapsed Time:	 0:37:33.688716
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-06 01:25:45.225242
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  True
+Cross Validation:   False
+Remove Outliers:    True
+Include Attributes: False
+Include N-Grams:    True
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  25000
+Total documents: 940
+k =  500
+Feature Selection....
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [07:44<00:00, 18.56s/it]
+Elapsed Time:	 0:10:58.203236
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-06 01:56:44.271279
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  True
+Cross Validation:   False
+Remove Outliers:    True
+Include Attributes: False
+Include N-Grams:    False
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  16904
+Total documents: 940
+k =  500
+Feature Selection....
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [06:21<00:00, 15.26s/it]
+Elapsed Time:	 0:08:34.148661
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-06 02:25:19.134480
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  False
+Cross Validation:   True
+Remove Outliers:    True
+Include Attributes: True
+Include N-Grams:    True
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  25000
+Total documents: 940
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [21:38:26<00:00, 3116.27s/it]
+Elapsed Time:	 21:38:31.703620
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-07 00:23:51.533049
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  False
+Cross Validation:   True
+Remove Outliers:    True
+Include Attributes: True
+Include N-Grams:    False
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  16904
+Total documents: 940
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [13:12:23<00:00, 1901.75s/it]
+Elapsed Time:	 13:12:25.715440
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-07 13:56:18.036904
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  False
+Cross Validation:   False
+Remove Outliers:    True
+Include Attributes: True
+Include N-Grams:    True
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  25000
+Total documents: 940
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [4:19:19<00:00, 622.39s/it]
+Elapsed Time:	 4:19:24.648844
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-07 18:35:43.628761
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  False
+Cross Validation:   False
+Remove Outliers:    True
+Include Attributes: True
+Include N-Grams:    False
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  16904
+Total documents: 940
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 25/25 [2:39:12<00:00, 382.11s/it]
+Elapsed Time:	 2:39:14.668562
+====================
+================================================== 	 20 of 112 ( 17.0 %)	 ==================================================
+2021-01-07 21:34:59.224347
+PAPER EXPERIMENTS
+Tech:               TF
+Feature Selection:  False
+Cross Validation:   True
+Remove Outliers:    True
+Include Attributes: False
+Include N-Grams:    True
+Reduce Models:      True
+After FS:           False
+Remove outlier_both False
+K Feature Select:   500
+
+Processed documents: 1062
+No proc w/ compensation > 0: 940
+TF BOW Document Vector
+Features:  25000
+Total documents: 940
+ 80%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏                               | 20/25 [16:11:25<4:10:14, 3002.99s/it]
+

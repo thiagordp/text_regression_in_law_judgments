@@ -9,7 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 def remove_outliers_iforest(x, y, sents):
-    iforest = IsolationForest(n_jobs=8)
+    iforest = IsolationForest(n_jobs=8, contamination=0.1)
     yhat = iforest.fit_predict(x, y)
 
     mask = yhat != -1

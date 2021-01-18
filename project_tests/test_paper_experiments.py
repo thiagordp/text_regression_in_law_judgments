@@ -584,32 +584,34 @@ def run_experiments(tech):
     ################################################
 
     # # All
-    i = 0
-    total_comb = 2 ** 7
+    it = 0
+    total_comb = 2 ** 6
 
     flag = False
-    for fs in [True, False]:
-        for or1 in [True, False]:
-            for cv in [True, False]:
-                for oa in [True, False]:
-                    for at in [True, False]:
-                        for or2 in [True, False]:
-                            for ng in [True, False]:
+    for fs in [False]:
+        for oa in [True, False]:
+            for or1 in [True, False]:
+                for or2 in [True, False]:
+                    for at in [False, True]:
+                        for cv in [False, True]:
+                            for ng in [False, True]:
 
                                 if or2 and or1:
                                     total_comb -= 1
                                     continue
 
-                                i += 1
+                                it += 1
 
-                                # Skip to the last run experiment
+                                # # Skip to the last run experiment
                                 # if not flag and \
-                                #         (fs or not cv or not or1 or not at or not ng or oa or or2):
+                                #         not (fs and cv and not or1 and at and not ng and oa and or2):
                                 #     continue
-                                # elif not fs and cv and or1 and at and ng and not oa and not or2:
+                                # elif not flag and fs and cv and not or1 and at and not ng and oa and or2:
                                 #     flag = True
+                                #     continue
 
-                                print("=" * 50, "\t", i, "of", total_comb, "(", round((i - 1) / total_comb * 100, 1), "%)\t", "=" * 50)
+                                print("=" * 50, "\t", it, "of", total_comb, "(", round((it - 1) / total_comb * 100, 1),
+                                      "%)\t", "=" * 50)
 
                                 t1 = datetime.now()
 
@@ -627,9 +629,9 @@ def run_experiments(tech):
                                 t2 = datetime.now()
                                 print("Elapsed Time:\t", (t2 - t1))
 
-                                for i in range(200):
-                                    print("=", end="")
+                                for i in range(5):
                                     time.sleep(60)
+                                    print("=", end="")
                                 print("")
 
     ##############################################################################################################################
@@ -639,7 +641,8 @@ def run_experiments(tech):
 
 
 def build_test_setup(tech, feature_selection, use_cross_validation, remove_outliers, include_attributes,
-                     n_grams, overfitting_avoidance, remove_outliers_both, fs_after=True, make_predictions=None, k_features=None):
+                     n_grams, overfitting_avoidance, remove_outliers_both, fs_after=True, make_predictions=None,
+                     k_features=None):
     print(datetime.today())
     print("PAPER EXPERIMENTS")
     print("Tech:              ", tech)
@@ -825,6 +828,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         bow, y, sentenca_num = remove_outliers_iforest(bow, y, sentenca_num)
         print("No Docs (OR2):", len(y))
 
+    print_or1_flag = False
     for repetition in tqdm.tqdm(range(repetitions)):
         arr = list()
 
@@ -842,7 +846,6 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
         #              cross_validation             #
         #############################################
         k_splits = 5
-
         if use_cross_validation:
             random_state = int(str(int((random.random() * random.random() * time.time())))[::-1]) % 2 ** 32
             kfold = KFold(n_splits=k_splits, shuffle=True, random_state=random_state)
@@ -850,7 +853,8 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             final_set = kfold.split(arr, y)
         else:
             random_state = int((random.random() * random.random() * time.time())) % 2 ** 32
-            x_train, x_test, y_train, y_test = train_test_split(arr, y, test_size=round((1 / k_splits), 2), random_state=random_state)
+            x_train, x_test, y_train, y_test = train_test_split(arr, y, test_size=round((1 / k_splits), 2),
+                                                                random_state=random_state)
             final_set = [[[x_train, y_train], [x_test, y_test]]]
 
         for train_ix, test_ix in final_set:
@@ -876,9 +880,13 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
             #############################################
             if remove_outliers:
                 x_train, y_train, sentence_train = remove_outliers_iforest(x_train, y_train, sentence_train)
+                if not print_or1_flag:
+                    print("No Docs (OR1):", len(y_train))
+                    print_or1_flag = True
 
             # Train the models
-            train_predictions, test_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test, y_test,
+            train_predictions, test_predictions = vsm_regression_models.full_models_regression(x_train, y_train, x_test,
+                                                                                               y_test,
                                                                                                feature_names, "tf",
                                                                                                papers_models=True,
                                                                                                reduce_models=overfitting_avoidance)
@@ -922,7 +930,8 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     # Create dataframe using results' list
     df = pd.DataFrame(list_results, columns=["tech", "rmse_test", "rmse_train", "rmse_ratio",
                                              "r2_train", "r2_test", "r2_ratio",
-                                             "mae_train", "mae_test", "mae_ratio", "mpe_train", "mpe_test", "mpe_ratio", "k"])
+                                             "mae_train", "mae_test", "mae_ratio", "mpe_train", "mpe_test", "mpe_ratio",
+                                             "k"])
 
     # Write file name according to the experimental setup.
     file_name = "data/paper/results_regression_@fs_@tech_@outlier_@n_gram_@attr_@cross_val_@reduce_model_@remove_outliers_both.#"
