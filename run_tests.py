@@ -6,7 +6,6 @@ import os
 import sys
 import warnings
 
-from evaluation import regression_evaluation
 from evaluation.regression_evaluation import feature_relations
 from project_tests import test_pre_processing, test_lda, test_paper_experiments
 
@@ -60,6 +59,10 @@ def test_log():
     test_paper_experiments.evaluate_results()
 
 
+def test_paper_results_evaluation():
+    test_paper_experiments.paper_results_evaluation()
+
+
 def test_lda_jec():
     test_lda.jec_lda()
 
@@ -73,9 +76,10 @@ def main():
 
     # test_lda_jec()
     # test_pre_processings()
-    test_regression()
+    # test_regression()
     # test_log()
     # test_feature_relations()
+    test_paper_results_evaluation()
 
 
 if __name__ == "__main__":

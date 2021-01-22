@@ -11,6 +11,7 @@ import random
 import time
 from datetime import datetime
 
+import matplotlib
 from matplotlib import rcParams
 
 from model.vsm_regression_models import REGRESSION_MODELS_PAPER
@@ -588,19 +589,26 @@ def run_experiments(tech):
     total_comb = 2 ** 6
 
     flag = False
-    for fs in [False]:
-        for oa in [True, False]:
-            for or1 in [True, False]:
+    for fs in [True, True]:
+        for oa in [True, True]:
+            for or1 in [True, True]:
                 for or2 in [True, False]:
-                    for at in [False, True]:
-                        for cv in [False, True]:
-                            for ng in [False, True]:
+                    for at in [True, True]:
+                        for cv in [True, True]:
+                            for ng in [True, True]:
 
                                 if or2 and or1:
                                     total_comb -= 1
                                     continue
 
                                 it += 1
+
+                                # true_count = int(fs == True) + int(oa == True) + int(or1 == True) \
+                                #              + int(or2 == True) + int(at == True) + int(cv == True) \
+                                #              + int(ng == True)
+                                #
+                                # if true_count > 1:
+                                #     continue
 
                                 # # Skip to the last run experiment
                                 # if not flag and \
@@ -1025,7 +1033,7 @@ def evaluate_results():
         # "bagging",
     ]
 
-    logs = glob.glob("data/paper/*.csv")
+    logs = glob.glob("data/paper/final_results/*.csv")
     # logs = rename_log(logs)
     logs = [log_i for log_i in logs if log_i.find("_table") == -1]
 
@@ -1256,8 +1264,8 @@ def plot_metrics(results, log):
     techs = sorted(set(results["tech"]))
     # matplotlib.style.use("seaborn")
 
-    plt.figure(figsize=(18, 10))
-    plt.grid(linestyle=':')
+    # plt.figure(figsize=(18, 10))
+    # plt.grid(linestyle=':')
 
     r2_mean = list()
 
@@ -1479,3 +1487,410 @@ def get_lim(data, type):
         print("Error type")
 
     return 0, 1
+
+
+def paper_results_evaluation():
+    print("=" * 128)
+    print("Paper Results Evaluation")
+    print("-" * 128)
+
+    results_logs = [log_result for log_result in glob.glob("data/paper/final_results/*.csv") if log_result.find("_table") == -1]
+
+    print("Available Combinations:", len(results_logs))
+
+    ##########################    SECTION 5.1: BASELINE (BL) AND FULL PIPELINE (FP)    ##########################
+    log_baseline = "data/paper/final_results/results_regression_wo_fs_tf_w_or1_wo_ng_wo_at_wo_cv_wo_oa_wo_or2.csv"
+    log_full_pipeline = "data/paper/final_results/results_regression_w_fs_before_500_tf_w_or1_w_ng_w_at_w_cv_w_oa_w_or2.csv"
+
+    # df_baseline = pd.read_csv(log_baseline)
+    df_fp = pd.read_csv(log_full_pipeline)
+    techs_fp = sorted(set(df_fp["tech"]))
+    print("Techs:", techs_fp)
+
+    # Get data from FP results
+    rmse_fp = dict()
+    r2_fp = dict()
+    mae_fp = dict()
+    for tech in techs_fp:
+        df_tech = df_fp[df_fp["tech"] == tech]
+        rmse_fp[tech] = np.mean(df_tech["rmse_test"])
+        r2_fp[tech] = round(np.mean(df_tech["r2_test"]), 2)
+        mae_fp[tech] = np.mean(df_tech["mae_test"])
+
+    plot_paper_rmse_r2_results(techs_fp, rmse_fp, r2_fp, mae_fp, "data/paper/final_analysis/full_pipeline_r2_rmse.pdf")
+    # plot_paper_results(techs_fp, rmse_fp, r2_fp, mae_fp, "data/paper/final_analysis/baseline_r2_rmse.pdf")
+
+    ##########################    SECTION 5.2: COMBINATIONS RESULTS    ##########################
+    columns_combinations = [
+        "fs", "or1", "ng", "at", "cv", "oa", "or2",
+        "@ adaboost",
+        "@ bagging",
+        "@ decision_tree",
+        "@ elastic_net",
+        "@ ensemble_voting_bg_mlp_gd_xgb",
+        "@ gradient_boosting",
+        "@ mlp",
+        "@ random_forest",
+        "@ ridge",
+        "@ svr_poly_rbf",
+        "@ xgboost"
+    ]
+
+    r2_columns = [line.replace("@", "R2") for line in columns_combinations]
+    rmse_columns = [line.replace("@", "RMSE") for line in columns_combinations]
+
+    # Plot the graphs of the descending metrics
+    r2_binary_table_df = pd.read_csv("data/paper/final_analysis/binary_table.csv", usecols=r2_columns)
+    r2_binary_table_df["combination"] = r2_binary_table_df["fs"].astype(str) + \
+                                        r2_binary_table_df["or1"].astype(str) + \
+                                        r2_binary_table_df["ng"].astype(str) + \
+                                        r2_binary_table_df["at"].astype(str) + \
+                                        r2_binary_table_df["cv"].astype(str) + \
+                                        r2_binary_table_df["oa"].astype(str) + \
+                                        r2_binary_table_df["or2"].astype(str)
+
+    rmse_binary_table_df = pd.read_csv("data/paper/final_analysis/binary_table.csv", usecols=rmse_columns)
+    rmse_binary_table_df["combination"] = rmse_binary_table_df["fs"].astype(str) + \
+                                          rmse_binary_table_df["or1"].astype(str) + \
+                                          rmse_binary_table_df["ng"].astype(str) + \
+                                          rmse_binary_table_df["at"].astype(str) + \
+                                          rmse_binary_table_df["cv"].astype(str) + \
+                                          rmse_binary_table_df["oa"].astype(str) + \
+                                          rmse_binary_table_df["or2"].astype(str)
+
+    plot_paper_combinations_results(r2_binary_table_df, rmse_binary_table_df)
+
+    ##########################    SECTION 5.3: IMPACT OF EACH ADJUSTMENT    ##########################
+
+    r2_binary_table_df = pd.read_csv("data/paper/final_analysis/binary_table.csv", usecols=r2_columns)
+    r2_binary_table_df["combination"] = r2_binary_table_df["fs"].astype(str) + \
+                                        r2_binary_table_df["or1"].astype(str) + \
+                                        r2_binary_table_df["ng"].astype(str) + \
+                                        r2_binary_table_df["at"].astype(str) + \
+                                        r2_binary_table_df["cv"].astype(str) + \
+                                        r2_binary_table_df["oa"].astype(str) + \
+                                        r2_binary_table_df["or2"].astype(str)
+
+    rmse_binary_table_df = pd.read_csv("data/paper/final_analysis/binary_table.csv", usecols=rmse_columns)
+    rmse_binary_table_df["combination"] = rmse_binary_table_df["fs"].astype(str) + \
+                                          rmse_binary_table_df["or1"].astype(str) + \
+                                          rmse_binary_table_df["ng"].astype(str) + \
+                                          rmse_binary_table_df["at"].astype(str) + \
+                                          rmse_binary_table_df["cv"].astype(str) + \
+                                          rmse_binary_table_df["oa"].astype(str) + \
+                                          rmse_binary_table_df["or2"].astype(str)
+    table_paper_adjustments_impact(r2_binary_table_df, rmse_binary_table_df)
+
+
+def table_paper_adjustments_impact(r2_table_df, rmse_table_df):
+    print("-" * 20, "Table Adjustments Impact", "-" * 20)
+
+    list_adjustments = ["fs", "at", "cv", "ng", "oa"]
+    columns_combinations = [
+        "@ adaboost",
+        "@ bagging",
+        "@ decision_tree",
+        "@ elastic_net",
+        "@ ensemble_voting_bg_mlp_gd_xgb",
+        "@ gradient_boosting",
+        "@ mlp",
+        "@ random_forest",
+        "@ ridge",
+        "@ svr_poly_rbf",
+        "@ xgboost"
+    ]
+
+    # OR1 and OR2 is separately
+
+    ###### R2 #####
+    r2_combinations = [text.replace("@", "R2") for text in columns_combinations]
+
+    dict_diff = dict()
+    
+    for adjust in list_adjustments:
+        print("=" * 30, "Adjustment: ", adjust, "=" * 30)
+
+        results_df_zero = r2_table_df.loc[(r2_table_df[adjust] == 0)]
+        results_df_one = r2_table_df.loc[(r2_table_df[adjust] == 1)]
+
+        for index, row in results_df_zero.iterrows():
+
+            match_df = results_df_one.copy()
+            if adjust != "fs":
+                match_df = match_df.loc[(match_df["fs"] == int(row["fs"]))]
+            if adjust != "or1":
+                match_df = match_df.loc[(match_df["or1"] == int(row["or1"]))]
+            if adjust != "ng":
+                match_df = match_df.loc[(match_df["ng"] == int(row["ng"]))]
+            if adjust != "at":
+                match_df = match_df.loc[(match_df["at"] == int(row["at"]))]
+            if adjust != "cv":
+                match_df = match_df.loc[(match_df["cv"] == int(row["cv"]))]
+            if adjust != "oa":
+                match_df = match_df.loc[(match_df["oa"] == int(row["oa"]))]
+            if adjust != "or2":
+                match_df = match_df.loc[(match_df["or2"] == int(row["or2"]))]
+
+            compare_row = 1
+            for index, matchx in match_df.iterrows():
+                compare_row = matchx
+
+            for tech_result in r2_combinations:
+                r2_zero = row[tech_result]
+                r2_one = compare_row[tech_result]
+
+                dict_tech = dict()
+                dict_tech[tech_result] = r2_one - r2_zero
+
+                if adjust not in dict_diff.keys():
+                    dict_diff[adjust] = dict_tech
+                else:
+                    dict_diff[adjust].update(dict_tech)
+
+                # print(tech_result, round(r2_one, 3), round(r2_zero, 3), round(r2_one - r2_zero, 3), sep="\t")
+                print(dict_diff)
+            print("-" * 50)
+
+
+def plot_paper_combinations_results(r2_df, rmse_df):
+    r2_df.sort_values(by="R2 ensemble_voting_bg_mlp_gd_xgb", ascending=False, inplace=True)
+    rmse_df.sort_values(by="RMSE ensemble_voting_bg_mlp_gd_xgb", ascending=True, inplace=True)
+
+    combinations_r2 = r2_df["combination"]
+    combinations_rmse = rmse_df["combination"]
+
+    r2_df.drop(columns=["combination", "fs", "ng", "oa", "or1", "or2", "cv", "at"], inplace=True)
+    rmse_df.drop(columns=["combination", "fs", "ng", "oa", "or1", "or2", "cv", "at"], inplace=True)
+
+    columns_key_r2 = sorted(r2_df.columns)
+    columns_key_rmse = sorted(rmse_df.columns)
+    columns = ["AdaBoost",
+               "Bagging",
+               "Decision Tree",
+               "Elastic Net",
+               "Ensemble Voting",
+               "Gradient Boosting",
+               "Neural Network",
+               "Random Forest",
+               "Ridge",
+               "SVM",
+               "XGBoosting"
+               ]
+
+    colors_techs = [
+        "royalblue",
+        "grey",
+        "darkcyan",
+        "darkkhaki",
+        "teal",
+        "firebrick",
+        "mediumseagreen",
+        "chocolate",
+        "darkorange",
+        "purple",
+        "seagreen"
+    ]
+
+    colors_real = [
+        (215, 38, 61),
+        (244, 96, 54),
+        (46, 41, 78),
+        (27, 153, 139),
+        (169, 183, 97),
+        (123, 44, 191),
+        (238, 150, 75),
+        (0, 126, 167),
+        (150, 48, 63),
+        (119, 191, 163),
+        (0, 0, 0),
+    ]
+
+    for it_colors in range(len(colors_real)):
+        color_real = colors_real[it_colors]
+        new_tuple = list()
+        for color_ind in color_real:
+            color_ind /= 255
+            new_tuple.append(color_ind)
+
+        colors_real[it_colors] = tuple(new_tuple)
+
+    line_styles = [
+        "solid"
+    ]
+
+    dot_styles = [
+        "o",
+        "v",
+        "s",
+    ]
+
+    plt.close('all')
+    fig, ax = plt.subplots()
+
+    fig.set_figheight(6)
+    fig.set_figwidth(9)
+
+    ax.grid(axis="y")
+
+    min_lim, max_lim = -0.4, 0.8
+
+    ax.grid(axis="y", linestyle=":")  # List of Colors available in: https://matplotlib.org/3.1.0/gallery/color/named_colors.html
+
+    # ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+    # ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
+
+    for it_columns in range(len(columns)):
+        col_key = columns_key_r2[it_columns]
+        col_name = columns[it_columns]
+        values = r2_df[col_key]
+        c = colors_real[it_columns]
+        line_style = line_styles[it_columns % len(line_styles)]
+
+        plt.plot(combinations_r2, values,
+                 label=col_name, color=c,
+                 linestyle=line_style,
+                 ms=2,
+                 alpha=0.65,
+                 marker=dot_styles[it_columns % len(dot_styles)])
+    ax.set_xticks(combinations_r2)
+    ax.set_xticklabels(combinations_r2, rotation=90, fontsize=9)
+    plt.yticks(fontsize=12)
+    ax.set_ylim(min_lim, max_lim)
+    ax.set_xlim(np.array([2.5, -2.5]) + ax.get_xlim())
+    ax.spines['right'].set_color(None)
+    ax.spines['top'].set_color(None)
+    ax.set_ylabel('R2', color="darkslategray", fontsize=10)
+    ax.set_xlabel('Combinations', color="darkslategray", fontsize=10)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
+
+    plt.subplots_adjust(left=0.0, right=1)
+    fig.tight_layout()
+    plt.savefig("data/paper/final_analysis/combinations_r2.pdf")
+
+    ################ RMSE PLOT ####################
+    plt.close('all')
+    fig, ax = plt.subplots()
+
+    fig.set_figheight(6)
+    fig.set_figwidth(9)
+
+    ax.grid(axis="y")
+
+    min_lim, max_lim = 1500, 4500
+
+    ax.grid(axis="y", linestyle=":")  # List of Colors available in: https://matplotlib.org/3.1.0/gallery/color/named_colors.html
+
+    for it_columns in range(len(columns)):
+        col_key = columns_key_rmse[it_columns]
+        col_name = columns[it_columns]
+        values = rmse_df[col_key]
+        c = colors_real[it_columns]
+        line_style = line_styles[it_columns % len(line_styles)]
+        plt.plot(combinations_rmse, values,
+                 label=col_name, color=c,
+                 linestyle=line_style,
+                 ms=2,
+                 alpha=0.65,
+                 marker=dot_styles[it_columns % len(dot_styles)])
+
+    ax.set_xticklabels(combinations_r2, rotation=90, fontsize=9)
+    ax.spines['right'].set_color(None)
+    ax.spines['top'].set_color(None)
+    plt.yticks(fontsize=12)
+    ax.set_ylim(min_lim, max_lim)
+    ax.set_xlim(np.array([2.5, -2.5]) + ax.get_xlim())
+    ax.set_ylabel('RMSE', color="darkslategray", fontsize=10)
+    ax.set_xlabel('Combinations', color="darkslategray", fontsize=10)
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
+    fig.tight_layout()
+    plt.savefig("data/paper/final_analysis/combinations_rmse.pdf")
+
+
+def plot_paper_rmse_r2_results(techs, rmse_dict, r2_dict, mae_dict, output_path):
+    tech_names = list()
+
+    tech_names.append("AdaBoost")
+    tech_names.append("Bagging")
+    tech_names.append("Decision Tree")
+    tech_names.append("Elastic Net")
+    tech_names.append("Ensemble Voting")
+    tech_names.append("Gradient Boosting")
+    tech_names.append("Neural Network")
+    tech_names.append("Random Forest")
+    tech_names.append("Ridge")
+    tech_names.append("SVM")
+    tech_names.append("XGBoosting")
+
+    tech_names = sorted(set(tech_names))
+
+    rmse_tech_value = list()
+    r2_tech_value = list()
+
+    matplotlib.rcParams['font.family'] = "FreeSerif"
+
+    for i_tech in range(len(techs)):
+        tech_key = techs[i_tech]
+
+        rmse_tech_value.append(rmse_dict[tech_key])
+        r2_tech_value.append(r2_dict[tech_key])
+
+    # RMSE
+    fig, ax1 = plt.subplots()
+
+    fig.set_figheight(6)
+    fig.set_figwidth(14)
+    ax1.set_ylabel('RMSE', color="darkslategray", fontsize=12)
+    min_lim, max_lim = get_lim(rmse_tech_value, "RMSE")
+    ax1.set_ylim(min_lim, max_lim)
+
+    ax1.grid(axis="y", linestyle=":")  # List of Colors available in: https://matplotlib.org/3.1.0/gallery/color/named_colors.html
+
+    for i in range(len(techs)):
+        tech = techs[i]
+        tech_name = tech_names[i]
+        rmse_value = round(float(rmse_tech_value[i]), 0)
+
+        ax1.bar(tech_name, rmse_value, color="lightsteelblue")
+        label = format(rmse_value, ',.0f')
+
+        plt.annotate(label,  # this is the text
+                     (tech_name, rmse_value - 700),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 3),  # distance from text to points (x,y)
+                     color="darkslategray",
+                     fontsize=12,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+    ax1.tick_params(axis='y', labelcolor="darkslategray", labelsize=12)
+    ax1.set_xticklabels(tech_names, rotation=35, fontsize=12)
+    ylabels = [format(label, ',.0f') for label in ax1.get_yticks()]
+    ax1.set_yticklabels(ylabels)
+
+    # R2 Plot
+    ax2 = ax1.twinx()
+
+    # ax2.grid(axis="y", linestyle=":", color="mediumaquamarine")
+    color = 'tab:blue'
+    ax2.set_ylabel('R²', color="seagreen", fontsize=12)  # we already handled the x-label with ax1
+    ax2.plot(tech_names, r2_tech_value, "-s", color="mediumseagreen")
+    ax2.set_xticklabels(tech_names, rotation=35, fontsize=12)
+
+    lim_min, lim_max = get_lim(r2_tech_value, "R2")
+    ax2.set_ylim(lim_min, lim_max)
+    ax2.tick_params(axis='y', labelcolor="seagreen", labelsize=12)
+    ylabels = [format(label, ',.2f') for label in ax2.get_yticks()]
+    ax2.set_yticklabels(ylabels)
+
+    for tech, data_tech in zip(tech_names, r2_tech_value):
+        label = format(data_tech, ',.2f')
+
+        plt.annotate(label,  # this is the text
+                     (tech, data_tech),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 10),  # distance from text to points (x,y)
+                     color="darkslategray",
+                     fontsize=12,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.savefig(output_path)

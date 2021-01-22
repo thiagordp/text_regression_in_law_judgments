@@ -514,8 +514,8 @@ def build_binary_table(files_list, techs):
     df_table = pd.DataFrame(data=results, columns=columns)
 
     df_table.drop_duplicates(subset=["fs", "or1", "ng", "at", "cv", "oa", "or2"], inplace=True)
-    df_table.to_csv("data/paper/binary_table.csv", index=False)
-    df_table.to_excel("data/paper/binary_table.xlsx", index=False)
+    df_table.to_csv("data/paper/final_analysis/binary_table.csv", index=False)
+    df_table.to_excel("data/paper/final_analysis/binary_table.xlsx", index=False)
 
 
 def fix_logs():
