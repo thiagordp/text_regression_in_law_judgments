@@ -6,6 +6,8 @@ import os
 import sys
 import warnings
 
+import matplotlib
+
 from evaluation.regression_evaluation import feature_relations
 from project_tests import test_pre_processing, test_lda, test_paper_experiments
 
@@ -77,8 +79,11 @@ def main():
     # test_lda_jec()
     # test_pre_processings()
     # test_regression()
-    # test_log()
-    # test_feature_relations()
+    matplotlib.rcParams['font.family'] = "FreeSerif"
+    test_log()
+    test_feature_relations()
+
+
     test_paper_results_evaluation()
 
 

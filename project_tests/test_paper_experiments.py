@@ -13,6 +13,8 @@ from datetime import datetime
 
 import matplotlib
 from matplotlib import rcParams
+from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 
 from model.vsm_regression_models import REGRESSION_MODELS_PAPER
 
@@ -1366,47 +1368,84 @@ def plot_metrics(results, log):
     plt.grid()
     fig, ax1 = plt.subplots()
 
-    fig.set_figheight(8)
+    fig.set_figheight(6)
     fig.set_figwidth(12)
 
     color = 'tab:red'
     # ax1.set_xlabel('Technique')
-    ax1.set_ylabel('RMSE', color="darkslategray", fontsize=12)
+    ax1.set_ylabel('Error', color="darkslategray", fontsize=14)
+    ax1.set_axisbelow(True)
+    ax1.grid(axis="y", linestyle=":", alpha=0.8)
 
     data = results["rmse_test"]
     min_lim, max_lim = get_lim(data, "RMSE")
     ax1.set_ylim(min_lim, max_lim)
 
     # ax1.plot(t, r2, color=color)
+    x = np.arange(len(techs))
+    it_techs = 0
+    bar_width = 0.45
 
     for tech in techs:
         data = float(results[results["tech"] == tech]["rmse_test"])
-        ax1.bar(tech, data, color="lightsteelblue")
+
+        if it_techs == 0:
+
+            ax1.bar(x[it_techs] - (bar_width / 2), data, color=(217 / 255, 198 / 255, 176 / 255), width=bar_width, label="RMSE")
+        else:
+            ax1.bar(x[it_techs] - (bar_width / 2), data, color=(217 / 255, 198 / 255, 176 / 255), width=bar_width)
+
         label = format(data, ',.0f')
 
         plt.annotate(label,  # this is the text
-                     (tech, data),  # this is the point to label
+                     (x[it_techs] - (bar_width / 2), 0),  # this is the point to label
                      textcoords="offset points",  # how to position the text
-                     xytext=(0, 3),  # distance from text to points (x,y)
-                     color="darkslategray",
-                     fontsize=12,
+                     xytext=(0, 10),  # distance from text to points (x,y)
+                     color="black",
+                     fontsize=10,
+                     rotation=90,
                      ha='center')  # horizontal alignment can be left, right or center
 
-    ax1.tick_params(axis='y', labelcolor="darkslategray", labelsize=12)
-    ax1.set_xticklabels(techs, rotation=90, fontsize=12)
+        it_techs += 1
+    it_techs = 0
+    for tech in techs:
+        data = float(results[results["tech"] == tech]["mae_test"])
+        if it_techs == 0:
+            ax1.bar(x[it_techs] + (bar_width / 2), data, color=(120 / 255, 159 / 255, 138 / 255), width=bar_width, label="MAE")
+        else:
+            ax1.bar(x[it_techs] + (bar_width / 2), data, color=(120 / 255, 159 / 255, 138 / 255), width=bar_width)
+
+        label = format(data, ',.0f')
+
+        plt.annotate(label,  # this is the text
+                     (x[it_techs] + (bar_width / 2), 0),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 10),  # distance from text to points (x,y)
+                     color="black",
+                     fontsize=10,
+                     rotation=90,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+        it_techs += 1
+
+    ax1.tick_params(axis='y', labelcolor="darkslategray", labelsize=14)
+    ax1.set_xticklabels(techs, rotation=30, fontsize=14)
     ylabels = [format(label, ',.0f') for label in ax1.get_yticks()]
     ax1.set_yticklabels(ylabels)
 
     ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
     color = 'tab:blue'
-    ax2.set_ylabel('R²', color="seagreen", fontsize=12)  # we already handled the x-label with ax1
+    ax2.set_ylabel('R²', color="darkslategray", fontsize=12)  # we already handled the x-label with ax1
 
     data = list()
     for tech in techs:
         data.append(float(results[results["tech"] == tech]["r2_test"]))
-    ax2.plot(techs, data, "-s", color="mediumseagreen")
-    ax2.set_xticklabels(techs, rotation=90, fontsize=12)
+
+    lim_min, lim_max = get_lim(data, "R2")
+    ax2.set_ylim(lim_min, 1)
+    ax2.plot(techs, data, "-s", color=(25 / 255, 46 / 255, 91 / 255), label="R²")
+    ax2.set_xticklabels(techs, rotation=30, fontsize=14)
     ylabels = [format(label, ',.2f') for label in ax2.get_yticks()]
     ax2.set_yticklabels(ylabels)
 
@@ -1417,15 +1456,26 @@ def plot_metrics(results, log):
                      (tech, data_tech),  # this is the point to label
                      textcoords="offset points",  # how to position the text
                      xytext=(0, 10),  # distance from text to points (x,y)
-                     color="darkslategray",
-                     fontsize=12,
+                     color="black",
+                     fontsize=10,
                      ha='center')  # horizontal alignment can be left, right or center
 
-    ax2.tick_params(axis='y', labelcolor="seagreen", labelsize=12)
+    ax2.tick_params(axis='y', labelcolor="darkslategray", labelsize=14)
 
-    lim_min, lim_max = get_lim(data, "R2")
+    # lim_min, lim_max = get_lim(data, "R2")
+    #
+    # ax2.set_ylim(lim_min, lim_max)
 
-    ax2.set_ylim(lim_min, lim_max)
+    labels = ["RMSE", "MAE", "R2"]
+    legend_elements = [
+        Patch(facecolor=(217 / 255, 198 / 255, 176 / 255), label='RMSE'),
+        Patch(facecolor=(120 / 255, 159 / 255, 138 / 255), label='MAE'),
+        Line2D([0], [0], color=(25 / 255, 46 / 255, 91 / 255), lw=2, label='R²'),
+    ]
+    #ax1.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
+    ax1.legend(handles=legend_elements,fancybox=False, shadow=False)
+
+    #ax2.legend(loc='upper left', bbox_to_anchor=(0.5, 0.2), fancybox=False, shadow=False, ncol=6)
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     plt.savefig(log.replace(".csv", "_r2_rmse_test.pdf"))
 
@@ -1606,7 +1656,7 @@ def table_paper_adjustments_impact(r2_table_df, rmse_table_df):
     r2_combinations = [text.replace("@", "R2") for text in columns_combinations]
 
     dict_diff = dict()
-    
+
     for adjust in list_adjustments:
         print("=" * 30, "Adjustment: ", adjust, "=" * 30)
 
@@ -1648,7 +1698,7 @@ def table_paper_adjustments_impact(r2_table_df, rmse_table_df):
                     dict_diff[adjust].update(dict_tech)
 
                 # print(tech_result, round(r2_one, 3), round(r2_zero, 3), round(r2_one - r2_zero, 3), sep="\t")
-                print(dict_diff)
+            print(dict_diff)
             print("-" * 50)
 
 

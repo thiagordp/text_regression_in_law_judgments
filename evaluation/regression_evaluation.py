@@ -303,7 +303,7 @@ def save_predictions(tech, pred_test, sentence_test, output_file_path):
 
 
 def feature_relations():
-    df = pd.read_excel("data/paper/binary_table.xlsx")
+    df = pd.read_excel("data/paper/final_analysis/binary_table.xlsx")
 
     # df.drop(columns=["dec", "concat"], inplace=True)
     # df.drop(columns=["% R2", "% RMSE", "R2 MLP", "RMSE MLP", "BIN"], inplace=True)
@@ -337,9 +337,9 @@ def feature_relations():
     plt.title("Correlation Heat Map")
     plt.xticks(rotation='vertical')
     plt.tight_layout()
-    plt.savefig("data/paper/correlation_heatmap.png", dpi=300)
+    plt.savefig("data/paper/final_analysis/correlation_heatmap.png", dpi=300)
 
-    df_corr.to_excel("data/paper/correlation_compare.xlsx")
+    df_corr.to_excel("data/paper/final_analysis/correlation_compare.xlsx")
     print(df.describe())
 
     # plt.figure(figsize=(15, 8))
