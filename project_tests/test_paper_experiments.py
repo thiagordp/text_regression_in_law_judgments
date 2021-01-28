@@ -7,6 +7,7 @@
 # Import Libraries
 import gc
 import glob
+import json
 import random
 import time
 from datetime import datetime
@@ -1472,10 +1473,10 @@ def plot_metrics(results, log):
         Patch(facecolor=(120 / 255, 159 / 255, 138 / 255), label='MAE'),
         Line2D([0], [0], color=(25 / 255, 46 / 255, 91 / 255), lw=2, label='R²'),
     ]
-    #ax1.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
-    ax1.legend(handles=legend_elements,fancybox=False, shadow=False)
+    # ax1.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
+    ax1.legend(handles=legend_elements, fancybox=False, shadow=False)
 
-    #ax2.legend(loc='upper left', bbox_to_anchor=(0.5, 0.2), fancybox=False, shadow=False, ncol=6)
+    # ax2.legend(loc='upper left', bbox_to_anchor=(0.5, 0.2), fancybox=False, shadow=False, ncol=6)
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     plt.savefig(log.replace(".csv", "_r2_rmse_test.pdf"))
 
@@ -1629,13 +1630,16 @@ def paper_results_evaluation():
                                           rmse_binary_table_df["cv"].astype(str) + \
                                           rmse_binary_table_df["oa"].astype(str) + \
                                           rmse_binary_table_df["or2"].astype(str)
-    table_paper_adjustments_impact(r2_binary_table_df, rmse_binary_table_df)
+    table_paper_adjustments_impact(r2_binary_table_df, "R2")
+    table_paper_adjustments_impact(rmse_binary_table_df, "RMSE")
 
 
-def table_paper_adjustments_impact(r2_table_df, rmse_table_df):
-    print("-" * 20, "Table Adjustments Impact", "-" * 20)
+def table_paper_adjustments_impact(table_df, metric):
+    print("-" * 20, "Table Adjustments Impact - ", metric, "-" * 20)
 
-    list_adjustments = ["fs", "at", "cv", "ng", "oa"]
+    list_adjustments = ["fs", "at", "cv", "ng", "oa", "or1", "or2"]
+
+    # OR1 and OR2 is separately
     columns_combinations = [
         "@ adaboost",
         "@ bagging",
@@ -1650,26 +1654,27 @@ def table_paper_adjustments_impact(r2_table_df, rmse_table_df):
         "@ xgboost"
     ]
 
-    # OR1 and OR2 is separately
-
     ###### R2 #####
-    r2_combinations = [text.replace("@", "R2") for text in columns_combinations]
+    r2_combinations = [text.replace("@", metric) for text in columns_combinations]
 
     dict_diff = dict()
 
     for adjust in list_adjustments:
         print("=" * 30, "Adjustment: ", adjust, "=" * 30)
 
-        results_df_zero = r2_table_df.loc[(r2_table_df[adjust] == 0)]
-        results_df_one = r2_table_df.loc[(r2_table_df[adjust] == 1)]
+        results_df_zero = table_df.loc[(table_df[adjust] == 0)]
+        results_df_one = table_df.loc[(table_df[adjust] == 1)]
+
+        if adjust == "or1":
+            results_df_zero = results_df_zero.loc[(results_df_zero["or2"] == 0)]
+        if adjust == "or2":
+            results_df_zero = results_df_zero.loc[(results_df_zero["or1"] == 0)]
 
         for index, row in results_df_zero.iterrows():
 
             match_df = results_df_one.copy()
             if adjust != "fs":
                 match_df = match_df.loc[(match_df["fs"] == int(row["fs"]))]
-            if adjust != "or1":
-                match_df = match_df.loc[(match_df["or1"] == int(row["or1"]))]
             if adjust != "ng":
                 match_df = match_df.loc[(match_df["ng"] == int(row["ng"]))]
             if adjust != "at":
@@ -1680,26 +1685,72 @@ def table_paper_adjustments_impact(r2_table_df, rmse_table_df):
                 match_df = match_df.loc[(match_df["oa"] == int(row["oa"]))]
             if adjust != "or2":
                 match_df = match_df.loc[(match_df["or2"] == int(row["or2"]))]
+            if adjust != "or1":
+                match_df = match_df.loc[(match_df["or1"] == int(row["or1"]))]
 
             compare_row = 1
             for index, matchx in match_df.iterrows():
                 compare_row = matchx
 
+            if type(compare_row) is int:
+                print("Skip", row["fs"], row["or1"], row["ng"], row["at"], row["cv"], row["oa"], row["or2"])
+                continue
+
             for tech_result in r2_combinations:
-                r2_zero = row[tech_result]
-                r2_one = compare_row[tech_result]
+                # print(dict_diff)
+                metric_zero = row[tech_result]
+                metric_one = compare_row[tech_result]
 
-                dict_tech = dict()
-                dict_tech[tech_result] = r2_one - r2_zero
+                # Update to append to array not replace.
 
-                if adjust not in dict_diff.keys():
-                    dict_diff[adjust] = dict_tech
+                if adjust in dict_diff.keys():
+                    dict_tech = dict_diff[adjust]
+
+                    if tech_result in dict_tech.keys():
+                        list_results = dict_tech[tech_result]
+                        list_results.append(metric_one - metric_zero)
+                        dict_tech[tech_result] = list_results
+                    else:
+                        dict_tech[tech_result] = [metric_one - metric_zero]
                 else:
-                    dict_diff[adjust].update(dict_tech)
+                    dict_tech = dict()
+                    dict_tech[tech_result] = [metric_one - metric_zero]
 
-                # print(tech_result, round(r2_one, 3), round(r2_zero, 3), round(r2_one - r2_zero, 3), sep="\t")
-            print(dict_diff)
-            print("-" * 50)
+                    dict_diff[adjust] = dict_tech
+
+    for adj in dict_diff.keys():
+        dict_tech = dict_diff[adj]
+        for tech_result in dict_tech.keys():
+            dict_tech[tech_result] = np.mean(dict_tech[tech_result])
+
+    output_json_name = "data/paper/final_analysis/results_combinations_" + str(metric).lower() + ".json"
+
+    with open(output_json_name, "w+") as f_out:
+        f_out.write(json.dumps(dict_diff, indent=4))
+
+    # TODO: Export to table
+    export_impact_results_to_table(dict_diff, metric)
+
+
+def export_impact_results_to_table(dict_diff=dict(), metric_label=""):
+    metrics = list(dict_diff["fs"].keys())
+
+    columns = ["technique"]
+    columns.extend(list(dict_diff.keys()))
+
+    lines = []
+
+    for metric in metrics:
+        line_values = [metric]
+        for adjustment in dict_diff.keys():
+            line_values.append(dict_diff[adjustment][metric])
+        lines.append(line_values)
+
+    metrics_df = pd.DataFrame(lines, columns=columns)
+
+    file_output_name = "data/paper/final_analysis/adjustments_impact_" + str(metric_label).lower() + ".@"
+    metrics_df.to_csv(file_output_name.replace("@", "csv"), index=False)
+    metrics_df.to_excel(file_output_name.replace("@", "xlsx"), index=False)
 
 
 def plot_paper_combinations_results(r2_df, rmse_df):

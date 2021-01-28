@@ -80,8 +80,8 @@ def main():
     # test_pre_processings()
     # test_regression()
     matplotlib.rcParams['font.family'] = "FreeSerif"
-    test_log()
-    test_feature_relations()
+    #test_log()
+    #test_feature_relations()
 
 
     test_paper_results_evaluation()
