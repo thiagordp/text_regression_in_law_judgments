@@ -8,6 +8,7 @@ import warnings
 
 import matplotlib
 
+from evaluation import regression_paper_evaluation
 from evaluation.regression_evaluation import feature_relations
 from project_tests import test_pre_processing, test_lda, test_paper_experiments
 
@@ -48,6 +49,7 @@ def test_evaluations():
 
 
 def test_log():
+
     path_log = "data/overfitting/bigger/"
 
     # tf_path = path_log + "results_regression_k_100_1000_attr_w_fs_tf_wo_outlier.csv"
@@ -62,7 +64,7 @@ def test_log():
 
 
 def test_paper_results_evaluation():
-    test_paper_experiments.paper_results_evaluation()
+    regression_paper_evaluation.paper_results_evaluation()
 
 
 def test_lda_jec():
@@ -80,8 +82,8 @@ def main():
     # test_pre_processings()
     # test_regression()
     matplotlib.rcParams['font.family'] = "FreeSerif"
-    #test_log()
-    #test_feature_relations()
+    # test_log()
+    # test_feature_relations()
 
 
     test_paper_results_evaluation()
