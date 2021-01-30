@@ -143,7 +143,6 @@ def extract_execution_time():
 
     results_list = []
     for line in experiment_logs:
-        result_dict = {}
 
         if line.find("Tech:") < 0:
             continue
@@ -165,15 +164,6 @@ def extract_execution_time():
 
         print(elapsed_time)
 
-        result_dict["fs"] = int(fs)
-        result_dict["cv"] = int(cv)
-        result_dict["or1"] = int(or1)
-        result_dict["at"] = int(at)
-        result_dict["ng"] = int(ng)
-        result_dict["oa"] = int(oa)
-        result_dict["or2"] = int(or2)
-        result_dict["seconds"] = float(round(elapsed_time, 3))
-
         result_line = [fs, cv, or1, at, ng, oa, or2, elapsed_time]
         results_list.append(result_line)
 
@@ -184,8 +174,6 @@ def extract_execution_time():
     results_df.to_csv(file_output.replace("@", "csv"), index=False)
     results_df.to_excel(file_output.replace("@", "xlsx"), index=False)
     results_df.corr().to_excel(file_output.replace("@", "corr.xlsx"))
-
-    #TODO: Check the percentual difference in execution time
 
 
 def find_adjustment_setup(text, re_expression, multiple_matches=False):
@@ -218,24 +206,30 @@ def table_paper_adjustments_impact(table_df, metric):
     list_adjustments = ["fs", "at", "cv", "ng", "oa", "or1", "or2"]
 
     # OR1 and OR2 is separately
-    columns_combinations = [
-        "@ adaboost",
-        "@ bagging",
-        "@ decision_tree",
-        "@ elastic_net",
-        "@ ensemble_voting_bg_mlp_gd_xgb",
-        "@ gradient_boosting",
-        "@ mlp",
-        "@ random_forest",
-        "@ ridge",
-        "@ svr_poly_rbf",
-        "@ xgboost"
-    ]
+    if metric != "Time":
+        columns_combinations = [
+            "@ adaboost",
+            "@ bagging",
+            "@ decision_tree",
+            "@ elastic_net",
+            "@ ensemble_voting_bg_mlp_gd_xgb",
+            "@ gradient_boosting",
+            "@ mlp",
+            "@ random_forest",
+            "@ ridge",
+            "@ svr_poly_rbf",
+            "@ xgboost"
+        ]
+    else:
+        columns_combinations = [
+            "elapsed_time"
+        ]
 
     ###### R2 #####
-    r2_combinations = [text.replace("@", metric) for text in columns_combinations]
+    metric_combinations = [text.replace("@", metric) for text in columns_combinations]
 
     dict_diff = dict()
+    dict_count = dict()
 
     for adjust in list_adjustments:
         print("=" * 30, "Adjustment: ", adjust, "=" * 30)
@@ -274,10 +268,15 @@ def table_paper_adjustments_impact(table_df, metric):
                 print("Skip", row["fs"], row["or1"], row["ng"], row["at"], row["cv"], row["oa"], row["or2"])
                 continue
 
-            for tech_result in r2_combinations:
+            for tech_result in metric_combinations:
                 # print(dict_diff)
                 metric_zero = row[tech_result]
                 metric_one = compare_row[tech_result]
+
+                if metric != "Time":
+                    diff_metric = metric_one - metric_zero
+                else:
+                    diff_metric = (metric_one / metric_zero) -1
 
                 # Update to append to array not replace.
 
@@ -286,20 +285,24 @@ def table_paper_adjustments_impact(table_df, metric):
 
                     if tech_result in dict_tech.keys():
                         list_results = dict_tech[tech_result]
-                        list_results.append(metric_one - metric_zero)
+                        list_results.append(diff_metric)
                         dict_tech[tech_result] = list_results
+
                     else:
-                        dict_tech[tech_result] = [metric_one - metric_zero]
+                        dict_tech[tech_result] = [diff_metric]
                 else:
                     dict_tech = dict()
-                    dict_tech[tech_result] = [metric_one - metric_zero]
+                    dict_tech[tech_result] = [diff_metric]
 
                     dict_diff[adjust] = dict_tech
 
     for adj in dict_diff.keys():
         dict_tech = dict_diff[adj]
+        print(adj)
         for tech_result in dict_tech.keys():
+            print(len(list(dict_tech[tech_result])))
             dict_tech[tech_result] = np.mean(dict_tech[tech_result])
+            print(dict_tech[tech_result])
 
     output_json_name = "data/paper/final_analysis/results_combinations_" + str(metric).lower() + ".json"
 
