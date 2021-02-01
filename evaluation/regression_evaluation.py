@@ -516,33 +516,3 @@ def build_binary_table(files_list, techs):
     df_table.drop_duplicates(subset=["fs", "or1", "ng", "at", "cv", "oa", "or2"], inplace=True)
     df_table.to_csv("data/paper/final_analysis/binary_table.csv", index=False)
     df_table.to_excel("data/paper/final_analysis/binary_table.xlsx", index=False)
-
-
-def fix_logs():
-    logs = glob.glob("data/paper/*.csv")
-    logs = [log for log in logs if log.find("_table") == -1]
-    techs = list()
-
-    for log in tqdm.tqdm(logs):
-        df = pd.read_csv(log)
-        #
-        # df["tech"] = df["tech"].apply(lambda row: row.replace("emsemble", "ensemble"))
-        # df["tech"] = df["tech"].apply(lambda row: row.replace("random_forest_100", "random_forest"))
-        #
-        print(log.split("/")[-1], "\t", sorted(set(df["tech"])))
-        #
-        # try:
-        #     df.drop(columns=["mlp_400_200_100_50"], inplace=True)
-        # except:
-        #     pass
-        #
-        # techs.extend(sorted(set(df["tech"])))
-        #
-        # df.to_csv(log, columns=df.columns)
-        # df.to_excel(log.replace(".csv", ".xlsx"), columns=df.columns)
-        # df.to_json(log.replace(".csv", ".json"), force_ascii=False, orient="records", lines=True)
-        text = open(log).read().replace("random_forest_100", "random_forest")
-
-        open(log, "w").write(text)
-
-    print(sorted(set(techs)))

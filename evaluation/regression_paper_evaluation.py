@@ -45,7 +45,7 @@ def paper_results_evaluation():
         mae_fp[tech] = np.mean(df_tech["mae_test"])
 
     plot_paper_rmse_r2_results(techs_fp, rmse_fp, r2_fp, mae_fp, "data/paper/final_analysis/full_pipeline_r2_rmse.pdf")
-    # plot_paper_results(techs_fp, rmse_fp, r2_fp, mae_fp, "data/paper/final_analysis/baseline_r2_rmse.pdf")
+    # plot_paper_rmse_r2_results(techs_fp, rmse_fp, r2_fp, mae_fp, "data/paper/final_analysis/baseline_r2_rmse.pdf")
 
     ##########################    SECTION 5.2: COMBINATIONS RESULTS    ##########################
     columns_combinations = [
@@ -134,9 +134,7 @@ def extract_execution_time():
     for log_path in log_files:
         full_text += open(log_path).read() + "\n"
 
-    print(len(full_text.split()))
     full_text = "".join(filter(lambda char: char in string.printable, full_text))
-    print(len(full_text.split()))
 
     n_experiments = 0
     experiment_logs = list(full_text.split("PAPER EXPERIMENTS"))
@@ -147,10 +145,7 @@ def extract_execution_time():
         if line.find("Tech:") < 0:
             continue
 
-        # print("#" * 50)
         line = line.replace("True", "1").replace("False", "0").replace("\t", "")
-        # print(line)
-        # print("#" * 50)
 
         # Feature selection extraction
         fs = find_adjustment_setup(line, r'Feature Selection:\s+\d')
@@ -160,9 +155,12 @@ def extract_execution_time():
         ng = find_adjustment_setup(line, r'Include N-Grams:\s+\d')
         oa = find_adjustment_setup(line, r'Reduce Models:\s+\d')
         or2 = find_adjustment_setup(line, r'Remove outlier_both\s+\d')
+
         elapsed_time = find_adjustment_setup(line, r"Elapsed Time:\s+\d+:\d+:\d+.\d+", True)
 
-        print(elapsed_time)
+        if elapsed_time is None:
+            # Elapsed Time: 1 day, 11:09:35.442229
+            elapsed_time = find_adjustment_setup(line, r"Elapsed Time:\s+\d+\s+day,\s+\d+:\d+:\d+.\d+", True)
 
         result_line = [fs, cv, or1, at, ng, oa, or2, elapsed_time]
         results_list.append(result_line)
@@ -188,13 +186,18 @@ def find_adjustment_setup(text, re_expression, multiple_matches=False):
         return res[0]
 
     if len(match_string) > 0 and multiple_matches:
-        split_string = match_string[0].replace(".", ":")
+        split_string = match_string[0].replace(".", ":").replace(",", ":")
         res = [int(str(i).strip()) for i in split_string.split(":") if str(i).strip().isdigit()]
 
-        if len(res) != 4:
-            print("Ops")
+        if match_string[0].find("day") >= 0:
+            # There is no log with more than 1 day and X hours
+            hours = 24 + res[0] + res[1] / 60 + res[2] / 3600
+        else:
+            if len(res) != 4:
+                print("Ops")
 
-        hours = res[0] + res[1] / 60 + res[2] / 3600
+            hours = res[0] + res[1] / 60 + res[2] / 3600
+
         return hours
 
     return None
@@ -232,7 +235,7 @@ def table_paper_adjustments_impact(table_df, metric):
     dict_count = dict()
 
     for adjust in list_adjustments:
-        print("=" * 30, "Adjustment: ", adjust, "=" * 30)
+        print("." * 30, "Adjustment: ", adjust, "." * 30)
 
         results_df_zero = table_df.loc[(table_df[adjust] == 0)]
         results_df_one = table_df.loc[(table_df[adjust] == 1)]
@@ -269,7 +272,7 @@ def table_paper_adjustments_impact(table_df, metric):
                 continue
 
             for tech_result in metric_combinations:
-                # print(dict_diff)
+
                 metric_zero = row[tech_result]
                 metric_one = compare_row[tech_result]
 
@@ -298,11 +301,8 @@ def table_paper_adjustments_impact(table_df, metric):
 
     for adj in dict_diff.keys():
         dict_tech = dict_diff[adj]
-        print(adj)
         for tech_result in dict_tech.keys():
-            print(len(list(dict_tech[tech_result])))
             dict_tech[tech_result] = np.mean(dict_tech[tech_result])
-            print(dict_tech[tech_result])
 
     output_json_name = "data/paper/final_analysis/results_combinations_" + str(metric).lower() + ".json"
 
@@ -408,7 +408,7 @@ def plot_paper_combinations_results(r2_df, rmse_df):
     plt.close('all')
     fig, ax = plt.subplots()
 
-    fig.set_figheight(6)
+    fig.set_figheight(5)
     fig.set_figwidth(9)
 
     ax.grid(axis="y")
@@ -434,7 +434,7 @@ def plot_paper_combinations_results(r2_df, rmse_df):
                  alpha=0.65,
                  marker=dot_styles[it_columns % len(dot_styles)])
     ax.set_xticks(combinations_r2)
-    ax.set_xticklabels(combinations_r2, rotation=90, fontsize=9)
+    ax.set_xticklabels(combinations_r2, rotation=90, fontsize=8)
     plt.yticks(fontsize=12)
     ax.set_ylim(min_lim, max_lim)
     ax.set_xlim(np.array([2.5, -2.5]) + ax.get_xlim())
@@ -452,7 +452,7 @@ def plot_paper_combinations_results(r2_df, rmse_df):
     plt.close('all')
     fig, ax = plt.subplots()
 
-    fig.set_figheight(6)
+    fig.set_figheight(5)
     fig.set_figwidth(9)
 
     ax.grid(axis="y")
@@ -474,7 +474,7 @@ def plot_paper_combinations_results(r2_df, rmse_df):
                  alpha=0.65,
                  marker=dot_styles[it_columns % len(dot_styles)])
 
-    ax.set_xticklabels(combinations_r2, rotation=90, fontsize=9)
+    ax.set_xticklabels(combinations_r2, rotation=90, fontsize=8)
     ax.spines['right'].set_color(None)
     ax.spines['top'].set_color(None)
     plt.yticks(fontsize=12)
