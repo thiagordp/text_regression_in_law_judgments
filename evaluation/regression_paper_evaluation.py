@@ -14,6 +14,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 
 def paper_results_evaluation():
@@ -279,7 +280,7 @@ def table_paper_adjustments_impact(table_df, metric):
                 if metric != "Time":
                     diff_metric = metric_one - metric_zero
                 else:
-                    diff_metric = (metric_one / metric_zero) -1
+                    diff_metric = 100 * ((metric_one / metric_zero) - 1)
 
                 # Update to append to array not replace.
 
@@ -302,7 +303,24 @@ def table_paper_adjustments_impact(table_df, metric):
     for adj in dict_diff.keys():
         dict_tech = dict_diff[adj]
         for tech_result in dict_tech.keys():
-            dict_tech[tech_result] = np.mean(dict_tech[tech_result])
+            if metric == "R2":
+
+                # print("Median:", round(np.median(dict_tech[tech_result]), 4))
+                # print("Avg:", round(np.mean(dict_tech[tech_result]), 4))
+                # print("Std:", round(np.std(dict_tech[tech_result]), 4))
+                # print("Var:", round(np.var(dict_tech[tech_result]), 4))
+                # print("Err:", round(stats.sem(dict_tech[tech_result]), 4))
+                # print("Desc:", stats.describe(dict_tech[tech_result]))
+                # print("Entropy:", round(stats.entropy(dict_tech[tech_result]), 4))
+
+                str_metric = str(round(np.mean(dict_tech[tech_result]), 2)).replace(".0 ", ".00 ") + " ± " + str(round(np.std(dict_tech[tech_result]), 2))
+                # str_metric = str(round(np.mean(dict_tech[tech_result]), 2)) + " ± " + str(round(np.std(dict_tech[tech_result]),2))
+
+            elif metric == "Time":
+                str_metric = str(round(np.mean(dict_tech[tech_result]), 1)) + " ± " + str(round(np.std(dict_tech[tech_result]), 1))
+            else:
+                str_metric = str(int(round(np.mean(dict_tech[tech_result]), 0))) + " ± " + str(int(round(np.std(dict_tech[tech_result]), 0)))
+            dict_tech[tech_result] = str_metric
 
     output_json_name = "data/paper/final_analysis/results_combinations_" + str(metric).lower() + ".json"
 
