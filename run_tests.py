@@ -80,7 +80,7 @@ def main():
 
     # test_lda_jec()
     # test_pre_processings()
-    # test_regression()
+    test_regression()
     matplotlib.rcParams['font.family'] = "FreeSerif"
     # test_log()
     # test_feature_relations()

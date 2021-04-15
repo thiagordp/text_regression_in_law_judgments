@@ -34,7 +34,7 @@ from model import vsm_regression_models
 from model.feature_selections import bow_feature_selection, remove_outliers_iforest
 from pre_processing.text_pre_processing import process_judge, process_has_x, process_loss, process_time_delay
 from representation import bow_tf, bow_tf_idf, bow_mean_embeddings, bow_binary
-from util.path_constants import INCLUDE_ZERO_VALUES
+from util.path_constants import INCLUDE_ZERO_VALUES, JEC_DATASET_PATH
 # Run Experiments
 from util.value_contants import K_BEST_FEATURE_PAPER
 
@@ -688,8 +688,11 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     # Convert np.array of texts to list
     x = [row for row in raw_data_df["sentenca"].values]
 
+    # token_count(x)
+
     # Get Judgments No of each case
     sentenca_std = [str(row) for row in raw_data_df["judgement"].values]
+
 
     # Extract attributes
     days_list = list(raw_data_df["dia"])
@@ -1015,6 +1018,31 @@ def replace_tech_name(tech):
     tech = tech.replace("ensemble_voting_bg_mlp_gd_xgb", "Ensemble Voting")
 
     return tech
+
+
+def token_count(docs):
+
+    total_tokens = 0
+    len_docs = len(docs)
+    vocab = {}
+
+    for text in tqdm.tqdm(docs):
+
+        tokens = text.split()
+
+        total_tokens += len(tokens)
+
+        for token in tokens:
+            if token not in vocab.keys():
+                vocab[token] = 1
+            else:
+                vocab[token] += 1
+
+    print("Total Tokens:", total_tokens)
+    print("Total Docs:  ", len_docs)
+    print("Tokens/Doc:  ", round(total_tokens / len_docs, 0))
+    print("Vocab size:  ", len(vocab.keys()))
+    # print("Vocab:", vocab)
 
 
 def evaluate_results():
@@ -1539,4 +1567,3 @@ def get_lim(data, type):
         print("Error type")
 
     return 0, 1
-
