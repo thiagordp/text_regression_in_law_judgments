@@ -1,31 +1,32 @@
-# Text Regression in Law Judgements
+# Regression applied to legal judgments to predict compensation for immaterial damage
 
-Regression applied to judgement texts from JEC / UFSC to predict the compensation for moral damage related to failures in air transport services.
+Regression applied to judgement texts from JEC - UFSC to predict the compensation for immaterial damage related to failures in air transport services.
+
+The paper is in *Prelo*.
 
 ## Scope
 
 We aim to check many techniques related to text representation, regression and final evaluation.
 
-In terms of text representation, we apply the following:
-
-- Bag of Words with TF values
-- Bag of Words with TF-IDF values
-- Word embeddings trained from large legal corpora (TODO: Cite our paper)  
-- Bag of Words with Word embeddings values
-- Word Embeddings with Dimensionality Reduction
+In terms of text representation, we apply the Bag of Words with TF values
 
 In terms of regression models, we apply the following:
 
-- Linear Regression
-- Polinomial Regression
-- Support Vector Machine
+- AdaBoost
+- Decision Tree
+- Elastic Net
+- Ensemble Voting
+- Gradient Boosting
+- Bagging
+- feed-forwared Neural Network
 - Random Forest
-- Convolutional Neural Network with and without Attention
-- Long Short Term Memory with and without Attention
+- Ridge 
+- Support Vector Machine
+- XGBoosting
 
-In terms of regression evaluation, we apply the following:
+In terms of performance measures, we apply the following:
 
 - R²
-- Adjusted R²
 - Root Mean Square Error (RMSE)
-- ...
+- Mean Absolute Error (MAE)
+- Relative Execution Time
