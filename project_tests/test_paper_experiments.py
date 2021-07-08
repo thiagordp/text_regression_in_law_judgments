@@ -7,14 +7,11 @@
 # Import Libraries
 import gc
 import glob
-import json
 import random
 import time
 from datetime import datetime
 
-import matplotlib
 from matplotlib import rcParams
-from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
 from model.vsm_regression_models import REGRESSION_MODELS_PAPER
@@ -34,7 +31,7 @@ from model import vsm_regression_models
 from model.feature_selections import bow_feature_selection, remove_outliers_iforest
 from pre_processing.text_pre_processing import process_judge, process_has_x, process_loss, process_time_delay
 from representation import bow_tf, bow_tf_idf, bow_mean_embeddings, bow_binary
-from util.path_constants import INCLUDE_ZERO_VALUES, JEC_DATASET_PATH
+from util.path_constants import INCLUDE_ZERO_VALUES
 # Run Experiments
 from util.value_contants import K_BEST_FEATURE_PAPER
 
@@ -566,60 +563,24 @@ def combination_experiments(tech):
 def run_experiments(tech):
     print(REGRESSION_MODELS_PAPER.keys())
 
-    # run_individual_experiments(tech)
-
-    # run_16_experiments_set_fs_ngram(tech)
-    # time.sleep(2 ** 32)
-    # run_incremental_experiments(tech)
-
-    # combination_experiments(tech)
-
-    # print("Waiting...")
-    # time.sleep(2 ** 32)
-    ################################################
-    # Just Feature Selection
-    # build_test_setup(tech,
-    #                   feature_selection=False,
-    #                  use_cross_validation=False,
-    #                  remove_outliers=False,
-    #                  include_attributes=False,
-    #                  n_grams=False)
-
-    ################################################
-
     # # All
     it = 0
     total_comb = 2 ** 6
 
     flag = False
-    for fs in [True, True]:
-        for oa in [True, True]:
-            for or1 in [True, True]:
+    for fs in [True, False]:
+        for oa in [True, False]:
+            for or1 in [True, False]:
                 for or2 in [True, False]:
-                    for at in [True, True]:
-                        for cv in [True, True]:
-                            for ng in [True, True]:
+                    for at in [True, False]:
+                        for cv in [True, False]:
+                            for ng in [True, False]:
 
                                 if or2 and or1:
                                     total_comb -= 1
                                     continue
 
                                 it += 1
-
-                                # true_count = int(fs == True) + int(oa == True) + int(or1 == True) \
-                                #              + int(or2 == True) + int(at == True) + int(cv == True) \
-                                #              + int(ng == True)
-                                #
-                                # if true_count > 1:
-                                #     continue
-
-                                # # Skip to the last run experiment
-                                # if not flag and \
-                                #         not (fs and cv and not or1 and at and not ng and oa and or2):
-                                #     continue
-                                # elif not flag and fs and cv and not or1 and at and not ng and oa and or2:
-                                #     flag = True
-                                #     continue
 
                                 print("=" * 50, "\t", it, "of", total_comb, "(", round((it - 1) / total_comb * 100, 1),
                                       "%)\t", "=" * 50)
@@ -640,6 +601,7 @@ def run_experiments(tech):
                                 t2 = datetime.now()
                                 print("Elapsed Time:\t", (t2 - t1))
 
+                                # Give a small rest to the processor
                                 for i in range(5):
                                     time.sleep(60)
                                     print("=", end="")
@@ -675,7 +637,7 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
     # Remove NaN values
     raw_data_df.dropna(inplace=True)
 
-    # Remove documentos with Zero values
+    # Remove documents with zero values outputs
     if not INCLUDE_ZERO_VALUES:
         raw_data_df = raw_data_df.loc[raw_data_df["indenizacao"] > 1.0]
         print("No proc w/ compensation > 0:", raw_data_df.shape[0])
@@ -692,7 +654,6 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
     # Get Judgments No of each case
     sentenca_std = [str(row) for row in raw_data_df["judgement"].values]
-
 
     # Extract attributes
     days_list = list(raw_data_df["dia"])
@@ -1021,7 +982,6 @@ def replace_tech_name(tech):
 
 
 def token_count(docs):
-
     total_tokens = 0
     len_docs = len(docs)
     vocab = {}
@@ -1051,22 +1011,12 @@ def evaluate_results():
     Evaluate Results
     """
     skip_techs = [
-        # "svr_poly_rbf",
         "svr_linear",
-        "mlp2"
-        # "gradient_boosting",
-        # "ridge",
-        # "adaboost",
-        # "decision_tree",
-        "mlp_400_200_100_50",
-        # "elastic_net",
-        # "xgboost",
-        # "xgboost_rf",
-        # "bagging",
+        "mlp2",
+        "mlp_400_200_100_50"
     ]
 
     logs = glob.glob("data/paper/final_results/*.csv")
-    # logs = rename_log(logs)
     logs = [log_i for log_i in logs if log_i.find("_table") == -1]
 
     fullresults = dict()
@@ -1078,16 +1028,11 @@ def evaluate_results():
 
     for log in tqdm.tqdm(logs):
 
-        # print("=" * 128)
-        # print(log)
-
         df = pd.read_csv(log)
         techs = [tech for tech in df["tech"] if tech not in skip_techs]
 
         techs = sorted(set(list(techs)))
         df = df[df["tech"] != "mlp2"]
-
-        # techs_all.extend(techs)
 
         results = list()
         full_results = list()
@@ -1131,12 +1076,7 @@ def evaluate_results():
         fullresults[log] = df
 
         plot_metrics(df, log)
-        # plot_violin(df_full, log, x_col="tech")
 
-    # df_ensemble = pd.DataFrame(ensemble_results, columns=["tech", "log", "bin_code", "rmse_test", "mae_test", "r2_test"])
-    # df_mlp = pd.DataFrame(mlp_results, columns=["tech", "log", "bin_code", "rmse_test", "mae_test", "r2_test"])
-    # plot_violin_box_plot(df_ensemble, log="", x_col="bin_code", file_name="data/paper/ensemble_combinations_boxplot.#", plot_violin=False)
-    # plot_violin_box_plot(df_mlp, log="", x_col="bin_code", file_name="data/paper/mlp_combinations_boxplot.#", plot_violin=False)
 
     regression_evaluation.build_binary_table(logs, sorted(set(techs_all)))
 
@@ -1292,6 +1232,9 @@ def rename_log(logs):
     return new_logs
 
 
+# main log files
+#
+
 def plot_metrics(results, log):
     techs = sorted(set(results["tech"]))
     # matplotlib.style.use("seaborn")
@@ -1300,7 +1243,6 @@ def plot_metrics(results, log):
     # plt.grid(linestyle=':')
 
     r2_mean = list()
-
     table_results_list = list()
 
     """
@@ -1319,14 +1261,14 @@ def plot_metrics(results, log):
                      (tech, data_tech),  # this is the point to label
                      textcoords="offset points",  # how to position the text
                      xytext=(0, 2),  # distance from text to points (x,y)
-                     fontsize=14,
+                     fontsize=23,
                      ha='center')  # horizontal alignment can be left, right or center
 
     plt.xticks(rotation='vertical')
-    plt.title("R2 Test", fontsize=18)
+    plt.title("R2 Test", fontsize=23)
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
-    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=14)
+    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=23)
 
     plt.tight_layout()
     plt.savefig(log.replace(".csv", "_r2_test.png"))
@@ -1349,15 +1291,15 @@ def plot_metrics(results, log):
         plt.annotate(label,  # this is the text
                      (tech, data_tech),  # this is the point to label
                      textcoords="offset points",  # how to position the text
-                     fontsize=14,
+                     fontsize=23,
                      xytext=(0, 2),  # distance from text to points (x,y)
                      ha='center')  # horizontal alignment can be left, right or center
 
     plt.xticks(rotation='vertical')
-    plt.title("RMSE Test", fontsize=18)
+    plt.title("RMSE Test", fontsize=23)
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
-    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=14)
+    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=23)
 
     plt.tight_layout()
     plt.savefig(log.replace(".csv", "_rmse_test.png"))
@@ -1378,15 +1320,15 @@ def plot_metrics(results, log):
         plt.annotate(label,  # this is the text
                      (tech, data_tech),  # this is the point to label
                      textcoords="offset points",  # how to position the text
-                     fontsize=14,
+                     fontsize=23,
                      xytext=(0, 2),  # distance from text to points (x,y)
                      ha='center')  # horizontal alignment can be left, right or center
 
     plt.xticks(rotation='vertical')
-    plt.title("MAE Test", fontsize=18)
+    plt.title("MAE Test", fontsize=23)
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
-    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=14)
+    plt.legend(bbox_to_anchor=(0.5, -0.1), ncol=4, loc='upper center', borderaxespad=0., fontsize=23)
 
     plt.tight_layout()
     plt.savefig(log.replace(".csv", "_mae_test.png"))
@@ -1394,41 +1336,53 @@ def plot_metrics(results, log):
     #########################################################
     # Plot R2 and RMSE in the same plot
 
+    logs_interest = [
+        "data/paper/final_results/results_regression_w_fs_before_500_tf_w_or1_w_ng_w_at_w_cv_w_oa_w_or2.csv",
+        "data/paper/final_results/results_regression_wo_fs_tf_w_or1_wo_ng_wo_at_wo_cv_wo_oa_wo_or2.csv"
+    ]
+
+    if log != logs_interest[0] and log != logs_interest[1]:
+        return None
+
     # plt.figure(figsize=(15, 8))
     plt.grid()
     fig, ax1 = plt.subplots()
 
+    ax1.margins(x=0.01, y=0.01)
     fig.set_figheight(6)
-    fig.set_figwidth(12)
+    fig.set_figwidth(14)
 
     color = 'tab:red'
     # ax1.set_xlabel('Technique')
-    ax1.set_ylabel('Error', color="darkslategray", fontsize=14)
+    ax1.set_ylabel('Error', color="black", fontsize=16)
     ax1.set_axisbelow(True)
     ax1.grid(axis="y", linestyle=":", alpha=0.8)
 
     data = results["rmse_test"]
     min_lim, max_lim = get_lim(data, "RMSE")
-    ax1.set_ylim(min_lim, max_lim)
+    # ax1.set_ylim(-400, max_lim) # Full
+    ax1.set_ylim(-1200, max_lim) # Simple
 
     # ax1.plot(t, r2, color=color)
     x = np.arange(len(techs))
     it_techs = 0
-    bar_width = 0.45
+    bar_width = 0.3
 
+    tech_labels = ["A", "B", "C"]
+    color_code = (217 / 255, 198 / 255, 176 / 255)
     for tech in techs:
         data = float(results[results["tech"] == tech]["rmse_test"])
 
         if it_techs == 0:
 
-            ax1.bar(x[it_techs] - (bar_width / 2), data, color=(217 / 255, 198 / 255, 176 / 255), width=bar_width, label="RMSE")
+            ax1.bar(x[it_techs] - bar_width, data, color=color_code, width=bar_width, label="RMSE")
         else:
-            ax1.bar(x[it_techs] - (bar_width / 2), data, color=(217 / 255, 198 / 255, 176 / 255), width=bar_width)
+            ax1.bar(x[it_techs] - bar_width, data, color=color_code, width=bar_width)
 
         label = format(data, ',.0f')
 
         plt.annotate(label,  # this is the text
-                     (x[it_techs] - (bar_width / 2), 0),  # this is the point to label
+                     (x[it_techs] - bar_width, 0),  # this is the point to label
                      textcoords="offset points",  # how to position the text
                      xytext=(0, 10),  # distance from text to points (x,y)
                      color="black",
@@ -1438,35 +1392,41 @@ def plot_metrics(results, log):
 
         it_techs += 1
     it_techs = 0
+    color_hatch = (120 / 255, 159 / 255, 138 / 255)
     for tech in techs:
         data = float(results[results["tech"] == tech]["mae_test"])
         if it_techs == 0:
-            ax1.bar(x[it_techs] + (bar_width / 2), data, color=(120 / 255, 159 / 255, 138 / 255), width=bar_width, label="MAE")
+            ax1.bar(x[it_techs], data, color=color_hatch, width=bar_width, label="MAE")
         else:
-            ax1.bar(x[it_techs] + (bar_width / 2), data, color=(120 / 255, 159 / 255, 138 / 255), width=bar_width)
+            ax1.bar(x[it_techs], data, color=color_hatch, width=bar_width)
 
+        #  ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, label="R²", edgecolor=color_code, hatch="////////")
         label = format(data, ',.0f')
 
         plt.annotate(label,  # this is the text
-                     (x[it_techs] + (bar_width / 2), 0),  # this is the point to label
+                     (x[it_techs], 0),  # this is the point to label
                      textcoords="offset points",  # how to position the text
                      xytext=(0, 10),  # distance from text to points (x,y)
                      color="black",
                      fontsize=10,
+                     backgroundcolor=(120 / 255, 159 / 255, 138 / 255, 0.3),
                      rotation=90,
                      ha='center')  # horizontal alignment can be left, right or center
 
         it_techs += 1
 
-    ax1.tick_params(axis='y', labelcolor="darkslategray", labelsize=14)
-    ax1.set_xticklabels(techs, rotation=30, fontsize=14)
-    ylabels = [format(label, ',.0f') for label in ax1.get_yticks()]
+    ax1.tick_params(axis='y', labelcolor="black", labelsize=16)
+    ylabels = [format(label, ',.0f') if label >=0 else "" for label in ax1.get_yticks()]
     ax1.set_yticklabels(ylabels)
+    # ax1.set_xticklabels(tech_labels)
+    # ax1.set_xticklabels(techs, rotation=90, fontsize=20)
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(techs, rotation=25, fontsize=16)
 
     ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
     color = 'tab:blue'
-    ax2.set_ylabel('R²', color="darkslategray", fontsize=12)  # we already handled the x-label with ax1
+    ax2.set_ylabel('R²', color="black", fontsize=16)  # we already handled the x-label with ax1
 
     data = list()
     for tech in techs:
@@ -1474,23 +1434,42 @@ def plot_metrics(results, log):
 
     lim_min, lim_max = get_lim(data, "R2")
     ax2.set_ylim(lim_min, 1)
-    ax2.plot(techs, data, "-s", color=(25 / 255, 46 / 255, 91 / 255), label="R²")
-    ax2.set_xticklabels(techs, rotation=30, fontsize=14)
+
+    # ax2.plot(techs, data, "-s", color=(25 / 255, 46 / 255, 91 / 255), label="R²")
+
     ylabels = [format(label, ',.2f') for label in ax2.get_yticks()]
     ax2.set_yticklabels(ylabels)
+    # ax2.set_xticklabels(tech_labels, rotation=90, fontsize=20)
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(techs, rotation=25, fontsize=16)
 
-    for tech, data_tech in zip(techs, data):
-        label = format(data_tech, ',.2f')
+    color_code = (132 / 255, 136 / 255, 164 / 255)
+    it_techs = 0
+    for tech in techs:
+        data = float(results[results["tech"] == tech]["r2_test"])
+
+        if it_techs == 0:
+            #ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, label="R²", edgecolor=color_code, hatch="/////")
+            ax2.bar(x[it_techs] + bar_width, data, color=color_code, width=bar_width)
+        else:
+            #ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, edgecolor=color_code, hatch="/////")
+            ax2.bar(x[it_techs] + bar_width, data, color=color_code, width=bar_width)
+
+        label = format(data, ',.2f')
 
         plt.annotate(label,  # this is the text
-                     (tech, data_tech),  # this is the point to label
+                     (x[it_techs] + bar_width, 0),  # this is the point to label
                      textcoords="offset points",  # how to position the text
                      xytext=(0, 10),  # distance from text to points (x,y)
                      color="black",
                      fontsize=10,
+                     rotation=90,
+                     #backgroundcolor=(102 / 255, 106 / 255, 134 / 255),
                      ha='center')  # horizontal alignment can be left, right or center
 
-    ax2.tick_params(axis='y', labelcolor="darkslategray", labelsize=14)
+        it_techs += 1
+
+    ax2.tick_params(axis='y', labelcolor="black", labelsize=16)
 
     # lim_min, lim_max = get_lim(data, "R2")
     #
@@ -1500,14 +1479,17 @@ def plot_metrics(results, log):
     legend_elements = [
         Patch(facecolor=(217 / 255, 198 / 255, 176 / 255), label='RMSE'),
         Patch(facecolor=(120 / 255, 159 / 255, 138 / 255), label='MAE'),
-        Line2D([0], [0], color=(25 / 255, 46 / 255, 91 / 255), lw=2, label='R²'),
+        Patch(facecolor=(132 / 255, 136 / 255, 164 / 255),  label='R²'),
     ]
     # ax1.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
     ax1.legend(handles=legend_elements, fancybox=False, shadow=False)
 
+    # align_yaxis(ax1, ax2)
+    plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
+
     # ax2.legend(loc='upper left', bbox_to_anchor=(0.5, 0.2), fancybox=False, shadow=False, ncol=6)
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
-    plt.savefig(log.replace(".csv", "_r2_rmse_test.pdf"))
+    plt.savefig(log.replace(".csv", "_r2_rmse_test.pdf"), dpi=100, rasterized=True)
 
     #########################################################
 
@@ -1534,13 +1516,33 @@ def plot_metrics(results, log):
     df.to_excel(log.replace(".csv", "_table.xlsx"), index=False)
 
 
+def align_yaxis(ax1, ax2):
+    y_lims = np.array([ax.get_ylim() for ax in [ax1, ax2]])
+
+    # force 0 to appear on both axes, comment if don't need
+    y_lims[:, 0] = y_lims[:, 0].clip(None, 0)
+    y_lims[:, 1] = y_lims[:, 1].clip(0, None)
+
+    # normalize both axes
+    y_mags = (y_lims[:, 1] - y_lims[:, 0]).reshape(len(y_lims), 1)
+    y_lims_normalized = y_lims / y_mags
+
+    # find combined range
+    y_new_lims_normalized = np.array([np.min(y_lims_normalized), np.max(y_lims_normalized)])
+
+    # denormalize combined range to get new axes
+    new_lim1, new_lim2 = y_new_lims_normalized * y_mags
+    ax1.set_ylim(new_lim1)
+    ax2.set_ylim(new_lim2)
+
+
 def get_lim(data, type):
     min_data = min(data)
     max_data = max(data)
 
     if type == "R2":
 
-        delta = 0.2
+        delta = 0.1
         min_lim = 0
         max_lim = 1
 
