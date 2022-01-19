@@ -9,3 +9,5 @@ nltk
 xgboost
 seaborn
 pyqt5
+statsmodels
+scipy

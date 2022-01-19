@@ -29,9 +29,9 @@ def paper_results_evaluation():
     ##########################    SECTION 5.1: BASELINE (BL) AND FULL PIPELINE (FP)    ##########################
     log_baseline = "data/paper/final_results/results_regression_wo_fs_tf_w_or1_wo_ng_wo_at_wo_cv_wo_oa_wo_or2.csv"
     log_full_pipeline = "data/paper/final_results/results_regression_w_fs_before_500_tf_w_or1_w_ng_w_at_w_cv_w_oa_w_or2.csv"
-
+    log_best_pipeline = "data/paper/final_results/results_regression_w_fs_before_500_tf_w_or1_w_ng_w_at_wo_cv_w_oa_w_or2.csv"
     # df_baseline = pd.read_csv(log_baseline)
-    df_fp = pd.read_csv(log_full_pipeline)
+    df_fp = pd.read_csv(log_best_pipeline)
     techs_fp = sorted(set(df_fp["tech"]))
     print("Techs:", techs_fp)
 
@@ -45,7 +45,7 @@ def paper_results_evaluation():
         r2_fp[tech] = round(np.mean(df_tech["r2_test"]), 2)
         mae_fp[tech] = np.mean(df_tech["mae_test"])
 
-    plot_paper_rmse_r2_results(techs_fp, rmse_fp, r2_fp, mae_fp, "data/paper/final_analysis/full_pipeline_r2_rmse.pdf")
+    plot_paper_rmse_r2_results(techs_fp, rmse_fp, r2_fp, mae_fp, "data/paper/final_analysis/best_pipeline_r2_rmse.pdf")
     # plot_paper_rmse_r2_results(techs_fp, rmse_fp, r2_fp, mae_fp, "data/paper/final_analysis/baseline_r2_rmse.pdf")
 
     ##########################    SECTION 5.2: COMBINATIONS RESULTS    ##########################
@@ -524,6 +524,7 @@ def plot_paper_rmse_r2_results(techs, rmse_dict, r2_dict, mae_dict, output_path)
 
     rmse_tech_value = list()
     r2_tech_value = list()
+    mae_tech_value = list()
 
     matplotlib.rcParams['font.family'] = "FreeSerif"
 
@@ -532,6 +533,7 @@ def plot_paper_rmse_r2_results(techs, rmse_dict, r2_dict, mae_dict, output_path)
 
         rmse_tech_value.append(rmse_dict[tech_key])
         r2_tech_value.append(r2_dict[tech_key])
+        mae_tech_value.append(mae_dict[tech_key])
 
     # RMSE
     fig, ax1 = plt.subplots()
@@ -557,6 +559,22 @@ def plot_paper_rmse_r2_results(techs, rmse_dict, r2_dict, mae_dict, output_path)
                      textcoords="offset points",  # how to position the text
                      xytext=(0, 3),  # distance from text to points (x,y)
                      color="darkslategray",
+                     fontsize=12,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+    for i in range(len(techs)):
+        tech = techs[i]
+        tech_name = tech_names[i]
+        mae_value = round(float(mae_tech_value[i]), 0)
+
+        ax1.bar(tech_name, mae_value, color="lightsteelblue")
+        label = format(mae_value, ',.0f')
+
+        plt.annotate(label,  # this is the text
+                     (tech_name, mae_value - 700),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 3),  # distance from text to points (x,y)
+                     color="darkblue",
                      fontsize=12,
                      ha='center')  # horizontal alignment can be left, right or center
 

@@ -10,6 +10,7 @@ PROJECT_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Projects/tex
 #
 # JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/merge_sem_dispositivo/"
 
+# TODO: Update this path
 JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/txts_atualizados_sd_manual/"
 # Classes
 PROCEDENTE = "procedente/"
@@ -24,6 +25,7 @@ EXTINCAO = "extincao/"
 #     EXTINCAO
 # ]
 
+# TODO: Place the dataset inside a folder "novos" (create it) in the path  JEC_DATA_SET.
 JEC_CLASS_PATHS = [
     "novos/"
 ]
@@ -31,6 +33,7 @@ JEC_CLASS_PATHS = [
 #
 # Moral Damage Values Dataset
 #
+# TODO: create a folder data and place the attributes CSV file inside such folder.
 DAMAGE_VALUES_DATASET_PATH = "data/regression_attributes_classes.csv"
 INCLUDE_ZERO_VALUES = False
 

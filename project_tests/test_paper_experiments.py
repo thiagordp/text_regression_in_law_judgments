@@ -1075,8 +1075,7 @@ def evaluate_results():
 
         fullresults[log] = df
 
-        plot_metrics(df, log)
-
+        plot_metrics_separate(df, log)
 
     regression_evaluation.build_binary_table(logs, sorted(set(techs_all)))
 
@@ -1338,10 +1337,11 @@ def plot_metrics(results, log):
 
     logs_interest = [
         "data/paper/final_results/results_regression_w_fs_before_500_tf_w_or1_w_ng_w_at_w_cv_w_oa_w_or2.csv",
-        "data/paper/final_results/results_regression_wo_fs_tf_w_or1_wo_ng_wo_at_wo_cv_wo_oa_wo_or2.csv"
+        "data/paper/final_results/results_regression_wo_fs_tf_w_or1_wo_ng_wo_at_wo_cv_wo_oa_wo_or2.csv",
+        "data/paper/final_results/results_regression_w_fs_before_500_tf_w_or1_w_ng_w_at_wo_cv_w_oa_w_or2.csv"
     ]
 
-    if log != logs_interest[0] and log != logs_interest[1]:
+    if log != logs_interest[0] and log != logs_interest[1] and log != logs_interest[2]:
         return None
 
     # plt.figure(figsize=(15, 8))
@@ -1361,7 +1361,8 @@ def plot_metrics(results, log):
     data = results["rmse_test"]
     min_lim, max_lim = get_lim(data, "RMSE")
     # ax1.set_ylim(-400, max_lim) # Full
-    ax1.set_ylim(-1200, max_lim) # Simple
+    ax1.set_ylim(-1200, max_lim)  # Simple
+    ax1.set_ylim(-400, max_lim)  # Best
 
     # ax1.plot(t, r2, color=color)
     x = np.arange(len(techs))
@@ -1416,7 +1417,7 @@ def plot_metrics(results, log):
         it_techs += 1
 
     ax1.tick_params(axis='y', labelcolor="black", labelsize=16)
-    ylabels = [format(label, ',.0f') if label >=0 else "" for label in ax1.get_yticks()]
+    ylabels = [format(label, ',.0f') if label >= 0 else "" for label in ax1.get_yticks()]
     ax1.set_yticklabels(ylabels)
     # ax1.set_xticklabels(tech_labels)
     # ax1.set_xticklabels(techs, rotation=90, fontsize=20)
@@ -1449,10 +1450,10 @@ def plot_metrics(results, log):
         data = float(results[results["tech"] == tech]["r2_test"])
 
         if it_techs == 0:
-            #ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, label="R²", edgecolor=color_code, hatch="/////")
+            # ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, label="R²", edgecolor=color_code, hatch="/////")
             ax2.bar(x[it_techs] + bar_width, data, color=color_code, width=bar_width)
         else:
-            #ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, edgecolor=color_code, hatch="/////")
+            # ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, edgecolor=color_code, hatch="/////")
             ax2.bar(x[it_techs] + bar_width, data, color=color_code, width=bar_width)
 
         label = format(data, ',.2f')
@@ -1464,7 +1465,7 @@ def plot_metrics(results, log):
                      color="black",
                      fontsize=10,
                      rotation=90,
-                     #backgroundcolor=(102 / 255, 106 / 255, 134 / 255),
+                     # backgroundcolor=(102 / 255, 106 / 255, 134 / 255),
                      ha='center')  # horizontal alignment can be left, right or center
 
         it_techs += 1
@@ -1479,7 +1480,7 @@ def plot_metrics(results, log):
     legend_elements = [
         Patch(facecolor=(217 / 255, 198 / 255, 176 / 255), label='RMSE'),
         Patch(facecolor=(120 / 255, 159 / 255, 138 / 255), label='MAE'),
-        Patch(facecolor=(132 / 255, 136 / 255, 164 / 255),  label='R²'),
+        Patch(facecolor=(132 / 255, 136 / 255, 164 / 255), label='R²'),
     ]
     # ax1.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
     ax1.legend(handles=legend_elements, fancybox=False, shadow=False)
@@ -1494,6 +1495,240 @@ def plot_metrics(results, log):
     #########################################################
 
     metrics = ["r2_test", "rmse_test", "mae_test"]
+
+    data = list()
+    techs = sorted(set(results["tech"]))
+    columns = ["metric"]
+    columns = columns + techs
+
+    for metric in metrics:
+        row_data = list()
+        row_data.append(metric)
+
+        for tech in techs:
+            metric_value = results[results["tech"] == tech][metric]
+
+            row_data.append(float(metric_value))
+
+        data.append(row_data)
+
+    df = pd.DataFrame(data=data, columns=columns)
+    df.to_csv(log.replace(".csv", "_table.csv"), index=False)
+    df.to_excel(log.replace(".csv", "_table.xlsx"), index=False)
+
+
+def plot_metrics_separate(results, log):
+    techs = sorted(set(results["tech"]))
+
+    #########################################################
+    # Plot R2 and RMSE in the same plot
+
+    logs_interest = [
+        "data/paper/final_results/results_regression_w_fs_before_500_tf_w_or1_w_ng_w_at_w_cv_w_oa_w_or2.csv",
+        "data/paper/final_results/results_regression_wo_fs_tf_w_or1_wo_ng_wo_at_wo_cv_wo_oa_wo_or2.csv",
+        "data/paper/final_results/results_regression_w_fs_before_500_tf_w_or1_w_ng_w_at_wo_cv_w_oa_w_or2.csv"
+    ]
+
+    if log != logs_interest[0] and log != logs_interest[1] and log != logs_interest[2]:
+        return None
+
+    # plt.figure(figsize=(15, 8))
+    plt.grid()
+    fig, ax1 = plt.subplots()
+
+    ax1.margins(x=0.01, y=0.01)
+    fig.set_figheight(6)
+    fig.set_figwidth(14)
+
+    color = 'tab:red'
+    # ax1.set_xlabel('Technique')
+    ax1.set_ylabel('Error', color="black", fontsize=16)
+    ax1.set_axisbelow(True)
+    ax1.grid(axis="y", linestyle=":", alpha=0.8)
+
+    data = results["rmse_test"]
+    min_lim, max_lim = get_lim(data, "RMSE")
+    # ax1.set_ylim(-400, max_lim) # Full
+    ax1.set_ylim(-1200, max_lim)  # Simple
+    ax1.set_ylim(-400, max_lim)  # Best
+
+    # ax1.plot(t, r2, color=color)
+    x = np.arange(len(techs))
+    it_techs = 0
+    bar_width = 0.45
+
+    tech_labels = ["A", "B", "C"]
+    color_code = (217 / 255, 198 / 255, 176 / 255)
+    for tech in techs:
+        data = float(results[results["tech"] == tech]["rmse_test"])
+
+        if it_techs == 0:
+
+            ax1.bar(x[it_techs] - bar_width / 2, data, color=color_code, width=bar_width, label="RMSE")
+        else:
+            ax1.bar(x[it_techs] - bar_width / 2, data, color=color_code, width=bar_width)
+
+        label = format(data, ',.0f')
+
+        plt.annotate(label,  # this is the text
+                     (x[it_techs] - bar_width / 2, 0),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 10),  # distance from text to points (x,y)
+                     color="black",
+                     fontsize=10,
+                     rotation=90,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+        it_techs += 1
+    it_techs = 0
+    color_hatch = (120 / 255, 159 / 255, 138 / 255)
+    for tech in techs:
+        data = float(results[results["tech"] == tech]["mae_test"])
+        if it_techs == 0:
+            ax1.bar(x[it_techs] + bar_width / 2, data, color=color_hatch, width=bar_width, label="MAE")
+        else:
+            ax1.bar(x[it_techs] + bar_width / 2, data, color=color_hatch, width=bar_width)
+
+        #  ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, label="R²", edgecolor=color_code, hatch="////////")
+        label = format(data, ',.0f')
+
+        plt.annotate(label,  # this is the text
+                     (x[it_techs] + bar_width / 2, 0),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 10),  # distance from text to points (x,y)
+                     color="black",
+                     fontsize=10,
+                     backgroundcolor=(120 / 255, 159 / 255, 138 / 255, 0.3),
+                     rotation=90,
+                     ha='center')  # horizontal alignment can be left, right or center
+
+        it_techs += 1
+
+    ax1.tick_params(axis='y', labelcolor="black", labelsize=16)
+    ylabels = [format(label, ',.0f') if label >= 0 else "" for label in ax1.get_yticks()]
+    ax1.set_yticklabels(ylabels)
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(techs, rotation=25, fontsize=16)
+
+    labels = ["RMSE", "MAE"]
+    legend_elements = [
+        Patch(facecolor=(217 / 255, 198 / 255, 176 / 255), label='RMSE'),
+        Patch(facecolor=(120 / 255, 159 / 255, 138 / 255), label='MAE')
+    ]
+    # ax1.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
+    ax1.legend(handles=legend_elements, fancybox=False, shadow=False)
+
+    # align_yaxis(ax1, ax2)
+    plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
+
+    # ax2.legend(loc='upper left', bbox_to_anchor=(0.5, 0.2), fancybox=False, shadow=False, ncol=6)
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.savefig(log.replace(".csv", "_rmse_test.pdf"), dpi=100, rasterized=True)
+
+    #########################################################
+
+    metrics = ["r2_test", "rmse_test", "mae_test"]
+
+    data = list()
+    techs = sorted(set(results["tech"]))
+    columns = ["metric"]
+    columns = columns + techs
+
+    for metric in metrics:
+        row_data = list()
+        row_data.append(metric)
+
+        for tech in techs:
+            metric_value = results[results["tech"] == tech][metric]
+
+            row_data.append(float(metric_value))
+
+        data.append(row_data)
+
+    df = pd.DataFrame(data=data, columns=columns)
+    df.to_csv(log.replace(".csv", "_table.csv"), index=False)
+    df.to_excel(log.replace(".csv", "_table.xlsx"), index=False)
+
+
+    fig, ax2 = plt.subplots()
+    ax2.margins(x=0.01, y=0.01)
+    fig.set_figheight(4)
+    fig.set_figwidth(10)
+
+    # ax1.plot(t, r2, color=color)
+    x = np.arange(len(techs))
+    it_techs = 0
+    bar_width = 0.5
+    #ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+    ax2.set_axisbelow(True)
+
+    ax2.grid(axis="y", linestyle=":", alpha=0.8)
+    ax2.set_ylabel('R²', color="black", fontsize=16)  # we already handled the x-label with ax1
+
+    data = list()
+    for tech in techs:
+        data.append(float(results[results["tech"] == tech]["r2_test"]))
+
+    lim_min, lim_max = get_lim(data, "R2")
+    ax2.set_ylim(lim_min, 1)
+
+    # ax2.plot(techs, data, "-s", color=(25 / 255, 46 / 255, 91 / 255), label="R²")
+
+    ylabels = [format(label, ',.2f') for label in ax2.get_yticks()]
+    ax2.set_yticklabels(ylabels)
+    # ax2.set_xticklabels(tech_labels, rotation=90, fontsize=20)
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(techs, rotation=25, fontsize=16)
+
+    color_code = (132 / 255, 136 / 255, 164 / 255)
+    it_techs = 0
+    for tech in techs:
+        data = float(results[results["tech"] == tech]["r2_test"])
+
+        if it_techs == 0:
+            # ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, label="R²", edgecolor=color_code, hatch="/////")
+            ax2.bar(x[it_techs] , data, color=color_code, width=bar_width)
+        else:
+            # ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, edgecolor=color_code, hatch="/////")
+            ax2.bar(x[it_techs] , data, color=color_code, width=bar_width)
+
+        label = format(data, ',.2f')
+
+        plt.annotate(label,  # this is the text
+                     (x[it_techs], 0),  # this is the point to label
+                     textcoords="offset points",  # how to position the text
+                     xytext=(0, 10),  # distance from text to points (x,y)
+                     color="black",
+                     fontsize=10,
+                     rotation=90,
+                     # backgroundcolor=(102 / 255, 106 / 255, 134 / 255),
+                     ha='center')  # horizontal alignment can be left, right or center
+
+        it_techs += 1
+
+    ax2.tick_params(axis='y', labelcolor="black", labelsize=16)
+
+    # lim_min, lim_max = get_lim(data, "R2")
+    #
+    # ax2.set_ylim(lim_min, lim_max)
+
+    labels = ["R2"]
+    legend_elements = [
+        Patch(facecolor=(132 / 255, 136 / 255, 164 / 255), label='R²'),
+    ]
+    # ax1.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=False, shadow=False, ncol=6)
+    ax2.legend(handles=legend_elements, fancybox=False, shadow=False)
+
+    # align_yaxis(ax1, ax2)
+    plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
+
+    # ax2.legend(loc='upper left', bbox_to_anchor=(0.5, 0.2), fancybox=False, shadow=False, ncol=6)
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.savefig(log.replace(".csv", "_r2.pdf"), dpi=100, rasterized=True)
+
+    #########################################################
+
+    metrics = ["r2_test"]
 
     data = list()
     techs = sorted(set(results["tech"]))

@@ -46,7 +46,8 @@ def get_cross_validation_average(result_list):
 
     df = pd.DataFrame(new_results, columns=["tech", "rmse_test", "rmse_train", "rmse_ratio",
                                             "r2_train", "r2_test", "r2_ratio",
-                                            "mae_train", "mae_test", "mae_ratio", "mpe_train", "mpe_test", "mpe_ratio", "k"])
+                                            "mae_train", "mae_test", "mae_ratio", "mpe_train", "mpe_test", "mpe_ratio",
+                                            "k"])
     list_tech = list(df["tech"].unique())
 
     for tech in list_tech:
@@ -184,7 +185,8 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
 
     # compare_results(df_train, df_test)
 
-    filename = "data/regression_metrics_test_" + str(datetime.datetime.today()).replace(":", "-").replace(".", "-") + "_" + description + ".csv"
+    filename = "data/regression_metrics_test_" + str(datetime.datetime.today()).replace(":", "-").replace(".",
+                                                                                                          "-") + "_" + description + ".csv"
     df_test.to_csv(filename.replace(" ", "_"))
 
     list_predictions = dict()
@@ -208,7 +210,8 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
             actual = actual_values[j_tr]
             sent_train = sentence_train[j_tr]
 
-            predictions_dict[int(sent_train)] = [sent_train, tech_train, "train", round(pred, 2), round(percentage_error(pred, actual), 4), round(actual, 2)]
+            predictions_dict[int(sent_train)] = [sent_train, tech_train, "train", round(pred, 2),
+                                                 round(percentage_error(pred, actual), 4), round(actual, 2)]
 
         actual_values = row_test[1]
         pred_values = row_test[2]
@@ -218,7 +221,8 @@ def batch_evaluation(results_train, results_test, sentence_train, sentences_test
             actual = actual_values[k_tes]
             sent_test = sentences_test[k_tes]
 
-            predictions_dict[int(sent_test)] = [int(sent_test), tech_train, "test", round(pred, 2), round(percentage_error(pred, actual), 4), round(actual, 2)]
+            predictions_dict[int(sent_test)] = [int(sent_test), tech_train, "test", round(pred, 2),
+                                                round(percentage_error(pred, actual), 4), round(actual, 2)]
 
         list_predictions[tech_train] = predictions_dict
 
@@ -422,8 +426,11 @@ def build_binary_table(files_list, techs):
     print("Build Binary Table")
 
     results = list()
+    full_results = list()
+    dict_full_results = dict()
 
-    columns = ["fs", "or1", "ng", "at", "cv", "oa", "or2"]
+    attrib_cols =  ["fs", "or1", "ng", "at", "cv", "oa", "or2"]
+    columns = attrib_cols.copy()
 
     techs = [tech.replace("emsemble", "ensemble") for tech in techs]
     techs = [tech.replace("random_forest_100", "random_forest") for tech in techs]
@@ -501,14 +508,32 @@ def build_binary_table(files_list, techs):
         result.append(or2)
 
         df = pd.read_csv(log_result)
+        full_result = result.copy()
+        dict_result = dict()
+        dict_result["combination"] = full_result
 
         for tech in techs:
-            r2_tech = np.mean(df[df["tech"] == tech]["r2_test"])
-            rmse_tech = np.mean(df[df["tech"] == tech]["rmse_test"])
-            mae_tech = np.mean(df[df["tech"] == tech]["mae_test"])
-            mpe_tech = np.mean(df[df["tech"] == tech]["mpe_test"])
-            result.extend([r2_tech, rmse_tech, mae_tech, mpe_tech])
+            r2_tech_values = df[df["tech"] == tech]["r2_test"]
+            rmse_tech_values = df[df["tech"] == tech]["rmse_test"]
+            mae_tech_values = df[df["tech"] == tech]["mae_test"]
+            mpe_tech_values = df[df["tech"] == tech]["mpe_test"]
 
+            result.extend([
+                np.mean(r2_tech_values),
+                np.mean(rmse_tech_values),
+                np.mean(mae_tech_values),
+                np.mean(mpe_tech_values)
+            ])
+
+            zip_list = list(zip(r2_tech_values, rmse_tech_values, mae_tech_values, mpe_tech_values))
+            zip_list = [list(z) for z in zip_list]
+
+            tech_df = pd.DataFrame(zip_list, columns=["R2 " + tech, "RMSE " + tech, "MAE " + tech, "MPE " + tech])
+
+
+            dict_result[tech] = tech_df
+
+        full_results.append(dict_result)
         results.append(result)
 
     df_table = pd.DataFrame(data=results, columns=columns)
@@ -516,3 +541,22 @@ def build_binary_table(files_list, techs):
     df_table.drop_duplicates(subset=["fs", "or1", "ng", "at", "cv", "oa", "or2"], inplace=True)
     df_table.to_csv("data/paper/final_analysis/binary_table.csv", index=False)
     df_table.to_excel("data/paper/final_analysis/binary_table.xlsx", index=False)
+
+    final_dfs = []
+    for dict_result in full_results:
+        combination = dict_result["combination"]
+
+        list_dfs = []
+        for tech in techs:
+            tech_df = dict_result[tech]
+            list_dfs.append(tech_df)
+
+        result_df = pd.concat(list_dfs, axis=1)
+        for i in range(len(attrib_cols)):
+            result_df.insert(i, attrib_cols[i], combination[i])
+
+        final_dfs.append(result_df)
+    df_table_full = pd.concat(final_dfs, axis=0)
+    # df_table_full = pd.DataFrame(data=full_results, columns=columns)
+    df_table_full.to_csv("data/paper/final_analysis/full_binary_table.csv", index=False)
+    df_table_full.to_excel("data/paper/final_analysis/full_binary_table.xlsx", index=False)
