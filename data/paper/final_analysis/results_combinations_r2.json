@@ -1,0 +1,93 @@
+{
+    "fs": {
+        "R2 adaboost": "0.0 \u00b1 0.02",
+        "R2 bagging": "-0.01 \u00b1 0.03",
+        "R2 decision_tree": "0.02 \u00b1 0.07",
+        "R2 elastic_net": "-0.03 \u00b1 0.04",
+        "R2 ensemble_voting_bg_mlp_gd_xgb": "-0.01 \u00b1 0.04",
+        "R2 gradient_boosting": "-0.01 \u00b1 0.05",
+        "R2 mlp": "0.01 \u00b1 0.11",
+        "R2 random_forest": "-0.01 \u00b1 0.03",
+        "R2 ridge": "-0.11 \u00b1 0.12",
+        "R2 svr_poly_rbf": "-0.01 \u00b1 0.01",
+        "R2 xgboost": "-0.02 \u00b1 0.04"
+    },
+    "at": {
+        "R2 adaboost": "0.12 \u00b1 0.08",
+        "R2 bagging": "0.1 \u00b1 0.11",
+        "R2 decision_tree": "0.18 \u00b1 0.2",
+        "R2 elastic_net": "0.1 \u00b1 0.06",
+        "R2 ensemble_voting_bg_mlp_gd_xgb": "0.1 \u00b1 0.1",
+        "R2 gradient_boosting": "0.11 \u00b1 0.11",
+        "R2 mlp": "0.14 \u00b1 0.11",
+        "R2 random_forest": "0.1 \u00b1 0.11",
+        "R2 ridge": "0.1 \u00b1 0.1",
+        "R2 svr_poly_rbf": "-0.02 \u00b1 0.02",
+        "R2 xgboost": "0.11 \u00b1 0.11"
+    },
+    "cv": {
+        "R2 adaboost": "-0.0 \u00b1 0.02",
+        "R2 bagging": "-0.0 \u00b1 0.02",
+        "R2 decision_tree": "-0.01 \u00b1 0.05",
+        "R2 elastic_net": "-0.01 \u00b1 0.02",
+        "R2 ensemble_voting_bg_mlp_gd_xgb": "-0.0 \u00b1 0.03",
+        "R2 gradient_boosting": "-0.01 \u00b1 0.03",
+        "R2 mlp": "-0.0 \u00b1 0.04",
+        "R2 random_forest": "-0.0 \u00b1 0.02",
+        "R2 ridge": "0.01 \u00b1 0.05",
+        "R2 svr_poly_rbf": "-0.0 \u00b1 0.01",
+        "R2 xgboost": "-0.0 \u00b1 0.03"
+    },
+    "ng": {
+        "R2 adaboost": "0.22 \u00b1 0.08",
+        "R2 bagging": "0.32 \u00b1 0.11",
+        "R2 decision_tree": "0.55 \u00b1 0.2",
+        "R2 elastic_net": "0.23 \u00b1 0.07",
+        "R2 ensemble_voting_bg_mlp_gd_xgb": "0.31 \u00b1 0.1",
+        "R2 gradient_boosting": "0.33 \u00b1 0.11",
+        "R2 mlp": "0.34 \u00b1 0.15",
+        "R2 random_forest": "0.32 \u00b1 0.11",
+        "R2 ridge": "0.44 \u00b1 0.14",
+        "R2 svr_poly_rbf": "0.01 \u00b1 0.02",
+        "R2 xgboost": "0.35 \u00b1 0.11"
+    },
+    "oa": {
+        "R2 adaboost": "0.01 \u00b1 0.02",
+        "R2 bagging": "-0.0 \u00b1 0.02",
+        "R2 decision_tree": "0.09 \u00b1 0.06",
+        "R2 elastic_net": "-0.0 \u00b1 0.02",
+        "R2 ensemble_voting_bg_mlp_gd_xgb": "-0.0 \u00b1 0.03",
+        "R2 gradient_boosting": "-0.02 \u00b1 0.04",
+        "R2 mlp": "-0.0 \u00b1 0.06",
+        "R2 random_forest": "-0.01 \u00b1 0.02",
+        "R2 ridge": "0.0 \u00b1 0.05",
+        "R2 svr_poly_rbf": "0.01 \u00b1 0.02",
+        "R2 xgboost": "-0.01 \u00b1 0.04"
+    },
+    "or1": {
+        "R2 adaboost": "0.02 \u00b1 0.02",
+        "R2 bagging": "-0.01 \u00b1 0.03",
+        "R2 decision_tree": "-0.03 \u00b1 0.05",
+        "R2 elastic_net": "-0.01 \u00b1 0.02",
+        "R2 ensemble_voting_bg_mlp_gd_xgb": "-0.01 \u00b1 0.03",
+        "R2 gradient_boosting": "-0.02 \u00b1 0.04",
+        "R2 mlp": "-0.04 \u00b1 0.04",
+        "R2 random_forest": "-0.01 \u00b1 0.03",
+        "R2 ridge": "-0.07 \u00b1 0.07",
+        "R2 svr_poly_rbf": "-0.01 \u00b1 0.02",
+        "R2 xgboost": "-0.01 \u00b1 0.03"
+    },
+    "or2": {
+        "R2 adaboost": "0.02 \u00b1 0.02",
+        "R2 bagging": "0.02 \u00b1 0.03",
+        "R2 decision_tree": "0.01 \u00b1 0.07",
+        "R2 elastic_net": "0.0 \u00b1 0.02",
+        "R2 ensemble_voting_bg_mlp_gd_xgb": "0.02 \u00b1 0.03",
+        "R2 gradient_boosting": "0.01 \u00b1 0.04",
+        "R2 mlp": "-0.01 \u00b1 0.05",
+        "R2 random_forest": "0.02 \u00b1 0.03",
+        "R2 ridge": "0.0 \u00b1 0.04",
+        "R2 svr_poly_rbf": "-0.01 \u00b1 0.02",
+        "R2 xgboost": "0.03 \u00b1 0.04"
+    }
+}

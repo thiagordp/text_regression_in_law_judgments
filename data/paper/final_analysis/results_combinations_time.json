@@ -1,0 +1,23 @@
+{
+    "fs": {
+        "elapsed_time": "-91.7 \u00b1 5.0"
+    },
+    "at": {
+        "elapsed_time": "48.1 \u00b1 35.6"
+    },
+    "cv": {
+        "elapsed_time": "371.4 \u00b1 49.5"
+    },
+    "ng": {
+        "elapsed_time": "29.6 \u00b1 30.7"
+    },
+    "oa": {
+        "elapsed_time": "-75.8 \u00b1 11.9"
+    },
+    "or1": {
+        "elapsed_time": "-10.8 \u00b1 5.5"
+    },
+    "or2": {
+        "elapsed_time": "-11.0 \u00b1 5.5"
+    }
+}

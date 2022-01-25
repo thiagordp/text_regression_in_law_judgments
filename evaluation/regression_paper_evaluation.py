@@ -66,6 +66,7 @@ def paper_results_evaluation():
 
     r2_columns = [line.replace("@", "R2") for line in columns_combinations]
     rmse_columns = [line.replace("@", "RMSE") for line in columns_combinations]
+    mae_columns = [line.replace("@", "MAE") for line in columns_combinations]
 
     # Plot the graphs of the descending metrics
     r2_binary_table_df = pd.read_csv("data/paper/final_analysis/binary_table.csv", usecols=r2_columns)
@@ -85,8 +86,16 @@ def paper_results_evaluation():
                                           rmse_binary_table_df["cv"].astype(str) + \
                                           rmse_binary_table_df["oa"].astype(str) + \
                                           rmse_binary_table_df["or2"].astype(str)
+    mae_binary_table_df = pd.read_csv("data/paper/final_analysis/binary_table.csv", usecols=mae_columns)
+    mae_binary_table_df["combination"] = rmse_binary_table_df["fs"].astype(str) + \
+                                          rmse_binary_table_df["or1"].astype(str) + \
+                                          rmse_binary_table_df["ng"].astype(str) + \
+                                          rmse_binary_table_df["at"].astype(str) + \
+                                          rmse_binary_table_df["cv"].astype(str) + \
+                                          rmse_binary_table_df["oa"].astype(str) + \
+                                          rmse_binary_table_df["or2"].astype(str)
 
-    plot_paper_combinations_results(r2_binary_table_df, rmse_binary_table_df)
+    plot_paper_combinations_results(r2_binary_table_df, rmse_binary_table_df, mae_binary_table_df)
 
     ##########################    SECTION 5.3: IMPACT OF EACH ADJUSTMENT    ##########################
 
@@ -351,18 +360,23 @@ def export_impact_results_to_table(dict_diff, metric_label=""):
     metrics_df.to_excel(file_output_name.replace("@", "xlsx"), index=False)
 
 
-def plot_paper_combinations_results(r2_df, rmse_df):
+def plot_paper_combinations_results(r2_df, rmse_df, mae_df):
     r2_df.sort_values(by="R2 ensemble_voting_bg_mlp_gd_xgb", ascending=False, inplace=True)
     rmse_df.sort_values(by="RMSE ensemble_voting_bg_mlp_gd_xgb", ascending=True, inplace=True)
+    mae_df.sort_values(by="MAE ensemble_voting_bg_mlp_gd_xgb", ascending=True, inplace=True)
 
     combinations_r2 = r2_df["combination"]
     combinations_rmse = rmse_df["combination"]
+    combinations_mae = mae_df["combination"]
 
     r2_df.drop(columns=["combination", "fs", "ng", "oa", "or1", "or2", "cv", "at"], inplace=True)
     rmse_df.drop(columns=["combination", "fs", "ng", "oa", "or1", "or2", "cv", "at"], inplace=True)
+    mae_df.drop(columns=["combination", "fs", "ng", "oa", "or1", "or2", "cv", "at"], inplace=True)
 
     columns_key_r2 = sorted(r2_df.columns)
     columns_key_rmse = sorted(rmse_df.columns)
+    columns_key_mae = sorted(mae_df.columns)
+
     columns = ["AdaBoost",
                "Bagging",
                "Decision Tree",

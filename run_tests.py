@@ -10,6 +10,7 @@ import matplotlib
 
 from evaluation import regression_paper_evaluation
 # from evaluation.regression_evaluation import feature_relations
+from evaluation.regression_paper_evaluation import paper_results_evaluation
 from project_tests import test_pre_processing, test_lda, test_paper_experiments
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -47,7 +48,8 @@ def main():
 
     # test_pre_processing.test_unify_database()
     # test_paper_experiments.run_experiments("TF")
-    test_paper_experiments.evaluate_results()
+    #test_paper_experiments.evaluate_results()
+    paper_results_evaluation()
 
 
 if __name__ == "__main__":

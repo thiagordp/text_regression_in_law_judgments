@@ -1,0 +1,93 @@
+{
+    "fs": {
+        "RMSE adaboost": "4 \u00b1 61",
+        "RMSE bagging": "12 \u00b1 99",
+        "RMSE decision_tree": "-40 \u00b1 156",
+        "RMSE elastic_net": "75 \u00b1 78",
+        "RMSE ensemble_voting_bg_mlp_gd_xgb": "17 \u00b1 107",
+        "RMSE gradient_boosting": "9 \u00b1 129",
+        "RMSE mlp": "-57 \u00b1 255",
+        "RMSE random_forest": "9 \u00b1 95",
+        "RMSE ridge": "206 \u00b1 209",
+        "RMSE svr_poly_rbf": "21 \u00b1 47",
+        "RMSE xgboost": "37 \u00b1 119"
+    },
+    "at": {
+        "RMSE adaboost": "-250 \u00b1 149",
+        "RMSE bagging": "-219 \u00b1 255",
+        "RMSE decision_tree": "-304 \u00b1 365",
+        "RMSE elastic_net": "-222 \u00b1 124",
+        "RMSE ensemble_voting_bg_mlp_gd_xgb": "-222 \u00b1 228",
+        "RMSE gradient_boosting": "-236 \u00b1 244",
+        "RMSE mlp": "-279 \u00b1 210",
+        "RMSE random_forest": "-220 \u00b1 257",
+        "RMSE ridge": "-181 \u00b1 188",
+        "RMSE svr_poly_rbf": "33 \u00b1 54",
+        "RMSE xgboost": "-244 \u00b1 234"
+    },
+    "cv": {
+        "RMSE adaboost": "6 \u00b1 52",
+        "RMSE bagging": "6 \u00b1 80",
+        "RMSE decision_tree": "18 \u00b1 111",
+        "RMSE elastic_net": "15 \u00b1 64",
+        "RMSE ensemble_voting_bg_mlp_gd_xgb": "11 \u00b1 84",
+        "RMSE gradient_boosting": "17 \u00b1 88",
+        "RMSE mlp": "5 \u00b1 95",
+        "RMSE random_forest": "5 \u00b1 79",
+        "RMSE ridge": "-23 \u00b1 99",
+        "RMSE svr_poly_rbf": "10 \u00b1 42",
+        "RMSE xgboost": "8 \u00b1 84"
+    },
+    "ng": {
+        "RMSE adaboost": "-447 \u00b1 161",
+        "RMSE bagging": "-816 \u00b1 258",
+        "RMSE decision_tree": "-1078 \u00b1 359",
+        "RMSE elastic_net": "-493 \u00b1 139",
+        "RMSE ensemble_voting_bg_mlp_gd_xgb": "-829 \u00b1 229",
+        "RMSE gradient_boosting": "-811 \u00b1 240",
+        "RMSE mlp": "-742 \u00b1 316",
+        "RMSE random_forest": "-811 \u00b1 260",
+        "RMSE ridge": "-860 \u00b1 249",
+        "RMSE svr_poly_rbf": "11 \u00b1 57",
+        "RMSE xgboost": "-873 \u00b1 233"
+    },
+    "oa": {
+        "RMSE adaboost": "-21 \u00b1 56",
+        "RMSE bagging": "0 \u00b1 78",
+        "RMSE decision_tree": "-168 \u00b1 107",
+        "RMSE elastic_net": "8 \u00b1 65",
+        "RMSE ensemble_voting_bg_mlp_gd_xgb": "7 \u00b1 88",
+        "RMSE gradient_boosting": "39 \u00b1 107",
+        "RMSE mlp": "21 \u00b1 119",
+        "RMSE random_forest": "28 \u00b1 74",
+        "RMSE ridge": "-1 \u00b1 105",
+        "RMSE svr_poly_rbf": "-10 \u00b1 56",
+        "RMSE xgboost": "27 \u00b1 99"
+    },
+    "or1": {
+        "RMSE adaboost": "-35 \u00b1 48",
+        "RMSE bagging": "20 \u00b1 82",
+        "RMSE decision_tree": "47 \u00b1 107",
+        "RMSE elastic_net": "25 \u00b1 56",
+        "RMSE ensemble_voting_bg_mlp_gd_xgb": "31 \u00b1 84",
+        "RMSE gradient_boosting": "43 \u00b1 100",
+        "RMSE mlp": "87 \u00b1 98",
+        "RMSE random_forest": "15 \u00b1 81",
+        "RMSE ridge": "125 \u00b1 125",
+        "RMSE svr_poly_rbf": "30 \u00b1 58",
+        "RMSE xgboost": "29 \u00b1 81"
+    },
+    "or2": {
+        "RMSE adaboost": "-93 \u00b1 83",
+        "RMSE bagging": "-104 \u00b1 96",
+        "RMSE decision_tree": "-90 \u00b1 139",
+        "RMSE elastic_net": "-54 \u00b1 61",
+        "RMSE ensemble_voting_bg_mlp_gd_xgb": "-93 \u00b1 95",
+        "RMSE gradient_boosting": "-86 \u00b1 115",
+        "RMSE mlp": "-31 \u00b1 104",
+        "RMSE random_forest": "-108 \u00b1 91",
+        "RMSE ridge": "-52 \u00b1 98",
+        "RMSE svr_poly_rbf": "-32 \u00b1 65",
+        "RMSE xgboost": "-117 \u00b1 101"
+    }
+}

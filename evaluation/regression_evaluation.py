@@ -530,7 +530,6 @@ def build_binary_table(files_list, techs):
 
             tech_df = pd.DataFrame(zip_list, columns=["R2 " + tech, "RMSE " + tech, "MAE " + tech, "MPE " + tech])
 
-
             dict_result[tech] = tech_df
 
         full_results.append(dict_result)
