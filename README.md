@@ -29,4 +29,17 @@ In terms of performance measures, we apply the following:
 - R²
 - Root Mean Square Error (RMSE)
 - Mean Absolute Error (MAE)
-- Relative Execution Time
+
+
+## How to run this project?
+
+- Install the dependencies by running `pip install -r requirements.txt`
+- First download the [dataset](https://figshare.com/s/0248f634a74d317405ff)
+- Update the file `util/path_constants.py` with the path where the dataset is stored in your computer
+- Run the project using the command `python run_tests.py`
+- This command does the following:
+   - Data preparation
+   - Run the experiments
+- However, it will take dozens of days to finish
+- When the execution finishes, copy all the terminal logging lines to the file `data/paper/running_logs/execution_log.log`
+- Run the evaluation: `python run_evaluation.py`

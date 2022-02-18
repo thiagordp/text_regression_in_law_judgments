@@ -8,10 +8,9 @@ PROJECT_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Projects/tex
 #
 # Original Judgements
 #
-# JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/merge_sem_dispositivo/"
 
-# TODO: Update this path
-JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/Msc/Thesis/Experiments/Datasets/processos_transp_aereo/txts_atualizados_sd_manual/"
+# TODO: Update this path to point to the downloaded dataset
+JEC_DATASET_PATH = "/media/trdp/Arquivos/Studies/dev_msc/Datasets/processos_transp_aereo/txts_atualizados_sd_manual/"
 # Classes
 PROCEDENTE = "procedente/"
 IMPROCEDENTE = "improcedente/"

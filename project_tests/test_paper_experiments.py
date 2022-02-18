@@ -7,6 +7,7 @@
 # Import Libraries
 import gc
 import glob
+import logging
 import random
 import time
 from datetime import datetime
@@ -1649,7 +1650,6 @@ def plot_metrics_separate(results, log):
     df.to_csv(log.replace(".csv", "_table.csv"), index=False)
     df.to_excel(log.replace(".csv", "_table.xlsx"), index=False)
 
-
     fig, ax2 = plt.subplots()
     ax2.margins(x=0.01, y=0.01)
     fig.set_figheight(4)
@@ -1659,7 +1659,7 @@ def plot_metrics_separate(results, log):
     x = np.arange(len(techs))
     it_techs = 0
     bar_width = 0.5
-    #ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+    # ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
     ax2.set_axisbelow(True)
 
     ax2.grid(axis="y", linestyle=":", alpha=0.8)
@@ -1687,10 +1687,10 @@ def plot_metrics_separate(results, log):
 
         if it_techs == 0:
             # ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, label="R²", edgecolor=color_code, hatch="/////")
-            ax2.bar(x[it_techs] , data, color=color_code, width=bar_width)
+            ax2.bar(x[it_techs], data, color=color_code, width=bar_width)
         else:
             # ax2.bar(x[it_techs] + bar_width, data, color="white", width=bar_width, edgecolor=color_code, hatch="/////")
-            ax2.bar(x[it_techs] , data, color=color_code, width=bar_width)
+            ax2.bar(x[it_techs], data, color=color_code, width=bar_width)
 
         label = format(data, ',.2f')
 
