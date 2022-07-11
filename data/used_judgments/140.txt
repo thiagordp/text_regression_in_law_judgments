@@ -1,0 +1,90 @@
+﻿Autos n° 0300110-74.2018.8.24.0090 
+
+Ação: Procedimento do Juizado Especial Cível/PROC 
+
+Autor:  Neli Dias Griman 
+
+Réu:  Oceanair Linhas Aéreas S/A e outros 
+
+
+
+Vistos etc.
+
+
+
+I. Relatório
+
+Relatório dispensado na forma do artigo 38, caput, da Lei 9.099/95.
+
+II. Fundamentação
+
+Trato de ação de condenatória ajuizada por Neli Dias Griman em face de Oceanair Linhas Aéreas S/A, Alitalia Società Aerea Italiana S.P.A e CVC Brasil Operadora e Agência de Viagens S/A.
+
+As preliminares de ilegitimidade suscitadas confundem-se com o mérito, e com ele serão analisadas.
+
+Julgo antecipadamente o feito, porquanto a solução dos autos pode ser obtida da análise do direito que disciplina a matéria, bem como pelo fato de que as provas carreadas são suficientes para a formação de meu convencimento. Valho-me, pois, do artigo 355, inciso I, do Código de Processo Civil.
+
+Preliminarmente, cumpre esclarecer acerca da legislação aplicável ao caso, pois a falha que é causa de pedir da demanda ocorreu em voo internacional (Roma – Rio de Janeiro).
+
+Em julgamento do Recurso Extraordinário n. 636331, em sede de repercussão geral, assim decidiu a Suprema Corte:
+
+Recurso extraordinário com repercussão geral. 2. Extravio de bagagem. Dano material. Limitação. Antinomia. Convenção de Varsóvia. Código de Defesa do Consumidor. 3. Julgamento de mérito. É aplicável o limite indenizatório estabelecido na Convenção de Varsóvia e demais acordos internacionais subscritos pelo Brasil, em relação às condenações por dano material decorrente de extravio de bagagem, em voos internacionais. 5. Repercussão geral. Tema 210. Fixação da tese: "Nos termos do art. 178 da Constituição da República, as normas e os tratados internacionais limitadores da responsabilidade das transportadoras aéreas de passageiros, especialmente as Convenções de Varsóvia e Montreal, têm prevalência em relação ao Código de Defesa do Consumidor". 6. Caso concreto. Acórdão que aplicou o Código de Defesa do Consumidor. Indenização superior ao limite previsto no art. 22 da Convenção de Varsóvia, com as modificações efetuadas pelos acordos internacionais posteriores. Decisão recorrida reformada, para reduzir o valor da condenação por danos materiais, limitando-o ao patamar estabelecido na legislação internacional. 7. Recurso a que se dá provimento. (RE 636331, Relator(a):  Min. GILMAR MENDES, Tribunal Pleno, julgado em 25/05/2017, PROCESSO ELETRÔNICO DJe-257 DIVULG 10-11-2017 PUBLIC 13-11-2017) (Grifei.)
+
+Desse modo, aplicar-se-ão as normas internacionais naquilo que lhes couber, ou seja, na análise do pedido de danos materiais. Os demais pedidos serão analisados com base no Código de Defesa do Consumidor, vez que as partes envolvidas na avença se enquadram nos conceitos de fornecedor e consumidor, dispostos nos artigos 3.º e 2.º da Lei n. 8.078/1990.
+
+Pois bem. 
+
+Infiro dos autos que a requerente comprou passagem para o trecho Roma – Rio de Janeiro, operado pela ré Alitalia, com chegada prevista para a manhã do dia 23.09.2016. Ocorre, contudo, que a partida do voo atrasou 4h50min (fl. 15), por conta de greve da tripulação (fls. 26/28). Tal demora na chegada acarretou na perca do voo entre Rio de Janeiro – Florianópolis, operado pela ré Avianca, que partiu às 09h10min daquele mesmo dia, e que havia sido adquirido por meio da ré CVC (fl. 16).
+
+Por conta disso, a reclamante se viu obrigada a adquirir nova passagem e pernoitar na capital fluminense até o outro dia, quando finalmente chegou ao destino final.
+
+Resta cristalino, portanto, que as rés Avianca e CVC não possuem qualquer responsabilidade pela falha reclamada. Ora, apenas participaram da venda e operação do voo Rio de Janeiro – Florianópolis, em nada se relacionando ou participando da cadeia do trecho falho (Roma – Rio de Janeiro). Não se trata de hipótese de conexão de voos, com bilhetes adquiridos em conjunto e nos quais todas as fornecedoras possuem responsabilidade pelo manejo da operação, mas sim de compras separadas. Aliás, as rés sequer poderiam ter ciência do atraso sofrido pela autora, tratando-se para elas somente de um mero não comparecimento ao embarque, o que enseja o cancelamento da passagem sem dever de restituição.
+
+Tenho, desse modo, que não existiu falha na prestação dos serviços das requeridas, sendo improcedentes os pedidos quanto a elas.
+
+Passo a analisar a responsabilidade da ré Alitalia.
+
+A falha - atraso superior a quatro horas - é incontroversa, sendo levantada tese de excludente por conta de greve dos funcionários. Porém, não é esse um fato imprevisível, por estar inserido nos riscos da atividade desenvolvida. Nesse sentido:
+
+AÇÃO DE REPARAÇÃO DE DANOS MORAIS. VOO INTERNACIONAL REALIZADO COM ATRASO DEVIDO À OCORRÊNCIA DE GREVE. FALHA NA PRESTAÇÃO DE SERVIÇO. AUSÊNCIA DE ASSISTÊNCIA AOS PASSAGEIROS. DANO MORAL CARACTERIZADO.    O atraso significativo de voo caracteriza a prestação inadequada do contrato de transporte, enseja a obrigação do fornecedor disponibilizar assistência material aos passageiros e constitui ato ilícito capaz de ensejar o dano moral in re ipsa, tendo em vista o desconforto e as angústias a que o consumidor é submetido   A greve dos funcionários não constitui fato imprevisível ao contrato de transporte, capaz de caracterizar a excludente de responsabilidade da companhia aérea pelo atraso de voo, mormente se não foi prestado ao consumidor, durante o período de espera, qualquer assistência material.   VALOR DA INDENIZAÇÃO. ADEQUAÇÃO. (TJSC, Recurso Inominado n. 0305633-54.2014.8.24.0075, de Tubarão, rel. Des. Giancarlo Bremer Nones, Quarta Turma de Recursos - Criciúma, j. 12-07-2016).(grifei)
+
+Ademais, conforme a Convenção de Montreal:
+
+Artigo 19 – Atraso. O transportador é responsável pelo dano ocasionado por atrasos no transporte aéreo de passageiros, bagagem ou carga. Não obstante, o transportador não será responsável pelo dano ocasionado por atraso se prova que ele e seus prepostos adotaram todas as medidas que eram razoavelmente necessárias para evitar o dano ou que lhes foi impossível, a um e a outros, adotar tais medidas.
+
+No caso, a requerida não comprovou ter auxiliado a autora para sanar os problemas advindos do atraso, a deixando a própria sorte. Pelo exposto, fica caracterizada a responsabilidade da requerida, restando tão somente a análise acerca da ocorrência do dano.
+
+1. Danos materiais
+
+Estabelece o artigo 22, item 1, da Convenção de Montreal: 
+
+"Em caso de dano causado por atraso no transporte de pessoas, como se especifica no Artigo 19, a responsabilidade do transportador se limita a 4.150 Direitos Especiais de Saque por passageiro."
+
+A parte autora comprova na exordial os gastos com hotel (fl. 21), transporte (fl. 22), e a passagem perdida (fl. 16), que totalizam R$ 506,62 (quinhentos e seis reais e sessenta e dois centavos). Embora sustenta ter gasto R$ 632,16 (seiscentos e trinta e dois reais e dezesseis centavos) para adquirir o novo bilhete, não há qualquer comprovante desse pagamento nos autos, inviabilizado o ressarcimento.
+
+Estando os valores comprovados dentro do limite da convenção, devem ser ressarcidos.
+
+2. Danos morais
+
+Quanto à existência do dano moral em situações de atraso de voo, o simples fato de sua chegada ter demorado mais do que o planejado já enseja condenação da ré pelos danos advindos do atraso. É cristalina a angústia e o sofrimento vividos por quem necessita passar muito mais tempo do que o programado em aeroportos, agravada a situação no caso pela perda do trecho seguinte.
+
+Nesse contexto, tratando-se de relação regida pelo Código Consumerista, comprovada a ocorrência do atraso e não existindo qualquer excludente de responsabilidade, deve a ré ser condenada a indenizar a parte autora pelos danos extrapatrimoniais experimentados.
+
+Acerca do quanto devido, tendo em vista os valores arbitrados em situações similares por este Magistrado, bem como o período de atraso ocorrido, sem perder de vista o caráter pedagógico e punitivo da cominação, entendo que a quantia de R$ 3.000,00 (três mil reais) mostra-se adequada a indenizá-la pelos infortúnios vivenciados. 
+
+Após fixar o valor da indenização, cabe dizer que a correção monetária flui do arbitramento (Enunciado n. 362 da Súmula do STJ), e os juros de mora, da citação (falta de cumprimento dos deveres do contrato firmado entre as partes - (STJ, EDcl no REsp 400843 / RS, Relator Ministro CARLOS ALBERTO MENEZES DIREITO, j. em 09.08.2007)).
+
+
+P. R. I.
+
+Arquivem-se oportunamente. 
+
+
+
+Florianópolis (SC), 07 de novembro de 2018.
+
+
+
+Marcelo Pizolati
+
+Juiz de Direito

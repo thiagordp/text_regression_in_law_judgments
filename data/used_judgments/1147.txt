@@ -1,0 +1,175 @@
+PROCEDIMENTO DO JUIZADO ESPECIAL CÍVEL Nº 5002152-50.2019.8.24.0090/SC
+
+AUTOR: RAQUEL DA ROSA STAHNKE
+
+AUTOR: FELIPE AUGUSTO DA SILVA STAHNKE
+
+RÉU: LATAM AIRLINES GROUP S/A
+
+SENTENÇA
+
+Vistos etc.
+
+ 
+
+I. Relatório
+
+Relatório dispensado na forma do artigo 38, caput, da Lei 9.099/95.
+
+II. Fundamentação
+
+Trato de ação de condenatória ajuizada por RAQUEL DA ROSA STAHNKE e FELIPE AUGUSTO DA SILVA STAHNKE em face de LATAM AIRLINES GROUP S/A.
+
+Julgo antecipadamente o feito, porquanto a solução da lide pode ser obtida da análise do direito que disciplina a matéria, bem como pelo fato de as provas carreadas aos autos serem suficientes para a formação de meu convencimento. Valho-me, pois, do art. 355, I, do Código de Processo Civil.
+
+Preliminarmente, cumpre esclarecer acerca da aplicabilidade das Convenções de Varsóvia e Montreal ao caso em tela.
+
+Em julgamento do Recurso Extraordinário n. 636331, em sede de repercussão geral, assim decidiu a Suprema Corte:
+
+Recurso extraordinário com repercussão geral. 2. Extravio de bagagem. Dano material. Limitação. Antinomia. Convenção de Varsóvia. Código de Defesa do Consumidor. 3. Julgamento de mérito. É aplicável o limite indenizatório estabelecido na Convenção de Varsóvia e demais acordos internacionais subscritos pelo Brasil, em relação às condenações por dano material decorrente de extravio de bagagem, em voos internacionais. 5. Repercussão geral. Tema 210. Fixação da tese: "Nos termos do art. 178 da Constituição da República, as normas e os tratados internacionais limitadores da responsabilidade das transportadoras aéreas de passageiros, especialmente as Convenções de Varsóvia e Montreal, têm prevalência em relação ao Código de Defesa do Consumidor". 6. Caso concreto. Acórdão que aplicou o Código de Defesa do Consumidor. Indenização superior ao limite previsto no art. 22 da Convenção de Varsóvia, com as modificações efetuadas pelos acordos internacionais posteriores. Decisão recorrida reformada, para reduzir o valor da condenação por danos materiais, limitando-o ao patamar estabelecido na legislação internacional. 7. Recurso a que se dá provimento. (RE 636331, Relator(a):  Min. GILMAR MENDES, Tribunal Pleno, julgado em 25/05/2017, PROCESSO ELETRÔNICO DJe-257 DIVULG 10-11-2017 PUBLIC 13-11-2017) (Grifou-se.)
+
+Desse modo, aplicar-se-ão as normas internacionais naquilo que lhes couber, ou seja, na análise do pedido de danos materiais. Os demais pedidos serão analisados com base no Código de Defesa do Consumidor, uma vez que as partes envolvidas na avença se enquadram nos conceitos de fornecedor e consumidor, dispostos nos artigos 3.º e 2.º da Lei n. 8.078/1990.
+
+Atraso do voo da ida
+
+Infiro dos autos que os autores compraram passagem com a companhia aérea ré para o trecho Florianópolis - Guarulhos - Lima, com chegada prevista no dia 30/04/2019 às 0h40min. Ocorre, contudo, que o voo Florianópolis - Garulhos sofreu atraso, acarretando a perda da conexão Guarulhos - Lima e, consequentemente, o atraso para chegada ao destino.
+
+                              Voos originais	                         Voos que ocorreram
+3611	Florianópolis - Guarulhos	19h10 às 20h25 do dia 29/04/19	3611	Florianópolis - Guarulhos	20h56 às 22h11 do dia 29/04/2019
+2376	Guarulhos - Lima	21h40 às 0h40 do dia 30/04/19	8100	Guarulhos - Lima	3h50 às 7h14 do dia 30/04/2019
+853	Lima - Cuzco	saída às 5h40 do dia 30/04/2019	853	Lima - Cuzco	saída às 5h40 do dia 1°/05/2019
+1. Danos morais
+
+Em sede de contestação, aduz a ré que o cancelamento do voo 3611 se deu em função da necessidade de readequação da malha aérea por determinação alheia à sua vontade, sem, contudo, acostar aos autos qualquer documento que comprove esta versão. Ressalta também que cumpriu com o disposto na Resolução 400 da ANAC (Agência Nacional de Aviação Civil), tendo realocado a parte autora e proporcionado sua chegada ao destino pretendido, sendo incabível, portanto, qualquer indenização.
+
+Sem razão a acionada, contudo.
+
+Em situação similar, já decidiu o Judiciário catarinense:
+
+RECURSO INOMINADO. AÇÃO DE INDENIZAÇÃO POR DANOS MORAIS E MATERIAIS. SERVIÇO DE TRANSPORTE AÉREO. VOO NACIONAL. ATRASO DE VOO. ATRASO DE MAIS DE 24 (VINTE E QUATRO) HORAS. PROCEDÊNCIA NO JUÍZO A QUO. ALEGAÇÃO DE REORGANIZAÇÃO DE MALHA AÉREA. CASO FORTUITO NÃO COMPROVADO. FALHA NA PRESTAÇÃO DO SERVIÇO. "A empresa aérea não provou a alegação de que reestruturação na malha aérea foi a causa do cancelamento do voo doméstico. De toda sorte, o fato é desinfluente à solução da controvérsia, haja vista que integrante do risco da atividade comercial das empresas aéreas, caracterizando assim fortuito interno, e nessa ordem não possui habilidade técnica para a aplicação da pretendida excludente do artigo 14, parágrafo 3º , inciso II , da Lei n. 8.078 /90" (1ª Turma Recursal dos Juizados Especiais do Distrito Federal - Apelação Cível do Juizado Especial nº 20140310351375, relatora Juíza Sandra Reves Vasques Tonussi, j. em 16.06.2015) (TJSC, Recurso Inominado n. 0810569-95.2012.8.24.0023, da Capital - Eduardo Luz, rel. Des. Rudson Marcos, j. 25-02-2016).
+
+No caso em apreço, a responsabilidade ocorre de forma objetiva. Independentemente da existência de culpa, há a responsabilização do fornecedor pela reparação dos danos causados por conta da falha na prestação dos serviços. Portanto, não há a possibilidade da parte ré se eximir da obrigação de indenizar.
+
+Quanto à ocorrência do dano moral em situações de atraso de voo, o simples fato de a viagem de ida ter demorado mais do que o planejado já enseja condenação da empresa ré pelos danos advindos do atraso. É cristalina a angústia e o sofrimento vividos por quem necessita passar muito mais tempo do que o programado em aeroportos, agravada a situação, no caso, pela necessidade de a parte autora pernoitar no aeroporto, retardando sua chegada ao destino.
+
+Depreendo dos autos que os autores deveriam ter chegado a Lima no dia 30/04/2019, às 0h40min (Evento 1, OUT6, fl. 3), entretanto, chegaram somente às 7h14min do dia 30/04/2019 (Evento 1, OUT8; Evento 10, PET1, fl. 6), o que implicou a perda do voo Lima - Cuzco, operado por outra companhia aérea, uma vez que este partiria às 5h40min do dia 30/04/2019 de Lima (Evento 1, OUT7).
+
+Assim, em razão do atraso do voo operado pela ré, os autores somente conseguiram chegar ao destino final (Cuzco) no dia seguinte, pois foram realocados para o voo das 5h40min do dia 1º/05/2019 (Evento 1, OUT9). Portanto, constato um atraso de 24 (vinte e quatro) horas para a chegada ao destino final.
+
+Nesse contexto, tratando-se de relação regida pelo Código Consumerista, comprovada a ocorrência do atraso e não existindo qualquer excludente de responsabilidade, deve a ré ser condenada a indenizar a parte autora pelos danos extrapatrimoniais experimentados.
+
+Acerca do quanto devido, tendo em vista os valores arbitrados em situações similares por este Juízo, ponderando o fato de não ter sido prestado auxílio e os autores terem demorado 24 (vinte e quatro) horas para chegar ao destino final, sem perder de vista o caráter pedagógico e punitivo da cominação, entendo que a quantia de R$ 20.000,00 (vinte mil reais), sendo R$ 10.000,00 (dez mil reais) a cada um dos autores, mostra-se adequada a indenizá-los pelos infortúnios vivenciados. 
+
+Após fixar o valor da indenização, cabe dizer que a correção monetária flui do arbitramento (Enunciado n. 362 da Súmula do STJ) e os juros de mora da citação (falta de cumprimento dos deveres do contrato firmado entre as partes - (STJ, EDcl no REsp 400843 / RS, Relator Ministro CARLOS ALBERTO MENEZES DIREITO, j. em 09.08.2007)).
+
+2. Danos materiais
+
+Estabelece a Convenção de Montreal, em seu artigo 19: 
+
+O transportador é responsável pelo dano ocasionado por atrasos no transporte aéreo de passageiros, bagagem ou carga. Não obstante, o transportador não será responsável pelo dano ocasionado por atraso se prova que ele e seus prepostos adotaram todas as medidas que eram razoavelmente necessárias para evitar o dano ou que lhes foi impossível, a um e a outros, adotar tais medidas.
+
+Conforme já disposto no item anterior, eximiu-se a ré de comprovar a excludente.
+
+Ainda, o artigo 22, item 1: "Em caso de dano causado por atraso no transporte de pessoas, como se especifica no Artigo 19, a responsabilidade do transportador se limita a 4.150 Direitos Especiais de Saque por passageiro".
+
+No caso em apreço, verifico que, devido ao atraso do voo, os autores necessitaram despender gastos com alimentação na noite de 29/04/2019, o qual foi comprovado por meio do cupom fiscal na quantia de R$ 105,60 (Evento 1, COMP12, fl. 1), e no dia 30/04/2019, às 17h05min e 22h26min - enquanto agaurdavam o voo para Cuzco -, que também foram comprovados por meio das segundas vias do cartão juntadas à fl. 2 (Evento 1, COMP12), perfazendo o total de S$ 295,00.
+
+Ainda em decorrência do atraso do voo operado pela ré, os autores deixaram de usufruir uma diária do hotel reservado em Cuzco para o dia 30/04/2019. Entretanto, em que pese os autores requererem o desembolso da quantia de U$D 83,20, verifico que este valor engloba duas diárias (Evento 1, COMP12, fl. 3). Observo que, em referida fatura eletrônica, muito possivelmente onde constam 01/04/19 e 02/04/2019 deveriam ser 01/05/2019 e 02/05/2019. Assim, os autores deixaram de utilizar a diária de 30/04/2019 a 01/05/2019, motivo pelo qual fazem jus à restituição de U$D 52,00.
+
+Dessa forma, tendo sido devidamente comprovado o prejuízo financeiro, em documentos não impugnados, deve a ré ressarcir as quantias desembolsadas por conta do atraso por ela gerado.
+
+Considerando que não se admite sentença ilíquida em sede de Juizado (art. 38, parágrafo único da Lei 9.099/1995), de plano, determino a conversão dos valores de acordo com a cotação do novo sol peruano em 30/04/2019 e do dólar americano no dia 1º/05/2019.
+
+Assim, ajusto o valor da devolução da quantia paga pelos itens comprados na data de 30/04/2019 (295 sóis peruanos) para R$ 351,67 (trezentos e cinquenta e um reais e sessenta e sete centavos) e na data de 1°/05/2019 (52 dólares americanos) para R$ 205,12 (duzentos e cinco reais e doze centavos), considerando as taxas de conversão do Novo Sol peruano e do Dólar americano para o Real brasileiro, conforme conversão realizada pelo sítio do Banco Central do Brasil1.
+
+A soma dos gastos totaliza R$ 662,39 (seiscentos e sessenta e dois reais e trinta e nove centavos), dentro, portanto, do limite estabelecido pela norma internacional.
+
+Assim, quanto aos gastos expendidos no voo da ida, defiro o pedido de indenização pelos danos materiais no valor de R$ 662,39 (seiscentos e sessenta e dois reais e trinta e nove centavos).
+
+Atraso do voo de retorno
+
+Infiro dos autos que os autores compraram passagem com a companhia aérea ré para o trecho Lima - Guarulhos - Florianópolis, com chegada prevista no dia 08/05/2019 às 22h10min. Ocorre, contudo, que não foi localizada a reserva do voo Lima - Guarulhos, acarretando a perda da conexão Guarulhos - Florianópolis e, consequentemente, o atraso para chegada ao destino.
+
+                            Voos originais	                         Voos que ocorreram
+8149	Lima - Guarulhos	9h15 às 15h25 do dia 08/05/2019	2381	Lima - Guarulhos	saída às 23h10 do dia 08/05/2019
+3308	Guarulhos - Florianópolis	22h10 às 23h30 do dia 08/05/2019	3228	Guarulhos - Florianópolis	saída às 08h45 do dia 09/05/2019 
+1. Danos morais
+
+Em sede de contestação, aduz a parte ré que o cancelamento do voo ocorreu em razão da perda da conexão do voo na ida, tendo providenciado a pronta realocação dos autores em outro voo. Entretanto, a justificativa apresentada não serve como excludente de responsabilidade, uma vez que a perda do voo 8149 se deu por mau gerenciamento da empresa aérea ré ao cancelar equivocadamente o voo dos autores, estando evidente a falha na prestação do seu serviço.
+
+No caso em apreço, a responsabilidade ocorre de forma objetiva. Independentemente da existência de culpa, há a responsabilização do fornecedor pela reparação dos danos causados por conta da falha na prestação dos serviços. Portanto, não há a possibilidade da parte ré se eximir da obrigação de indenizar.
+
+Quanto à ocorrência do dano moral em situações de atraso de voo, o simples fato de a viagem de retorno ter demorado mais do que o planejado já enseja condenação da empresa ré pelos danos advindos do atraso. É cristalina a angústia e o sofrimento vividos por quem necessita passar muito mais tempo do que o programado em aeroportos.
+
+Depreendo dos autos que os autores deveriam ter chegado a Florianópolis no dia 08/05/2019, às 23h30min (Evento 1, OUT5, fl. 1), entretanto, chegaram somente por volta das 10h do dia 09/05/2019 (saída às 8h45min de Guarulhos - Evento 10, PET1, fl. 6). Portanto, constato um atraso de cerca de dez horas para a chegada ao destino final.
+
+Nesse contexto, tratando-se de relação regida pelo Código Consumerista, comprovada a ocorrência do atraso e não existindo qualquer excludente de responsabilidade, deve a ré ser condenada a indenizar a parte autora pelos danos extrapatrimoniais experimentados.
+
+Acerca do quanto devido, tendo em vista os valores arbitrados em situações similares por este Juízo, ponderando o fato de não ter sido prestado auxílio à parte demandante, o voo ter atrasado cerca de dez horas para chegada a Florianópolis e, por outro lado, a ausência de comprovação da alegada perda de compromissos profissionais e pessoais, sem perder de vista o caráter pedagógico e punitivo da cominação, entendo que a quantia de R$ 8.000,00 (oito mil reais), sendo R$ 4.000,00 (quatro mil reais) para cada autor, mostra-se adequada a indenizá-los pelos infortúnios vivenciados. 
+
+Após fixar o valor da indenização, cabe dizer que a correção monetária flui do arbitramento (Enunciado n. 362 da Súmula do STJ) e os juros de mora da citação (falta de cumprimento dos deveres do contrato firmado entre as partes - (STJ, EDcl no REsp 400843 / RS, Relator Ministro CARLOS ALBERTO MENEZES DIREITO, j. em 09.08.2007)).
+
+2. Danos materiais
+
+Estabelece a Convenção de Montreal, em seu artigo 19: 
+
+"O transportador é responsável pelo dano ocasionado por atrasos no transporte aéreo de passageiros, bagagem ou carga. Não obstante, o transportador não será responsável pelo dano ocasionado por atraso se prova que ele e seus prepostos adotaram todas as medidas que eram razoavelmente necessárias para evitar o dano ou que lhes foi impossível, a um e a outros, adotar tais medidas." 
+
+Como já disposto no item anterior, eximiu-se a ré de comprovar a excludente.
+
+Ainda, o artigo 22, item 1: "Em caso de dano causado por atraso no transporte de pessoas, como se especifica no Artigo 19, a responsabilidade do transportador se limita a 4.150 Direitos Especiais de Saque por passageiro".
+
+No caso em apreço, verifico que, devido ao cancelamento do voo 8149, os autores necessitaram despender gastos com alimentação no dia 08/05/2019, o qual foi comprovado por meio dos cupons fiscais nas quantias de S$ 269,00, S$ 217,00 e S$ 21,90 (Evento 1, COMP13, fls. 1 e 3), perfazendo o total de S$ 507,90.
+
+Ainda, em razão da partida do voo ocorrer somente às 23h30min, quando a previsão inicial era às 9h15min, os autores optaram por adquirir meia-diária durante o dia 08/05/2019. Observo que, caso contrário, ficariam mais de doze horas esperando no aeroporto, sendo justificável, portanto, a restituição do valor de US$ 50,00 (Evento 1, COMP13, fl. 2).
+
+Considerando que não se admite sentença ilíquida em sede de Juizado (art. 38, parágrafo único da Lei 9.099/1995), de plano, determino a conversão dos valores de acordo com a cotação no dia 08/05/2019 do dólar americano e do novo sol peruano.
+
+Assim, ajusto o valor da devolução da quantia paga pelos itens comprados na data de 08/05/2019 (507,90 sóis peruanos) para R$ 602,57 (seiscentos e dois reais e cinquenta e sete centavos) e (50 dólares americanos) para R$ 196,69 (cento e noventa e seis reais e sessenta e nove centavos), considerando as taxas de conversão do Novo Sol peruano e do Dólar americano para o Real brasileiro, conforme conversão realizada pelo sítio do Banco Central do Brasil1.
+
+A soma dos gastos totaliza R$ 799,26 (setecentos e noventa e nove reais e vinte e seis centavos), dentro, portanto, do limite estabelecido pela norma internacional.
+
+Assim, quanto aos gastos despendidos no voo da volta, defiro o pedido de indenização pelos danos materiais no valor de R$ 799,26 (setecentos e noventa e nove reais e vinte e seis centavos), conforme pleiteado pela parte autora à exordial.
+
+Extravio temporário de bagagem
+
+Alegam os autores que, ao chegarem a Lima/Peru, foram surpreendidos com o extravio de suas bagagens. Afirmam que as malas foram entregues após cerca de dois dias dias de sua chegada ao local, razão pela qual postulam a condenação da ré ao pagamento de indenização por danos morais.
+
+Em sede de contestação, a ré aduz que se demonstrou solícita perante as requisições efetuadas pela parte autora, informando-a acerca do lapso temporal para a chegada de sua bagagem. Alega também que foi respeitado o prazo de 21 (vinte e um) dias para devolução dos pertences extraviados, conforme determinação da ANAC. Por fim, refuta o pedido de danos morais, uma vez que não há provas nos autos acerca de prejuízo à estabilidade emocional dos autores.
+
+No caso em apreço, observo que é incontroverso o extravio das bagagens, o que foi admitido pela parte requerida, bem como comprovado por meio dos documentos acostados em OUT10, Evento 1 ("parte de irregularidad de equipaje").
+
+Observo que os autores efetuaram reclamação acerca do extravio das malas no dia 30/04/2019, às 8h41min e 8h43min (Evento 1, OUT10, fls. 1/2), tendo sido devolvidas no dia 1º/5/2019 (Evento 10, PET1, fl. 12).
+
+Entretanto, a companhia aérea ré não mencionou tampouco comprovou o horário de devolução das malas no dia 1º/5/2019, sendo que os autores afirmaram que ficaram cerca de dois dias sem seus pertences, sendo incabível exigir destes a prova do horário da entrega, ônus que competia à ré (art. 373, II, CPC).
+
+É incontroverso que quando os autores chegaram a Lima (7h14min do dia 30/04/2019) suas bagagens já estavam extraviadas, bem como que passaram o dia 30/04/2019 inteiro sem estas. Por certo também ficaram no mínimo parte do dia 1º/5/2019 sem elas.
+
+Não obstante, é flagrante que a situação ocorrida e gerada pela ré causou transtorno e angústia aos autores, uma vez que permaneceram quase dois dias da viagem sem seus bens. Assim, constato ter havido efetivo abalo moral aos requerentes, devendo a parte acionada ser condenada a indenizá-los.
+
+Nesse sentido:
+
+APELAÇÃO CÍVEL. INDENIZAÇÃO. SERVIÇO PÚBLICO CONCEDIDO. TRANSPORTE AÉREO. EXTRAVIO DE BAGAGEM. ABALO MORAL NÃO VERIFICADO PELO MAGISTRADO. RESSARCIMENTO APENAS DOS PREJUÍZOS MATERIAIS. DECRETO DE PARCIAL PROCEDÊNCIA. PRETENSA COMPENSAÇÃO PELO DANO MORAL SUPORTADO. TESE ACOLHIDA. ABALO IN RE IPSA. DEVER DE INDENIZAR CONFIGURADO. FIXAÇÃO DO QUANTUM EM MONTANTE PROPORCIONAL AO CASO E CONFORME PRECEDENTES DESTE COLEGIADO. RECURSO PROVIDO.   'É inquestionável o abalo moral sofrido por passageiro que teve sua bagagem extraviada por falha operacional de empresa aérea, sendo inegáveis o aborrecimento, o transtorno e o sofrimento que essa circunstância gera no espírito do passageiro, situação que certamente escapa da condição de mero dissabor cotidiano' (AC n. 2008.065854-4, de Urussanga, rel. Des. Eládio Torret Rocha) (TJSC, AC n. 2012.049768-8, rel. Des. Pedro Manoel Abreu, j. 3-2-2015). (TJSC, Apelação n. 0300443-81.2014.8.24.0020, de Criciúma, rel. Des. Edemar Gruber, j. 14-07-2016). (grifei)
+
+Nesse contexto, tratando-se de relação regida pelo código consumerista, comprovada a ocorrência do extravio da bagagem e não existindo qualquer excludente de responsabilidade, deve a parte ré ser condenada a indenizar a parte autora pelos danos extrapatrimoniais experimentados.
+
+Acerca do quanto devido, tendo em vista os valores arbitrados em situações similares por este Juízo, bem como considerando o prazo de quase dois dias para devolução da bagagem, sem perder de vista o caráter pedagógico e punitivo da cominação, entendo que a quantia de R$ 2.000,00 (dois mil reais), sendo R$ 1.000,00 (um mil reais) para cada autor, mostra-se adequada a indenizá-los pelos infortúnios vivenciados. 
+
+Após fixar o valor da indenização, cabe dizer que a correção monetária flui do arbitramento (enunciado 362 da Súmula do STJ) e os juros de mora da citação (falta de cumprimento dos deveres do contrato firmado entre as partes - (STJ, EDcl no REsp 400843 / RS, Relator Ministro CARLOS ALBERTO MENEZES DIREITO, j. em 09.08.2007)).
+
+ 
+
+
+Documento eletrônico assinado por VANIA PETERMANN, Juíza de Direito, na forma do artigo 1º, inciso III, da Lei 11.419, de 19 de dezembro de 2006. A conferência da autenticidade do documento está disponível no endereço eletrônico https://eproc1g.tjsc.jus.br/eproc/externo_controlador.php?acao=consulta_autenticidade_documentos, mediante o preenchimento do código verificador 310001479909v28 e do código CRC a4621837.
+
+Informações adicionais da assinatura:
+Signatário (a): VANIA PETERMANN
+Data e Hora: 24/1/2020, às 16:40:51
+
+ 
+
+1. Disponível em: https://www.bcb.gov.br/conversao
+1. Disponível em: https://www.bcb.gov.br/conversao
+ 
+
+5002152-50.2019.8.24.0090310001479909 .V28

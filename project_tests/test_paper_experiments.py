@@ -8,6 +8,7 @@
 import gc
 import glob
 import logging
+import os
 import random
 import time
 from datetime import datetime
@@ -32,7 +33,7 @@ from model import vsm_regression_models
 from model.feature_selections import bow_feature_selection, remove_outliers_iforest
 from pre_processing.text_pre_processing import process_judge, process_has_x, process_loss, process_time_delay
 from representation import bow_tf, bow_tf_idf, bow_mean_embeddings, bow_binary
-from util.path_constants import INCLUDE_ZERO_VALUES
+from util.path_constants import INCLUDE_ZERO_VALUES, JEC_DATASET_PATH, JEC_CLASS_PATHS
 # Run Experiments
 from util.value_contants import K_BEST_FEATURE_PAPER
 
@@ -655,6 +656,16 @@ def build_test_setup(tech, feature_selection, use_cross_validation, remove_outli
 
     # Get Judgments No of each case
     sentenca_std = [str(row) for row in raw_data_df["judgement"].values]
+    #
+    # for sent in sentenca_std:
+    #     path_doc = JEC_DATASET_PATH + JEC_CLASS_PATHS[0] + sent + ".txt"
+    #
+    #     with open(path_doc) as fp:
+    #         text = fp.read()
+    #         outpath = "data/used_judgments/" + sent + ".txt"
+    #
+    #         with open(outpath, "w+") as fp_2:
+    #             fp_2.write(text)
 
     # Extract attributes
     days_list = list(raw_data_df["dia"])

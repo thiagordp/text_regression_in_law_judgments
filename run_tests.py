@@ -62,7 +62,7 @@ def main():
     matplotlib.rcParams['font.family'] = "FreeSerif"
 
     # Data Preparation
-    test_pre_processing.test_unify_database()
+    #test_pre_processing.test_unify_database()
     # Run the experiments
     test_paper_experiments.run_experiments("TF")
 
